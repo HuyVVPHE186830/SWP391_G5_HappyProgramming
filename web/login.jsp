@@ -146,7 +146,7 @@
                 <form action="login" method="post">
                     <input type="text" placeholder="Username" name="username" required>
                     <input type="password" placeholder="Password" name="password" required>
-                    <a href="forgetpassword.jsp" class="forgot">Forgot Your Password?</a>
+                    <a href="forgetPass.jsp" class="forgot">Forgot Your Password?</a>
                     <c:if test="${sessionScope.error != null}">
                         <div class="error-message">
                             ${error}

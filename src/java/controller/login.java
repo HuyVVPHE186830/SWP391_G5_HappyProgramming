@@ -71,7 +71,7 @@ public class login extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
@@ -79,8 +79,11 @@ public class login extends HttpServlet {
         UserDAO dao = new UserDAO();
         List<User> users = dao.getAll();
         User user = new User();
+
+        boolean found = false;
         for (User u : users) {
             if (username.equals(u.getUsername()) && password.equals(u.getPassword())) {
+                found = true;
                 if (u.getRoleId() == 1) {
                     session.setAttribute("user", u);
                     response.sendRedirect("homeadmin.jsp");
@@ -90,13 +93,13 @@ public class login extends HttpServlet {
                 } else if (u.getRoleId() == 3) {
                     session.setAttribute("user", u);
                     response.sendRedirect("homementee.jsp");
-                } else {
-                    session.setAttribute("user", u);
-                    response.sendRedirect("homeguest.jsp");
                 }
-                break;
+                break; // Exit the loop once a match is found
             }
-            session.setAttribute("error", "CHECK YOUR USERNAME OR PASSWORD");
+        }
+
+        if (!found) {
+            session.setAttribute("error", "*Check Your Username Or Password");
             response.sendRedirect("login.jsp");
         }
     }

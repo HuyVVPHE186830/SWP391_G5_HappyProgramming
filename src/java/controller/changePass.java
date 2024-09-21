@@ -54,7 +54,7 @@ public class changePass extends HttpServlet {
             u.setPassword(newPass);
 
             UserDAO dao = new UserDAO();
-            boolean f = dao.checkPassword(id, curPass);
+                boolean f = dao.checkPassword(id, curPass);
             if (f) {
                 boolean f2 = dao.changePass(u);
                 if (f2) {

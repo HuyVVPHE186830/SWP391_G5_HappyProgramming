@@ -94,6 +94,20 @@
                 text-align: center;
                 font-size: 14px;
             }
+
+            .success{
+                color: #4CAF50; /* Màu xanh lục cho thông báo */
+                font-size: 0.9rem;
+                text-align: center; /* Căn giữa chữ */
+                margin: 10px 0; /* Khoảng cách trên và dưới */
+            }
+
+            .error {
+                color: red; /* Màu cho lỗi */
+                font-size: 0.9rem;
+                text-align: center; /* Căn giữa chữ */
+                margin: 10px 0; /* Khoảng cách trên và dưới */
+            }
         </style>
         <script>
             function validateForm() {
@@ -115,34 +129,23 @@
     <body>
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
-        <c:if test="${empty user}">
-            <c:redirect url="login.jsp"></c:redirect>
-        </c:if>
+
         <div class="changepass-form">
             <div class="changepass-form-left">
                 <h2>Change Password</h2>
-                <form action="changePass" method="post" onsubmit="return validateForm()">
-                    <input type="hidden" value="${user.id}" name="id">
-                    <input type="password" placeholder="Current password" id="curPass" name="curPass" required>
+                <form action="verify" method="post">
+                    <input type="password" placeholder="Enter verification code" id="verificationCode" name="verificationCode" required>
                     <input type="password" placeholder="New password" id="newPass" name="newPass" required>
                     <input type="password" placeholder="Confirm new password" id="confirmPass" name="confirmPass" required>
-                    <a href="forgetPass.jsp" class="forgot">Forgot Your Password?</a>
-
-                    <c:if test="${not empty succMsg}">
-                        <div class="success-message">
-                            ${succMsg}
-                        </div>
-                        <c:remove var="succMsg" scope="session"/>
-                    </c:if>
-
-                    <c:if test="${not empty failedMsg}">
-                        <div class="error-message">
-                            ${failedMsg}
-                        </div>
-                        <c:remove var="failedMsg" scope="session"/>
-                    </c:if>
-
                     <button type="submit" class="button-changepass">CHANGE PASSWORD</button>
+                    <c:if test="${not empty success}">
+                        <div class="message">${success}</div>
+                    </c:if>
+
+                    <!-- Hiển thị lỗi nếu có -->
+                    <c:if test="${not empty error}">
+                        <div class="error">${error}</div>
+                    </c:if>
                 </form>
             </div>
 

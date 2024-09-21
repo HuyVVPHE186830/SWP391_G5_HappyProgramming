@@ -1,0 +1,145 @@
+
+ public static void main(String[] args) {
+        final String from = "yeudangyeunuoc2424@gmail.com";
+        final String password = "roos rltr pymd ytjs"; // 
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP host
+        props.put("mail.smtp.port", "587"); // TLS 587 , SSL 465 port
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        };
+//create working session
+        Session session = Session.getInstance(props, auth);
+        final String to = "trucnghe186655@fpt.edu.vn";
+// send Email
+        MimeMessage msg = new MimeMessage(session);
+        try {
+
+//            message.setFrom(new InternetAddress(from));
+//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+//            message.setSubject("Test Email");
+//            message.setText("Hello, this is a test email!");
+//content type
+            msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+            // who send
+            msg.setFrom(new InternetAddress(from));
+            //recip
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+            //subtitle
+            msg.setSubject("Test Email" + System.currentTimeMillis());
+            //set send day
+            msg.setSentDate(new Date());
+            //quy ddinhj emal nhan phan hoi(email khacs)
+            //--  msg.setReplyTo(InternetAddress.parse(from,false));
+            msg.setContent("Im Ironman","text/html");
+            Transport.send(msg);
+            System.out.println("Email sent successfully!");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+==================================================================================
+ public boolean sendMail(User user) {
+        boolean test = false;
+
+        String sendFrom = "yeudangyeunuoc2424@gmail.com";
+        String password = "roos rltr pymd ytjs";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP host
+        props.put("mail.smtp.port", "587"); // TLS 587 , SSL 465 port
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(sendFrom, password);
+            }
+        };
+        Session session = Session.getInstance(props, auth);
+        String sendTo = user.getMail();
+
+        MimeMessage msg = new MimeMessage(session);
+
+        try {
+
+//            message.setFrom(new InternetAddress(from));
+//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+//            message.setSubject("Test Email");
+//            message.setText("Hello, this is a test email!");
+//content type
+            msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+            // who send
+            msg.setFrom(new InternetAddress(sendFrom));
+            //recip
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sendTo, false));
+            //subtitle
+            msg.setSubject("Happy Programing: Your confirm code!!!" + System.currentTimeMillis());
+            //set send day
+            msg.setSentDate(new Date());
+            //quy ddinhj emal nhan phan hoi(email khacs)
+            //--  msg.setReplyTo(InternetAddress.parse(from,false));
+            msg.setContent("<!DOCTYPE html>\n"
+                    + "<html lang=\"vi\">\n"
+                    + "<head>\n"
+                    + "    <meta charset=\"UTF-8\">\n"
+                    + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                    + "    <title>Xác Minh Mã</title>\n"
+                    + "    <style>\n"
+                    + "        body {\n"
+                    + "            margin: 0;\n"
+                    + "            height: 100vh;\n"
+                    + "            display: flex;\n"
+                    + "            justify-content: center;\n"
+                    + "            align-items: center;\n"
+                    + "            background-color: #800080; /* Màu tím */\n"
+                    + "            color: white;\n"
+                    + "            font-family: Arial, sans-serif;\n"
+                    + "            transition: background-color 0.5s;\n"
+                    + "        }\n"
+                    + "        .code-container {\n"
+                    + "            padding: 20px;\n"
+                    + "            border-radius: 8px;\n"
+                    + "            background: rgba(255, 255, 255, 0.1);\n"
+                    + "            text-align: center;\n"
+                    + "            opacity: 0;\n"
+                    + "            animation: fadeIn 2s forwards;\n"
+                    + "        }\n"
+                    + "        @keyframes fadeIn {\n"
+                    + "            from {\n"
+                    + "                opacity: 0;\n"
+                    + "            }\n"
+                    + "            to {\n"
+                    + "                opacity: 1;\n"
+                    + "            }\n"
+                    + "        }\n"
+                    + "    </style>\n"
+                    + "</head>\n"
+                    + "<body>\n"
+                    + "    <div class=\"code-container\">\n"
+                    + "        <h1>Your verification code:</h1>\n"
+                    + "        <h2>" + user.getVerificationCode() + "</h2>\n"
+                    + "    </div>\n"
+                    + "    \n"
+                    + "    <script>\n"
+                    + "        // Thêm JavaScript nếu cần thiết\n"
+                    + "    </script>\n"
+                    + "</body>\n"
+                    + "</html>", "text/html");
+            Transport.send(msg);
+            test = true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return test;
+    }

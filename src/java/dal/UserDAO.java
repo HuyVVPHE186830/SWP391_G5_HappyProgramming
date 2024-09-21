@@ -47,7 +47,7 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
         List<User> list = dao.getAll();
@@ -55,7 +55,7 @@ public class UserDAO extends DBContext {
             System.out.println(l);
         }
     }
-    
+
     public boolean checkPassword(int id, String pass) {
         boolean f = false;
         try {
@@ -71,11 +71,11 @@ public class UserDAO extends DBContext {
         }
         return f;
     }
-    
+
     public boolean changePass(User u) {
         boolean f = false;
         try {
-            String sql = "update [User] set password = ? where id = ?";
+            String sql = "update [User] set [password] = ? where id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, u.getPassword());
             ps.setInt(2, u.getId());
@@ -89,7 +89,7 @@ public class UserDAO extends DBContext {
         }
         return f;
     }
-    
+
     public User getUserById(int id) {
         User u = null;
         try {
@@ -118,5 +118,24 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return u;
+    }
+
+    public boolean resetPassWord(String veriCode, String newPass) {
+        boolean f = false;
+        try {
+            String sql = "update [User] set password = ? where [verification_code] = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newPass);
+            ps.setString(2, veriCode);
+
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
+
     }
 }

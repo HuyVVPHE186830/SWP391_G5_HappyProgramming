@@ -12,6 +12,14 @@
         <servlet-name>changePass</servlet-name>
         <servlet-class>controller.changePass</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>resetPass</servlet-name>
+        <servlet-class>controller.resetPass</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>verifyServlet</servlet-name>
+        <servlet-class>controller.verifiServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -23,5 +31,13 @@
     <servlet-mapping>
         <servlet-name>changePass</servlet-name>
         <url-pattern>/changePass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>resetPass</servlet-name>
+        <url-pattern>/resetPass</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>verifyServlet</servlet-name>
+        <url-pattern>/verify</url-pattern>
     </servlet-mapping>
 </web-app>
