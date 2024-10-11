@@ -31,15 +31,11 @@
                 <h2>${cD.courseName}</h2>
                 <h3>Description:</h3>
                 <p>${cD.courseDescription}</p>
-                <c:forEach items="${sessionScope.participate}" var="p">
-                    <c:if test="${  cD.courseId == p.courseId}">
-                        <c:forEach items="${sessionScope.mentor}" var="m">
-                            <c:if test="${p.username == m.username}">
-                                <c:set var="count" value="${count + 1}"/>
-                            </c:if>
-                        </c:forEach>
-                    </c:if>
-                </c:forEach>
+                <c:if test="${not empty sessionScope.mentorThisCourse}">
+                    <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
+                        <c:set var="count" value="${count + 1}"/>
+                    </c:forEach>
+                </c:if>
                 <h3>Number of Mentor</h3>
                 <h4 class="stat-number">${count}</h4>
                 <a href="viewCourseMentor?courseId=${cD.courseId}" class="button-enroll">Check Out</a>

@@ -16,6 +16,6 @@ public class Iconstant {
 
     public static final String SESSION_PRODUCT = "listProducts";
 
-    public static final String GOOGLE_REDIRECT_RESET = "http://localhost:8080/HappyProgramming/verify";
+    public static final String GOOGLE_REDIRECT_RESET = "http://localhost:9999/HappyProgramming/verify";
 
 }

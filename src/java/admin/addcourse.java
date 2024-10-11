@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.List;
 import model.Course;
 
 public class addcourse extends HttpServlet {
@@ -63,7 +64,9 @@ public class addcourse extends HttpServlet {
                     session.setAttribute("failedMsg", "Something wrong on server...");
                 }
             }
-            response.sendRedirect("addcourse.jsp");
+            List<Course> list = dao.getAllCoursesForAdmin();
+            session.setAttribute("listCourses", list);
+            request.getRequestDispatcher("dashboard/mngcourse.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
