@@ -414,7 +414,7 @@ public class UserDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username); // Set the username parameter
             ResultSet rs = st.executeQuery();
-        //co ket qua thi return true (da deactivate)
+            //co ket qua thi return true (da deactivate)
             if (rs.next()) {
                 return true;
             }
