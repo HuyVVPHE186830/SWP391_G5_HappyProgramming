@@ -268,27 +268,27 @@
                     });
                 }
             });
-
-            function validateNoSpacesOnly() {
-                const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
-                let valid = true;
-
-                inputs.forEach(input => {
-                    const trimmedValue = input.value.trim();
-                    if (trimmedValue === "") {
-                        valid = false;
-                        input.value = "";
-                    } else {
-                        input.value = trimmedValue;
-                    }
-                });
-
-                if (!valid) {
-                    alert("Fields cannot be empty or contain only spaces.");
-                }
-
-                return valid;
-            }
+//
+//            function validateNoSpacesOnly() {
+//                const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+//                let valid = true;
+//
+//                inputs.forEach(input => {
+//                    const trimmedValue = input.value.trim();
+//                    if (trimmedValue === "") {
+//                        valid = false;
+//                        input.value = "";
+//                    } else {
+//                        input.value = trimmedValue;
+//                    }
+//                });
+//
+//                if (!valid) {
+//                    alert("Fields cannot be empty or contain only spaces.");
+//                }
+//
+//                return valid;
+//            }
 
             function validateFileSize() {
                 const fileInput = document.getElementById("cvContainer");
