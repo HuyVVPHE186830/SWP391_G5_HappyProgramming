@@ -11,6 +11,7 @@
 <%@ page import="java.sql.Timestamp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
@@ -49,6 +50,11 @@
                 margin-bottom: 10px;
             }
 
+            .modal-body {
+                max-height: 70vh; /* Đặt chiều cao tối đa cho modal */
+                overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung quá dài */
+            }
+
             .post {
                 padding: 15px;
                 background-color: #f1f1f1;
@@ -56,16 +62,19 @@
                 margin-bottom: 15px;
             }
 
-            .close-btn {
-                border: none;
-                background: none;
-                font-size: 1.5rem;
-                color: #000;
+            .dropdown {
+                position: relative;
+                display: inline-block;
+                float: left;
+                margin-top: 5px;
             }
 
-            .close-btn:hover {
-                color: #dc3545; /* Màu khi hover */
+            .btn btn-link {
+                padding: 0;
+                border: none;
+                background: transparent;
             }
+
         </style>
     </head>
     <body>
@@ -87,7 +96,6 @@
                 document.getElementById('addType').addEventListener('change', function () {
                     var selectedType = this.value;
                     var deadlineContainer = document.getElementById('deadlineContainer');
-
                     // Kiểm tra nếu loại bài viết là "exercise" hoặc "test"
                     if (selectedType === 'exercise' || selectedType === 'test') {
                         deadlineContainer.style.display = 'block'; // Hiện trường deadline
@@ -96,6 +104,12 @@
                     }
                 });
             });
+            function handlePostClick(title, content, createdAt, type, deadline, createdBy) {
+                console.log("Post clicked");
+                showPostDetails(title, content, createdAt, type, deadline, createdBy);
+            }
+
+
         </script>
         <jsp:include page="header.jsp"/>
         <div class="container mt-5">
@@ -108,7 +122,48 @@
                 <div class="col-md-8">
                     <c:if test="${not empty sessionScope.posts}">
                         <c:forEach var="post" items="${sessionScope.posts}">
-                            <div class="post">
+                            <input type="hidden" name="postId_${post.postId}" value="${post.postId}">
+                            <div class="post" data-bs-toggle="modal" data-bs-target="#postDetailModal"
+                                 data-title="${fn:escapeXml(post.postTitle)}"
+                                 data-content="${fn:escapeXml(post.postContent)}"
+                                 data-created-at="${fn:escapeXml(post.createdAt)}"
+                                 data-type="${fn:escapeXml(post.postType)}"
+                                 data-deadline="${fn:escapeXml(post.deadline)}"
+                                 data-created-by="${fn:escapeXml(post.createdBy)}"
+                                 data-post-id="${post.postId}"
+                                 onclick="showPostDetails(this, '${post.postId}')"> 
+                                <script>
+                                    function showPostDetails(postElement, id) {
+                                        // Lấy giá trị từ các thuộc tính data- của phần tử được nhấn
+                                        const title = postElement.getAttribute('data-title');
+                                        const content = postElement.getAttribute('data-content');
+                                        const createdAt = postElement.getAttribute('data-created-at');
+                                        const type = postElement.getAttribute('data-type');
+                                        const deadline = postElement.getAttribute('data-deadline');
+                                        const createdBy = postElement.getAttribute('data-created-by');
+                                        const postId = postElement.getAttribute('data-post-id').value;  // Lấy postId từ thuộc tính data-post-id
+
+                                        // Cập nhật thông tin hiển thị
+                                        document.getElementById('postDetailTitle').innerText = title;
+                                        document.getElementById('postDetailContent').innerText = content;
+                                        document.getElementById('postDetailCreatedAt').innerText = createdAt ? new Date(createdAt).toLocaleDateString('en-GB') : 'N/A';
+                                        document.getElementById('postDetailType').innerText = type;
+                                        document.getElementById('postDetailDeadline').innerText = deadline ? new Date(deadline).toLocaleString('en-GB', {dateStyle: 'short', timeStyle: 'short'}) : 'N/A';
+                                        document.getElementById('postDetailCreatedBy').innerText = createdBy;
+
+                                        const deleteButton = document.querySelector('.dropdown-menu .btn-danger');
+                                        let link = "deleteMentorPost?postId=" + id + "&courseId=${course.courseId}";
+                                        deleteButton.onclick = function (event) {
+                                            event.preventDefault();
+                                            if (confirm("Do you want to delete this post?")) {
+                                                deleteButton.href = link;
+                                                window.location.href = deleteButton.href;
+                                            }
+                                        };
+
+
+                                    }
+                                </script>
                                 <div class="d-flex justify-content-between">
                                     <div><strong>${post.postTitle}</strong></div>
                                     <c:choose>
@@ -120,10 +175,19 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                <p>${post.postContent}</p>
+                                <c:set var="maxLength" value="100" />
+                                <c:choose>
+                                    <c:when test="${fn:length(post.postContent) > maxLength}">
+                                        <p>${fn:substring(post.postContent, 0, maxLength)}...</p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p>${post.postContent}</p>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </c:forEach>
                     </c:if>
+
                     <c:if test="${empty sessionScope.posts}">
                         <p>No posts available.</p>
                     </c:if>
@@ -151,9 +215,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
-                        <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fas fa-times"></i>
-                        </button>
                     </div>
                     <div class="modal-body">
                         <form id="mentorPostForm" action="addMentorPost" method="POST">
@@ -183,6 +244,32 @@
                                 <button type="submit" class="btn btn-primary">Create</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="postDetailModal" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <strong><h3 class="modal-title" id="postDetailTitle"></h3></strong>
+                        <div class="dropdown">
+                            <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#" onclick="editPost()">Edit</a></li>
+                                <a href="#" class="btn btn-danger" confirm="Do you want to delete this post?">Delete</a>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <p id="postDetailContent"></p>
+                        <p><strong>Created At:</strong> <span id="postDetailCreatedAt"></span></p>
+                        <p><strong>Type:</strong> <span id="postDetailType"></span></p>
+                        <p><strong>Deadline:</strong> <span id="postDetailDeadline"></span></p>
+                        <p><strong>Created By:</strong> <span id="postDetailCreatedBy"></span></p>
                     </div>
                 </div>
             </div>

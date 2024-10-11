@@ -96,6 +96,10 @@
         <servlet-name>viewMentorPost</servlet-name>
         <servlet-class>controller.viewMentorPost</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>deleteMentorPost</servlet-name>
+        <servlet-class>controller.deleteMentorPost</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -191,5 +195,9 @@
     <servlet-mapping>
         <servlet-name>viewMentorPost</servlet-name>
         <url-pattern>/viewMentorPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteMentorPost</servlet-name>
+        <url-pattern>/deleteMentorPost</url-pattern>
     </servlet-mapping>
 </web-app>

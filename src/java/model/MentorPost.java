@@ -11,6 +11,7 @@ package model;
 import java.sql.Timestamp;
 
 public class MentorPost {
+    private int postId;
     private String postTitle;
     private String postContent;
     private String postType;
@@ -35,7 +36,8 @@ public class MentorPost {
         this.createdAt = new Timestamp(System.currentTimeMillis()); // Gán thời gian hiện tại cho createdAt
     }
 
-    public MentorPost(String postTitle, String postContent, String postType, Timestamp deadline, int courseId, String createdBy, Timestamp createdAt) {
+    public MentorPost(int postId, String postTitle, String postContent, String postType, Timestamp deadline, int courseId, String createdBy, Timestamp createdAt) {
+        this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.postType = postType;
@@ -44,7 +46,16 @@ public class MentorPost {
         this.createdBy = createdBy;
         this.createdAt = createdAt;
     }
-    
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+
     
     // Getter và Setter
     public String getPostTitle() {
@@ -105,7 +116,9 @@ public class MentorPost {
 
     @Override
     public String toString() {
-        return "MentorPost{" + "postTitle=" + postTitle + ", postContent=" + postContent + ", postType=" + postType + ", deadline=" + deadline + ", courseId=" + courseId + ", createdBy=" + createdBy + ", createdAt=" + createdAt + '}';
+        return "MentorPost{" + "postId=" + postId + ", postTitle=" + postTitle + ", postContent=" + postContent + ", postType=" + postType + ", deadline=" + deadline + ", courseId=" + courseId + ", createdBy=" + createdBy + ", createdAt=" + createdAt + '}';
     }
+
+    
     
 }

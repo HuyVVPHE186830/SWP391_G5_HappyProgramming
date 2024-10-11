@@ -29,6 +29,7 @@ public class MentorPostDAO extends DBContext {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 // Lấy các trường bạn cần từ kết quả truy vấn
+                int id = rs.getInt("postId");
                 String postTitle = rs.getString("postTitle");
                 String postContent = rs.getString("postContent");
                 String postType = rs.getString("postType");
@@ -36,7 +37,7 @@ public class MentorPostDAO extends DBContext {
                 Timestamp createdAt = rs.getTimestamp("createdAt");
 
                 // Tạo đối tượng MentorPost từ dữ liệu trong cơ sở dữ liệu
-                MentorPost mentorPost = new MentorPost(postTitle, postContent, postType, deadline, courseId, createdBy, createdAt); // Điều chỉnh constructor nếu cần
+                MentorPost mentorPost = new MentorPost(id, postTitle, postContent, postType, deadline, courseId, createdBy, createdAt); // Điều chỉnh constructor nếu cần
                 list.add(mentorPost); // Thêm bài viết vào danh sách
             }
         } catch (SQLException ex) {
@@ -61,7 +62,18 @@ public class MentorPostDAO extends DBContext {
             System.out.println(ex);
         }
     }
-    
+
+    public void deletePost(int postId) {
+        String sql = "DELETE FROM MentorPosts WHERE postId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, postId); // Đặt ID của bài viết vào câu lệnh SQL
+            st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex); // In ra lỗi nếu có
+        }
+    }
+
     public static void main(String[] args) {
         MentorPostDAO dao = new MentorPostDAO();
         List<MentorPost> posts = dao.getAllPost(1, "huyenmentor");
