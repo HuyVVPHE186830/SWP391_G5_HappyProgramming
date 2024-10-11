@@ -176,54 +176,51 @@ public class CourseDAO extends DBContext {
         return list;
     }
 
-   public List<Course> getOtherCourseHasOtherCategory(List<Integer> categoryIds) {
-    List<Course> list = new ArrayList<>();
-    // Dynamically generate placeholders for the categoryIds
-    String placeholders = categoryIds.stream().map(id -> "?").collect(Collectors.joining(","));
+    public List<Course> getOtherCourseHasOtherCategory(List<Integer> categoryIds) {
+        List<Course> list = new ArrayList<>();
+        // Dynamically generate placeholders for the categoryIds
+        String placeholders = categoryIds.stream().map(id -> "?").collect(Collectors.joining(","));
 
-    String sql = "SELECT Course.courseId, Course.courseName, CAST(Course.courseDescription AS CHAR) AS courseDescription, Course.createdAt "
-               + "FROM Course "
-               + "JOIN Course_Category ON Course.courseId = Course_Category.courseId "
-               + "JOIN Category ON Category.categoryId = Course_Category.categoryId "
-               + "GROUP BY Course.courseId, Course.courseName, CAST(Course.courseDescription AS CHAR), Course.createdAt "
-               + "HAVING SUM(CASE WHEN Category.categoryId IN (" + placeholders + ") THEN 1 ELSE 0 END) = 0";
+        String sql = "SELECT Course.courseId, Course.courseName, CAST(Course.courseDescription AS CHAR) AS courseDescription, Course.createdAt "
+                + "FROM Course "
+                + "JOIN Course_Category ON Course.courseId = Course_Category.courseId "
+                + "JOIN Category ON Category.categoryId = Course_Category.categoryId "
+                + "GROUP BY Course.courseId, Course.courseName, CAST(Course.courseDescription AS CHAR), Course.createdAt "
+                + "HAVING SUM(CASE WHEN Category.categoryId IN (" + placeholders + ") THEN 1 ELSE 0 END) = 0";
 
-    try {
-        PreparedStatement st = connection.prepareStatement(sql);
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
 
-        // Set the category IDs in the prepared statement
-        for (int i = 0; i < categoryIds.size(); i++) {
-            st.setInt(i + 1, categoryIds.get(i));
+            // Set the category IDs in the prepared statement
+            for (int i = 0; i < categoryIds.size(); i++) {
+                st.setInt(i + 1, categoryIds.get(i));
+            }
+
+            ResultSet rs = st.executeQuery();
+
+            // Process the result set
+            while (rs.next()) {
+                int id = rs.getInt("courseId");
+                String name = rs.getString("courseName");
+                String des = rs.getString("courseDescription");
+                Date date = rs.getDate("createdAt");
+                Course e = new Course(id, name, des, date);
+
+                list.add(e);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();  // Log the exception to make debugging easier
         }
 
-        ResultSet rs = st.executeQuery();
-
-        // Process the result set
-        while (rs.next()) {
-            int id = rs.getInt("courseId");
-            String name = rs.getString("courseName");
-            String des = rs.getString("courseDescription");
-            Date date = rs.getDate("createdAt");
-            Course e = new Course(id, name, des, date);
-
-            list.add(e);
-        }
-    } catch (SQLException ex) {
-        ex.printStackTrace();  // Log the exception to make debugging easier
+        return list;
     }
 
-    return list;
-}
-
-public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
-    // You can implement this method similarly, or it could call the previous method.
-    // Assuming you want to handle a single categoryId, here's a simple version:
-    List<Course> list = new ArrayList<>();
-    return list; // Adjust implementation as needed based on your requirements
-}
-
-
-  
+    public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
+        // You can implement this method similarly, or it could call the previous method.
+        // Assuming you want to handle a single categoryId, here's a simple version:
+        List<Course> list = new ArrayList<>();
+        return list; // Adjust implementation as needed based on your requirements
+    }
 
     public List<Course_Category> getAllCategories_Course() {
         List<Course_Category> list = new ArrayList<>();
@@ -608,7 +605,7 @@ public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
         return list;
     }
 
-    private int getNumOfMentee(int id) {
+    public int getNumOfMentee(int id) {
 
         String sql = "SELECT COUNT(*)\n"
                 + "			FROM Course c\n"
@@ -634,9 +631,6 @@ public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
 
     }
 
-   
-     
-
     public List<Course> getAllCourse2(int page) {
         List<Course> list = new ArrayList<>();
         String sql = "SELECT * FROM [Course] "
@@ -654,7 +648,7 @@ public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
                 Date date = rs.getDate("createdAt");
                 List<Category> listC = getCategoriesForCourse(id);
                 int countMentee = getNumOfMentee(id);
-                Course e = new Course(id, name, des, date,countMentee, listC);
+                Course e = new Course(id, name, des, date, countMentee, listC);
                 list.add(e);
             }
         } catch (SQLException ex) {
@@ -1151,4 +1145,71 @@ public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
     }
     //End My Courses
 
+    public List<Course> getAllCoursesForAdmin() {
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM Course";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseId");
+                String courseName = rs.getString("courseName");
+                String courseDescription = rs.getString("courseDescription");
+                Date createdAt = rs.getDate("createdAt");
+                List<Category> categories = getCategoriesByCourseId(rs.getInt("courseId"));
+                int countMentee = getNumOfMentee(courseId);
+                int countMentor = getNumOfMentor(courseId);
+                courses.add(new Course(courseId, courseName, courseDescription, createdAt, countMentee, countMentor, categories));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
+
+    public int getNumOfMentor(int id) {
+        String sql = "SELECT COUNT(*) "
+                + "FROM Course c "
+                + "JOIN Participate p ON c.courseId = p.courseId "
+                + "JOIN [User] u ON p.username = u.username "
+                + "JOIN Status s ON p.statusId = s.statusId "
+                + "WHERE p.participateRole = 2 AND p.statusId = 1 AND c.courseId = ? "
+                + "GROUP BY c.courseId, c.courseName, "
+                + "CAST(c.courseDescription AS NVARCHAR(MAX)), c.createdAt";
+        int totalMentor = 0;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                totalMentor = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }
+        return totalMentor;
+    }
+    
+    public List<Course> getAllSearchCoursesForAdmin(String key) {
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM Course where courseName like ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + key + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseId");
+                String courseName = rs.getString("courseName");
+                String courseDescription = rs.getString("courseDescription");
+                Date createdAt = rs.getDate("createdAt");
+                List<Category> categories = getCategoriesByCourseId(rs.getInt("courseId"));
+                int countMentee = getNumOfMentee(courseId);
+                int countMentor = getNumOfMentor(courseId);
+                courses.add(new Course(courseId, courseName, courseDescription, createdAt, countMentee, countMentor, categories));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
 }

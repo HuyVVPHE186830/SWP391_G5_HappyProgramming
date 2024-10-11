@@ -15,9 +15,9 @@
                 <i style="margin-right: 10px; font-size: 18px" class="fas fa-user-circle fa-fw me-3"></i>
                 <span style="font-size: 16px; font-weight: 600">Accounts</span>
             </a>
-                <a href="<%= request.getContextPath() %>/addcourse.jsp" class="list-group-item list-group-item-action" style="margin-top: 10px">
-                <i style="margin-right: 10px; font-size: 18px" class="fa-solid fa-circle-plus"></i>
-                <span style="font-size: 16px; font-weight: 600">Add course</span>
+                <a href="<%= request.getContextPath() %>/ManagerCourse" class="list-group-item list-group-item-action" style="margin-top: 10px">
+                <i style="margin-right: 10px; font-size: 18px" class="fa-solid fa-laptop-code"></i>
+                <span style="font-size: 16px; font-weight: 600">Courses</span>
             </a>
         </div>
     </div>
