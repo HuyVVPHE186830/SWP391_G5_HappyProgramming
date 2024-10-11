@@ -1212,4 +1212,29 @@ public class CourseDAO extends DBContext {
         }
         return courses;
     }
+    
+    public int getTotalParticipants(int courseId) {
+        int totalParticipants = 0;
+        String sql = "SELECT COUNT(*) AS TotalParticipants "
+                   + "FROM [Participate] "
+                   + "WHERE participateRole = ? "
+                   + "AND statusId = ? "
+                   + "AND courseId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            // Set parameters
+            preparedStatement.setInt(1, 3);
+            preparedStatement.setInt(2, 1);
+            preparedStatement.setInt(3, courseId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    totalParticipants = resultSet.getInt("TotalParticipants");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalParticipants;
+    }
 }

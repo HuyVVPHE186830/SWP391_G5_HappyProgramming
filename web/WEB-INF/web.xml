@@ -84,6 +84,18 @@
         <servlet-name>viewMentor</servlet-name>
         <servlet-class>controller.viewMentor</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>manageCourse</servlet-name>
+        <servlet-class>controller.manageCourse</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addMentorPost</servlet-name>
+        <servlet-class>controller.addMentorPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewMentorPost</servlet-name>
+        <servlet-class>controller.viewMentorPost</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -167,5 +179,17 @@
     <servlet-mapping>
         <servlet-name>viewMentor</servlet-name>
         <url-pattern>/viewMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageCourse</servlet-name>
+        <url-pattern>/manageCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addMentorPost</servlet-name>
+        <url-pattern>/addMentorPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewMentorPost</servlet-name>
+        <url-pattern>/viewMentorPost</url-pattern>
     </servlet-mapping>
 </web-app>

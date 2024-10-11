@@ -244,7 +244,7 @@ public class UserDAO extends DBContext {
     }
 
     public void registerUser(User user) {
-        String sql = "INSERT INTO [User] (username, [password], firstName, lastName, dob, mail, createdDate, avatarPath, CVPath, activeStatus,isVerified, roleId) "
+        String sql = "INSERT INTO [User] (username, password, firstName, lastName, dob, mail, createdDate, avatarPath, CVPath, activeStatus,isVerified, roleId) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -562,6 +562,9 @@ public class UserDAO extends DBContext {
         UserDAO dao = new UserDAO();
         String s = dao.newPassWord2("admin");
         System.out.println(s);
+        Date dob = new Date();
+        User u = new User("huy", "1", "huy", "võ", dob, null, dob, null, null, true, true, 2);
+        dao.registerUser(u);
     }
 
 //    public static void main(String[] args) {
