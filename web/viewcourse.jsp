@@ -42,9 +42,7 @@
                 </c:forEach>
                 <h3>Number of Mentor</h3>
                 <h4 class="stat-number">${count}</h4>
-                <form action="#">
-                    <button class="button-enroll">Enroll</button>
-                </form>
+                <a href="viewCourseMentor?courseId=${cD.courseId}" class="button-enroll">Check Out</a>
             </c:if>
         </div>
 

@@ -76,6 +76,14 @@
         <servlet-name>verifyEmail</servlet-name>
         <servlet-class>controller.verifyEmail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>viewCourseMentor</servlet-name>
+        <servlet-class>controller.viewCourseMentor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewMentor</servlet-name>
+        <servlet-class>controller.viewMentor</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -151,5 +159,13 @@
     <servlet-mapping>
         <servlet-name>verifyEmail</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewCourseMentor</servlet-name>
+        <url-pattern>/viewCourseMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewMentor</servlet-name>
+        <url-pattern>/viewMentor</url-pattern>
     </servlet-mapping>
 </web-app>

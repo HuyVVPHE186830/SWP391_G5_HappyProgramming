@@ -32,12 +32,24 @@
                     <h1 style="margin-bottom: 20px; text-transform: capitalize">Explore our courses right away</h1>
                     <form action="allCourse" method="get" class="search-bar">
                         <input type="hidden" name="search" value="searchByName"/>
-                        <input type="text" class="input-submit" placeholder="Search a course" name="keyword">
-                        <input type="submit" class="button-submit" value="Search">
+                        <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                        <input type="submit" class="button-submit" id="submit-btn" disabled value="Search">
                     </form>
                 </div>
                 <img src="img/banner.jpg" alt="alt"/>
             </div>
+            <script>
+                function checkInput() {
+                    var keyword = document.getElementById('keyword').value.trim();
+                    var submitBtn = document.getElementById('submit-btn');
+
+                    if (keyword !== "") {
+                        submitBtn.disabled = false;
+                    } else {
+                        submitBtn.disabled = true;
+                    }
+                }
+            </script>
 
             <!-- CATEGORY -->
             <div style="background-color: #edf2fa">
@@ -110,7 +122,7 @@
                     <div class="mentor-cards">
                         <c:forEach items="${sessionScope.choosedMentor}" var="m" begin="0" end="3">
                             <div class="mentor-card">
-                                    <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
+                                <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
                                 <div class="mentor-body">
                                     <div class="mentor-text">
                                         <div style="color: black">${m.lastName} ${m.firstName}</div>
