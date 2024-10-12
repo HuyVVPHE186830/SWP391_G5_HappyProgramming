@@ -186,7 +186,7 @@
                     <c:if test="${not empty listCoursesMentoring}">
                         <c:forEach items="${listCoursesMentoring}" var="cou">
                             <div class="product-item">
-                                <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course">
+                                <a href="manageCourse?courseId=${cou.courseId}" class="mentor-course">
                                     <h3>${cou.courseName}</h3>
                                 </a>
                                 <p>Categories: 
