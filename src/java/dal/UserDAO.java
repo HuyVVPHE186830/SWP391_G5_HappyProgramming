@@ -134,7 +134,8 @@ public class UserDAO extends DBContext {
                 + "JOIN Participate ON Participate.username = [User].username "
                 + "JOIN Course ON Course.courseId = Participate.courseId "
                 + "WHERE [User].roleId = 2 AND Course.courseId = ? "
-                + "AND ([User].firstName LIKE ? OR [User].lastName LIKE ?) "
+                + "AND ([User].firstName COLLATE Latin1_General_CI_AI LIKE ? "
+                + "OR [User].lastName COLLATE Latin1_General_CI_AI LIKE ?) "
                 + "ORDER BY [User].id";
         try (PreparedStatement pre = connection.prepareStatement(sql)) {
             pre.setInt(1, courseId);
@@ -665,7 +666,7 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
-        List<User> user = dao.getAllMentorBySearchKey(1, "mai");
+        List<User> user = dao.getAllMentorBySearchKey(1, "ata");
         for (User l : user) {
             System.out.println(l);
         }

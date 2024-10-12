@@ -19,8 +19,9 @@
             }
 
             #orderbyForm {
-                margin-bottom: 15px;
+                margin-bottom: 20px;
                 margin-left: 30px;
+                margin-top: 30px;
             }
 
             #orderby {
@@ -101,10 +102,12 @@
 
         <!-- MENTOR LIST -->
         <div  class="description">
+            <c:set var="cM" value="${sessionScope.courseOfMentor}"/>
+            <h6><a href="home" class="link">Home</a> <span>></span> <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> List Mentors of ${cM.courseName}</h6>
+
+
+
             <c:if test="${not empty sessionScope.mentorThisCourse}">
-                <c:set var="cM" value="${sessionScope.courseOfMentor}"/>
-                <h6><a href="home" class="link">Home</a> <span>></span> <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> List Mentors of ${cM.courseName}</h6>
-                <h2 class="list-mentor">Mentor Of This Course</h2>
 
                 <!-- SORT -->
                 <form id="orderbyForm" action="viewCourseMentor">
@@ -140,6 +143,7 @@
                         document.getElementById('orderbyForm').submit();
                     });
                 </script>
+                <h2 class="list-mentor">Mentor Of This Course</h2>
 
                 <!-- CONTENT MENTOR -->
                 <div class="mentor-cards row">
@@ -154,7 +158,54 @@
                         </a>
                     </c:forEach>
                 </div>
+
+
             </c:if>
+
+            <c:if test="${not empty sessionScope.keyword}">
+                <c:if test="${empty sessionScope.mentorThisCourse}">
+                    <!-- SORT -->
+                    <form id="orderbyForm" action="viewCourseMentor">
+                        <select id="orderby" name="orderby">                                
+                            <option value="default" ${sessionScope.order == "default" ? 'selected' : ''}>Default</option>
+                            <option value="name" ${sessionScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
+                        </select>
+                        <input type="hidden" name="courseId" value="${cM.courseId}">
+                    </form>
+
+                    <!-- SEARCH -->
+                    <form action="viewCourseMentor" method="post" class="search-bar">
+                        <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                        <input type="hidden" name="courseId" value="${cM.courseId}">
+                        <input type="submit" class="button-submit" id="submit-btn" disabled value="Search">
+                    </form>
+
+                    <script>
+                        function checkInput() {
+                            var keyword = document.getElementById('keyword').value.trim();
+                            var submitBtn = document.getElementById('submit-btn');
+
+                            if (keyword !== "") {
+                                submitBtn.disabled = false;
+                            } else {
+                                submitBtn.disabled = true;
+                            }
+                        }
+                    </script>
+
+                    <script>
+                        document.getElementById('orderby').addEventListener('change', function () {
+                            document.getElementById('orderbyForm').submit();
+                        });
+                    </script>
+                    <h2 class="list-mentor">There are no mentors with a name like "${sessionScope.keyword}".</h2>
+                </c:if>
+            </c:if>
+
+            <c:if test="${empty sessionScope.mentorThisCourse && empty sessionScope.keyword}">
+                <h2 class="list-mentor">This Course Does Not Have Any Mentor Yet</h2>
+            </c:if>
+
 
             <!-- OTHER COURSES -->
             <c:if test="${not empty sessionScope.otherCourseExO}">

@@ -122,7 +122,7 @@
         </c:if>
 
         <!-- MENTOR LIST -->
-        <h2 class="list-mentor">Some Best Mentors Of This Course</h2>
+        <h2 class="list-mentor">Some Of Our Best Mentors For This Course</h2>
         <div class="mentor-cards">
             <c:if test="${not empty sessionScope.mentorThisCourse}">
                 <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
