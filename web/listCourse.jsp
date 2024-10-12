@@ -323,7 +323,8 @@
                                 <p>Created at: ${cou.createdAt}</p>
                                 <h6 class = "lv3Text">Mentee in this coursr:${cou.countMentee} </h6>
 
-                                <button>Enroll</button>
+                                <button>                                                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course" style="color: white; text-decoration: none;">
+                                        View</button>
                             </div>
                         </div>
                     </c:forEach>
@@ -351,7 +352,8 @@
                             <p class="short-description">${cou.courseDescription}</p>
                             <h6>Created at: ${cou.createdAt}</h6>
                             <h6 class = "lv3Text">Mentee in this coursr:${cou.countMentee} </h6>
-                            <button>Enroll</button>
+                            <button>                                                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course" style="color: white; text-decoration: none;">
+View</button>
                         </div>
                     </div>
                 </c:forEach>

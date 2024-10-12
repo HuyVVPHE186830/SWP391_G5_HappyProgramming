@@ -20,6 +20,36 @@ import model.User;
  */
 public class UserDAO extends DBContext {
 
+    public User getUserByUsernameM(String username) {
+        String sql = "SELECT * FROM [User] WHERE username=?";
+        try (PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setString(1, username);
+            ResultSet rs = pre.executeQuery();
+
+            if (rs.next()) { // Chỉ cần kiểm tra nếu có kết quả
+                int id = rs.getInt("id");
+                String usernamE = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
+
+                return new User(id, usernamE, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null; 
+    }
+
     public List<User> getAll() {
         List<User> list = new ArrayList<>();
         String sql = "SELECT * FROM [User]";
@@ -414,7 +444,7 @@ public class UserDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username); // Set the username parameter
             ResultSet rs = st.executeQuery();
-        //co ket qua thi return true (da deactivate)
+            //co ket qua thi return true (da deactivate)
             if (rs.next()) {
                 return true;
             }
@@ -560,8 +590,13 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
-        String s = dao.newPassWord2("admin");
-        System.out.println(s);
+        User user = dao.getUserByUsernameM("anmentor");
+        
+        if(user != null){
+            System.out.println(user);
+        }else{
+            System.out.println("Not found");
+        }
     }
 
 //    public static void main(String[] args) {

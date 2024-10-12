@@ -16,6 +16,21 @@
         <title>viewcourse</title>
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
         <link href="CSS/viewcourse.css" rel="stylesheet">
+        <style>
+            .chat-button {
+                display: inline-block;
+                padding: 10px 15px;
+                background-color: #007bff; /* Bootstrap primary color */
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 10px; /* Space between name and button */
+            }
+
+            .chat-button:hover {
+                background-color: #0056b3; /* Darker shade on hover */
+            }
+        </style>
     </head>
     <body>
 
@@ -32,7 +47,7 @@
                 <h3>Description:</h3>
                 <p>${cD.courseDescription}</p>
                 <c:forEach items="${sessionScope.participate}" var="p">
-                    <c:if test="${  cD.courseId == p.courseId}">
+                    <c:if test="${cD.courseId == p.courseId}">
                         <c:forEach items="${sessionScope.mentor}" var="m">
                             <c:if test="${p.username == m.username}">
                                 <c:set var="count" value="${count + 1}"/>
@@ -105,7 +120,6 @@
                 </div>
             </div>
 
-
             <script>
                 let categoriesShown = 4;
 
@@ -137,6 +151,7 @@
                         <div class="mentor-body">
                             <div class="mentor-text">
                                 <div style="color: black">${m.lastName} ${m.firstName}</div>
+                                <a href="sendMessage?username=${m.username}" class="chat-button">Chat</a>
                             </div>
                         </div>
                     </div>

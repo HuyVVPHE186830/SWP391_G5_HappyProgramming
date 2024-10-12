@@ -146,7 +146,6 @@
                                                 break;
                                             case "username":
                                                 String username = request.getParameter("username");
-                                //                totalRecord = courseDAO.findTotalRecordByCategory(categoryId);
                                                 listCourse = courseDAO.findByUsername2(username);
                                                 pagecontrol.setUrlPattern(requestURL + "?search=username&username=" + username + "&");
                                                         break;
@@ -157,9 +156,9 @@
                                                 pagecontrol.setUrlPattern(requestURL + "?");
 
                                         }
-                                       int totalPage = (totalRecord % 6) == 0
-                                                ? (totalRecord / 6)
-                                                : (totalRecord / 6) + 1;
+                                       int totalPage = (totalRecord % 5) == 0
+                                                ? (totalRecord / 5)
+                                                : (totalRecord / 5) + 1;
 
                                         pagecontrol.setPage(page);
                                         pagecontrol.setTotalPage(totalPage);
