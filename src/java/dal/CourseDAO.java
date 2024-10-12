@@ -49,6 +49,49 @@ public class CourseDAO extends DBContext {
         return list;
     }
 
+    public List<Course> getAllCoursesExceptOne(int excludedCourseId) {
+        List<Course> list = new ArrayList<>();
+        String sql = "SELECT * FROM Course WHERE courseId != ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, excludedCourseId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("courseId");
+                String name = rs.getString("courseName");
+                String description = rs.getString("courseDescription");
+                Course c = new Course(id, name, description);
+                list.add(c);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
+    public List<Course> getAllCoursesOfMentorExceptOne(int excludedCourseId, String username) {
+        List<Course> list = new ArrayList<>();
+        String sql = "SELECT * FROM Course join Participate on Course.courseId = Participate.courseId\n"
+                + "join [User] on Participate.username = [User].username\n"
+                + "WHERE Course.courseId != ? and [User].username = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, excludedCourseId);
+            st.setString(2, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("courseId");
+                String name = rs.getString("courseName");
+                String description = rs.getString("courseDescription");
+                Course c = new Course(id, name, description);
+                list.add(c);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
     public int countCourse() {
         int count = 0;
         String sql = "SELECT COUNT(*) AS total FROM Course";
@@ -1185,11 +1228,11 @@ public class CourseDAO extends DBContext {
                 totalMentor = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
         return totalMentor;
     }
-    
+
     public List<Course> getAllSearchCoursesForAdmin(String key) {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM Course where courseName like ?";

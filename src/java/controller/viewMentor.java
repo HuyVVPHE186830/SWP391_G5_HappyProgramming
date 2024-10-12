@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import model.Course;
 import model.User;
 
@@ -73,7 +74,11 @@ public class viewMentor extends HttpServlet {
             int userId = Integer.parseInt(userId_str);
             Course course = daoC.getCourseByCourseId(courseId);
             User mentor = daoU.getUserById(userId);
+            List<User> othermentor = daoU.getAllMentorByCourseIdExceptOne(courseId, mentor.getUsername());
+            List<Course> othercourse = daoC.getAllCoursesOfMentorExceptOne(courseId, mentor.getUsername());
+            session.setAttribute("otherCourseMentor", othercourse);
             session.setAttribute("mentorDetail", mentor);
+            session.setAttribute("otherMentor", othermentor);
             session.setAttribute("courseOfMentor", course);
             response.sendRedirect("viewmentor.jsp");
         } catch (Exception e) {

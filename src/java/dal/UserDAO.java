@@ -99,7 +99,8 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "select [User].* from [User] join Participate on Participate.username = [User].username\n"
                 + "join Course on Course.courseId = Participate.courseId\n"
-                + "where [User].roleId = 2 and Course.courseId = ?";
+                + "where [User].roleId = 2 and course.courseId = ?\n"
+                + "order by [User].id";
         try (PreparedStatement pre = connection.prepareStatement(sql)) {
             pre.setInt(1, courseId);
             ResultSet rs = pre.executeQuery();
@@ -120,6 +121,110 @@ public class UserDAO extends DBContext {
                 String verificationCode = rs.getString("verification_code");
                 int roleId = rs.getInt("roleId");
                 list.add(new User(id, username, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<User> getAllMentorBySearchKey(int courseId, String searchKey) {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT [User].* FROM [User] "
+                + "JOIN Participate ON Participate.username = [User].username "
+                + "JOIN Course ON Course.courseId = Participate.courseId "
+                + "WHERE [User].roleId = 2 AND Course.courseId = ? "
+                + "AND ([User].firstName LIKE ? OR [User].lastName LIKE ?) "
+                + "ORDER BY [User].id";
+        try (PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setInt(1, courseId);
+            pre.setString(2, "%" + searchKey + "%");
+            pre.setString(3, "%" + searchKey + "%");
+            ResultSet rs = pre.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
+                list.add(new User(id, username, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<User> getAllMentorByCourseIdOrderByName(int courseId) {
+        List<User> list = new ArrayList<>();
+        String sql = "select [User].* from [User] join Participate on Participate.username = [User].username\n"
+                + "join Course on Course.courseId = Participate.courseId\n"
+                + "where [User].roleId = 2 and Course.courseId = ?\n"
+                + "ORDER BY [User].firstName";
+        try (PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setInt(1, courseId);
+            ResultSet rs = pre.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
+                list.add(new User(id, username, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<User> getAllMentorByCourseIdExceptOne(int courseId, String username) {
+        List<User> list = new ArrayList<>();
+        String sql = "select [User].* from [User] join Participate on Participate.username = [User].username\n"
+                + "join Course on Course.courseId = Participate.courseId\n"
+                + "where [User].roleId = 2 and Course.courseId = ?\n"
+                + "and [User].username <> ?";
+        try (PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setInt(1, courseId);
+            pre.setString(2, username); // Đặt giá trị của username vào câu truy vấn
+            ResultSet rs = pre.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String fetchedUsername = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
+                list.add(new User(id, fetchedUsername, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId));
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -560,8 +665,10 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
-        String s = dao.newPassWord2("admin");
-        System.out.println(s);
+        List<User> user = dao.getAllMentorBySearchKey(1, "mai");
+        for (User l : user) {
+            System.out.println(l);
+        }
     }
 
 //    public static void main(String[] args) {

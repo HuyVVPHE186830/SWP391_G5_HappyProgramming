@@ -1,7 +1,7 @@
 <%-- 
     Document   : viewmentor
     Created on : Oct 8, 2024, 9:43:29 PM
-    Author     : Admin
+    Author     : ThuanNV
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -58,15 +58,42 @@
                         <h3>Course: ${cM.courseName}</h3>
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
+                        <form action="#">
+                            <a href="#?courseId=${cM.courseId}" class="button-enroll">Enroll</a>
+                        </form>
                     </div>
                 </div>
-                <form action="#">
-                    <a href="#?courseId=${cM.courseId}" class="button-enroll">Enroll</a>
-                </form>
+            </c:if>
+
+            <!-- MORE DETAILS -->
+            <c:if test="${not empty sessionScope.otherCourseMentor}">
+                <h5 style="margin-left: 30px; font-style: italic; margin-top: 30px; font-weight: 400; border-left: 1px solid black; padding: 5px">Also This Mentor Has Other Courses Like 
+                    <c:forEach var="oC" items="${sessionScope.otherCourseMentor}" varStatus="status">
+                        <a href="viewcourse?courseId=${oC.courseId}" class="link">${oC.courseName}</a>
+                        <c:if test="${status.last}">.</c:if>
+                        <c:if test="${status.index == sessionScope.otherCourseMentor.size() - 2}"> and </c:if>
+                        <c:if test="${!status.last && status.index != sessionScope.otherCourseMentor.size() - 2}">, </c:if>
+                    </c:forEach>
+                </h5>
+            </c:if>
+
+            <!-- OTHER MENTOR OF THIS COURSE -->
+            <c:if test="${not empty sessionScope.otherMentor}">
+                <h2 class="list-mentor">Other Mentor Of This Course</h2>
+                <div class="mentor-cards">
+                    <c:forEach items="${sessionScope.otherMentor}" var="cM">
+                        <div class="mentor-card">
+                            <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${cM.avatarPath}">
+                            <div class="mentor-body">
+                                <div class="mentor-text">
+                                    <div style="color: black">${cM.lastName} ${cM.firstName}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
             </c:if>
         </div>
-
-        <!-- OTHER MENTOR OF THIS COURSE -->
 
         <!-- FOOTERS -->
         <jsp:include page="footer.jsp"/>

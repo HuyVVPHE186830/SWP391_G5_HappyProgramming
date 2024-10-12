@@ -1,7 +1,7 @@
 <%-- 
     Document   : viewCourseMentor
     Created on : Oct 8, 2024, 9:12:48 PM
-    Author     : Admin
+    Author     : ThuanNV
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -17,6 +17,81 @@
             .mentor-card:hover {
                 text-decoration: none;
             }
+
+            #orderbyForm {
+                margin-bottom: 15px;
+                margin-left: 30px;
+            }
+
+            #orderby {
+                width: 300px;
+                padding: 8px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                background-color: #fff;
+                margin-right: 10px;
+                display: inline-block;
+            }
+
+            #orderby:focus {
+                border-color: #007bff;
+                outline: none;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
+            #orderbyForm input[type="submit"] {
+                padding: 8px 16px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+
+            #orderbyForm input[type="submit"]:hover {
+                background-color: #0056b3;
+            }
+
+            #orderbyForm {
+                display: inline-block;
+                vertical-align: top;
+            }
+
+            .search-bar {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                max-width: 300px;
+                border-radius: 10px;
+                overflow: hidden;
+                margin-left: 30px;
+                margin-bottom: 20px;
+            }
+
+            .input-submit {
+                border: none;
+                padding: 10px;
+                flex: 1;
+                border-radius: 10px 0 0 10px;
+                font-size: 16px;
+                outline: none;
+            }
+
+            .button-submit {
+                background-color: #5e3fd3;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 0 10px 10px 0;
+                font-size: 16px;
+                transition: all 1s ease;
+                font-weight: bold;
+            }
+
+            .button-submit:hover {
+                background-color: #541371;
+            }
+
         </style>
     </head>
     <body>
@@ -32,12 +107,33 @@
                 <h2 class="list-mentor">Mentor Of This Course</h2>
 
                 <!-- SORT -->
-                <form id="orderbyForm" action="viewCourseMentor" method="post">
-                    <select id="orderby" name="orderby" class="form-control">                                
+                <form id="orderbyForm" action="viewCourseMentor">
+                    <select id="orderby" name="orderby">                                
                         <option value="default" ${sessionScope.order == "default" ? 'selected' : ''}>Default</option>
                         <option value="name" ${sessionScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
                     </select>
+                    <input type="hidden" name="courseId" value="${cM.courseId}">
                 </form>
+
+                <!-- SEARCH -->
+                <form action="viewCourseMentor" method="post" class="search-bar">
+                    <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                    <input type="hidden" name="courseId" value="${cM.courseId}">
+                    <input type="submit" class="button-submit" id="submit-btn" disabled value="Search">
+                </form>
+
+                <script>
+                    function checkInput() {
+                        var keyword = document.getElementById('keyword').value.trim();
+                        var submitBtn = document.getElementById('submit-btn');
+
+                        if (keyword !== "") {
+                            submitBtn.disabled = false;
+                        } else {
+                            submitBtn.disabled = true;
+                        }
+                    }
+                </script>
 
                 <script>
                     document.getElementById('orderby').addEventListener('change', function () {
@@ -45,11 +141,8 @@
                     });
                 </script>
 
-
-                <!-- RATING -->
-
                 <!-- CONTENT MENTOR -->
-                <div class="mentor-cards">
+                <div class="mentor-cards row">
                     <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
                         <a href="viewMentor?userId=${m.id}&courseId=${cM.courseId}" class="mentor-card">
                             <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
@@ -62,12 +155,21 @@
                     </c:forEach>
                 </div>
             </c:if>
-            <c:if test="${empty sessionScope.mentorThisCourse}">
-                <h4>This Course Does Not Have Mentor Yet!</h4>
+
+            <!-- OTHER COURSES -->
+            <c:if test="${not empty sessionScope.otherCourseExO}">
+                <h2 class="list-mentor">Other Courses You Can Explore</h2>
+                <div class="same-course-cards-wrapper">
+                    <div class="same-course-cards">
+                        <c:forEach items="${sessionScope.otherCourseExO}" var="oC">
+                            <a href="viewcourse?courseId=${oC.courseId}" class="same-course-card">
+                                <h3>${oC.courseName}</h3>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </div>
             </c:if>
         </div>
-
-        <!-- OTHER COURSES -->
 
         <!-- FOOTER -->
         <jsp:include page="footer.jsp"/>
