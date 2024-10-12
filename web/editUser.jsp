@@ -311,6 +311,50 @@
                 }
                 return true;
             }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const dobInput = document.querySelector('input[name="dob"]');
+
+                dobInput.addEventListener('focus', function () {
+                    this.type = 'date';
+                });
+
+                dobInput.addEventListener('blur', function () {
+                    if (!this.value) {
+                        this.type = 'text';
+                    }
+                });
+
+                const userProfileForm = document.getElementById('userProfileForm');
+                if (userProfileForm) {
+                    userProfileForm.addEventListener('submit', function (event) {
+                        if (!validateNoSpacesOnly() || !validateFileSize()) {
+                            event.preventDefault();
+                        }
+                    });
+                }
+            });
+
+            function validateNoSpacesOnly() {
+                const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+                let valid = true;
+
+                inputs.forEach(input => {
+                    const trimmedValue = input.value.trim();
+                    if (trimmedValue === "") {
+                        valid = false;
+                        input.value = "";
+                    } else {
+                        input.value = trimmedValue;
+                    }
+                });
+
+                if (!valid) {
+                    alert("Fields cannot be empty or contain only spaces.");
+                }
+
+                return valid;
+            }
         </script>
         <div class="profile-form">
             <div class="profile-container">
@@ -384,7 +428,7 @@
                         <% session.removeAttribute("note"); %>
                         <div class="button-container">
                             <button type="submit" class="button-save" id="saveButton"  onclick="saveChanges()">Save Changes</button>
-                            <button type="button" class="button-save" id="cancelButton"  style="background-color: red;" onclick="window.location.href='userProfile.jsp'">Cancel</button>
+                            <button type="button" class="button-save" id="cancelButton"  style="background-color: red;" onclick="window.location.href = 'userProfile.jsp'">Cancel</button>
                         </div>
                     </form>
                 </div>

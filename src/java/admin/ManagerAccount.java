@@ -32,9 +32,9 @@ public class ManagerAccount extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         UserDAO dao = new UserDAO();
         List<User> list = dao.getAll();
-
         HttpSession session = request.getSession();
         session.setAttribute("listUsers", list);
 
@@ -50,7 +50,7 @@ public class ManagerAccount extends HttpServlet {
 
         UserDAO dao = new UserDAO();
         List<User> list = dao.getUsersBySearchName(txt);
-        
+
         request.setAttribute("listUsers", list);
         request.setAttribute("searchValue", txt);
         response.setContentType("text/html;charset=UTF-8");

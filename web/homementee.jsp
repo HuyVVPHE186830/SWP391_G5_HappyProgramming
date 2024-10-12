@@ -1,7 +1,7 @@
 <%-- 
     Document   : homeuser.jsp
     Created on : Sep 18, 2024, 4:25:30 PM
-    Author     : Admin
+    Author     : ThuanNV
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -32,12 +32,24 @@
                     <!-- SEARCH BAR -->
                     <form action="allCourse" method="get" class="search-bar">
                         <input type="hidden" name="search" value="searchByName"/>
-                        <input type="text" class="input-submit" placeholder="Search a course" name="keyword">
-                        <input type="submit" class="button-submit" value="Search">
+                        <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                        <input type="submit" class="button-submit" id="submit-btn" disabled value="Search">
                     </form>
                 </div>
                 <img src="img/banner.jpg" alt="alt"/>
             </div>
+            <script>
+                function checkInput() {
+                    var keyword = document.getElementById('keyword').value.trim();
+                    var submitBtn = document.getElementById('submit-btn');
+
+                    if (keyword !== "") {
+                        submitBtn.disabled = false;
+                    } else {
+                        submitBtn.disabled = true;
+                    }
+                }
+            </script>
 
             <!-- CATEGORY -->
             <div style="background-color: #edf2fa">

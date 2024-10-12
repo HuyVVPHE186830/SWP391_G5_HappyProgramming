@@ -16,7 +16,8 @@ import model.User;
 import dal.UserDAO;
 import model.GoogleAccount;
 
-/**4
+/**
+ * 4
  *
  * @author Admin
  */
@@ -60,18 +61,30 @@ public class login extends HttpServlet {
         List<User> users = dao.getAll();
         User user = new User();
         boolean found = false;
+        boolean active = true;
         for (User u : users) {
             if (username.equals(u.getUsername()) && password.equals(u.getPassword())) {
+                if (u.isActiveStatus() == false) {
+                    active = false;
+                    break;
+                }
                 found = true;
                 session.setAttribute("user", u);
                 response.sendRedirect("home");
                 break;
             }
         }
-
+        
+        if (!active) {
+            session.setAttribute("error", "*Your Account Have Been Deactivate");
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
         if (!found) {
             session.setAttribute("error", "*Check Your Username Or Password");
             response.sendRedirect("login.jsp");
+            return;
         }
     }
 

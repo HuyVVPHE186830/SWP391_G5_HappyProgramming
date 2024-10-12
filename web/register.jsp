@@ -225,7 +225,6 @@
             function selectRole(role) {
                 document.querySelector('.role-container').classList.add('hidden');
                 const cvInput = document.getElementById('cvContainer');
-                const form = document.getElementById('registrationForm');
                 const registerForm = document.getElementById('registerForm');
                 if (role === 'mentor') {
                     registerForm.enctype = 'multipart/form-data';
@@ -259,7 +258,37 @@
                         this.type = 'text';
                     }
                 });
+
+                const registerForm = document.getElementById('registerForm');
+                if (registerForm) {
+                    registerForm.addEventListener('submit', function (event) {
+                        if (!validateNoSpacesOnly() || !validateFileSize()) {
+                            event.preventDefault();
+                        }
+                    });
+                }
             });
+//
+//            function validateNoSpacesOnly() {
+//                const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+//                let valid = true;
+//
+//                inputs.forEach(input => {
+//                    const trimmedValue = input.value.trim();
+//                    if (trimmedValue === "") {
+//                        valid = false;
+//                        input.value = "";
+//                    } else {
+//                        input.value = trimmedValue;
+//                    }
+//                });
+//
+//                if (!valid) {
+//                    alert("Fields cannot be empty or contain only spaces.");
+//                }
+//
+//                return valid;
+//            }
 
             function validateFileSize() {
                 const fileInput = document.getElementById("cvContainer");
@@ -267,8 +296,6 @@
                 const maxSize = 5 * 1024 * 1024;
 
                 if (file) {
-
-                    // Kiểm tra kích thước file
                     if (file.size > maxSize) {
                         alert("CV must be less than 5MB!");
                         fileInput.value = "";

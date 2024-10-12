@@ -54,7 +54,7 @@
                 flex: 0 0 27%;
                 display: flex;
                 flex-direction: column;
-                align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+                align-items: center;
                 justify-content: center;
                 margin-left: 3%;
             }
@@ -308,6 +308,8 @@
                 }
                 return true;
             }
+            
+            
         </script>
         <div class="profile-form">
             <div class="profile-container">

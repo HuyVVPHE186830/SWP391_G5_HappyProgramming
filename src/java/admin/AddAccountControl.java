@@ -8,9 +8,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,6 +60,10 @@ public class AddAccountControl extends HttpServlet {
             msg = "Username " + username + " added successfully!";
             request.setAttribute("mess", msg);
         }
+        HttpSession session = request.getSession();
+        List<User> list = dao.getAll();
+        session.setAttribute("listUsers", list);
+
         // Forward the request to the account management page
         request.getRequestDispatcher("ManagerAccount").forward(request, response);
     }

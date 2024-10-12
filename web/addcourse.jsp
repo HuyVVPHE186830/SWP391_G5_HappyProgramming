@@ -147,9 +147,38 @@
                 color: #452cbf;
             }
         </style>
+        
+        <script>
+            function validateNoSpacesOnly() {
+                const inputs = document.querySelectorAll('input[type="text"], textarea');
+                let valid = true;
+
+                inputs.forEach(input => {
+                    const trimmedValue = input.value.trim();
+                    if (trimmedValue === "") {
+                        valid = false;
+                        input.value = "";
+                    } else {
+                        input.value = trimmedValue;
+                    }
+                });
+
+                if (!valid) {
+                    alert("Fields cannot be empty or contain only spaces.");
+                }
+
+                return valid;
+            }
+        </script>
     </head>
     <body>
-        <jsp:include page="header.jsp"/>
+        <c:if test="${empty user}">
+            <c:redirect url="login.jsp"/>
+        </c:if>
+        
+        <c:if test="${user.roleId ne 1}">
+            <c:redirect url="home"/>
+        </c:if>
         <!-- Modal Content -->
         <div class="modal-dialog">
             <div class="modal-content">
@@ -166,7 +195,7 @@
                             </span>
                         </a>
                         <h5 class="modal-title">Add New Course</h5>
-                        <form action="addcourse" method="post" id="addCourseForm">
+                        <form action="addcourse" method="post" id="addCourseForm" onsubmit="return validateNoSpacesOnly()">
                             <div class="form-group">
                                 <label for="courseName">Course Name</label>
                                 <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter the name of the course" required>
@@ -186,7 +215,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea id="description" name="description" class="form-control" placeholder="Enter description of the course" rows="3"></textarea>
+                                <textarea id="description" name="description" class="form-control" placeholder="Enter description of the course" rows="3" required></textarea>
                             </div>
                             <c:if test="${not empty succMsg}">
                                 <div class="success-message">

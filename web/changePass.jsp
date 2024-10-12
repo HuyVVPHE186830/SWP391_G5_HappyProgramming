@@ -102,6 +102,17 @@
             }
         </style>
         <script>
+            function validateChangePassword() {
+                const formValid = validateForm();
+                const noSpacesOnlyValid = validateNoSpacesOnly();
+
+                if (formValid && noSpacesOnlyValid) {
+                    return true; 
+                } else {
+                    return false; 
+                }
+            }
+
             function validateForm() {
                 var curPass = document.getElementById("curPass").value;
                 var newPassword = document.getElementById("newPass").value;
@@ -116,9 +127,33 @@
                 }
                 return true;
             }
+
+            function validateNoSpacesOnly() {
+                const inputs = document.querySelectorAll('input[type="password"]');
+                let valid = true;
+
+                inputs.forEach(input => {
+                    const trimmedValue = input.value.trim();
+                    if (trimmedValue === "") {
+                        valid = false;
+                        input.value = "";
+                    } else {
+                        input.value = trimmedValue;
+                    }
+                });
+
+                if (!valid) {
+                    alert("Fields cannot be empty or contain only spaces.");
+                }
+
+                return valid;
+            }
         </script>
     </head>
     <body>
+        <c:if test="${empty user}">
+            <c:redirect url="login.jsp"/>
+        </c:if>
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
 
@@ -126,7 +161,7 @@
             <div class="changepass-form">
                 <div class="changepass-form-left">
                     <h2>Change Password</h2>
-                    <form action="changePass" method="post" onsubmit="return validateForm()">
+                    <form action="changePass" method="post" onsubmit="return validateChangePassword()">
                         <input type="hidden" value="${user.id}" name="id">
                         <input type="password" placeholder="Current password" id="curPass" name="curPass" required>
                         <input type="password" placeholder="New password" id="newPass" name="newPass" required>

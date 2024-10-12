@@ -1,7 +1,7 @@
 <%-- 
     Document   : viewcourse
     Created on : Sep 21, 2024, 3:40:46 PM
-    Author     : Admin
+    Author     : ThuanNV
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -55,11 +55,14 @@
                         </c:forEach>
                     </c:if>
                 </c:forEach>
+                <c:if test="${not empty sessionScope.mentorThisCourse}">
+                    <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
+                        <c:set var="count" value="${count + 1}"/>
+                    </c:forEach>
+                </c:if>
                 <h3>Number of Mentor</h3>
                 <h4 class="stat-number">${count}</h4>
-                <form action="#">
-                    <button class="button-enroll">Enroll</button>
-                </form>
+                <a href="viewCourseMentor?courseId=${cD.courseId}&orderby=${"default"}" class="button-enroll">View</a>
             </c:if>
         </div>
 
@@ -142,7 +145,7 @@
         </c:if>
 
         <!-- MENTOR LIST -->
-        <h2 class="list-mentor">Mentor Of This Course</h2>
+        <h2 class="list-mentor">Some Of Our Best Mentors For This Course</h2>
         <div class="mentor-cards">
             <c:if test="${not empty sessionScope.mentorThisCourse}">
                 <c:forEach items="${sessionScope.mentorThisCourse}" var="m">

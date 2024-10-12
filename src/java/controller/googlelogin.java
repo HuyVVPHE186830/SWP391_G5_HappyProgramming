@@ -126,7 +126,7 @@ public class googlelogin extends HttpServlet {
         } else {
             Date doc = new Date();
             int roleId = "mentor".equals(role) ? 2 : 3;
-            User user = new User(username, password, firstName, lastName, dob, email, doc, "ok", cvBase64, true, true, roleId);
+            User user = new User(username, password, firstName, lastName, dob, email, doc, avatar, cvBase64, true, true, roleId);
             dao.registerUser(user);
             session.setAttribute("user", user);
             response.sendRedirect("home");

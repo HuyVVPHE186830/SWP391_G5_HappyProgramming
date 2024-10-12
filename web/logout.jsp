@@ -1,7 +1,7 @@
 <%-- 
     Document   : logout
     Created on : Sep 21, 2024, 2:17:00 PM
-    Author     : Admin
+    Author     : ThuanNV
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

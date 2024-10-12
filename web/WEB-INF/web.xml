@@ -80,6 +80,31 @@
         <servlet-name>sendMessage</servlet-name>
         <servlet-class>controller.sendMessage</servlet-class>
     </servlet>
+    <servlet>
+
+        <servlet-name>viewCourseMentor</servlet-name>
+        <servlet-class>controller.viewCourseMentor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewMentor</servlet-name>
+        <servlet-class>controller.viewMentor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>manageCourse</servlet-name>
+        <servlet-class>controller.manageCourse</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addMentorPost</servlet-name>
+        <servlet-class>controller.addMentorPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewMentorPost</servlet-name>
+        <servlet-class>controller.viewMentorPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteMentorPost</servlet-name>
+        <servlet-class>controller.deleteMentorPost</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -159,5 +184,29 @@
     <servlet-mapping>
         <servlet-name>sendMessage</servlet-name>
         <url-pattern>/sendMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewCourseMentor</servlet-name>
+        <url-pattern>/viewCourseMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewMentor</servlet-name>
+        <url-pattern>/viewMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageCourse</servlet-name>
+        <url-pattern>/manageCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addMentorPost</servlet-name>
+        <url-pattern>/addMentorPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewMentorPost</servlet-name>
+        <url-pattern>/viewMentorPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteMentorPost</servlet-name>
+        <url-pattern>/deleteMentorPost</url-pattern>
     </servlet-mapping>
 </web-app>
