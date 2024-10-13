@@ -32,7 +32,7 @@ public class MentorPostDAO extends DBContext {
                 int id = rs.getInt("postId");
                 String postTitle = rs.getString("postTitle");
                 String postContent = rs.getString("postContent");
-                String postType = rs.getString("postType");
+                int postType = rs.getInt("postTypeId");
                 Timestamp deadline = rs.getTimestamp("deadline");
                 Timestamp createdAt = rs.getTimestamp("createdAt");
 
@@ -47,12 +47,12 @@ public class MentorPostDAO extends DBContext {
     }
 
     public void addMentorPost(MentorPost mentorPost) {
-        String sql = "INSERT INTO MentorPosts (postTitle, postContent, postType, deadline, createdAt, courseId, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MentorPosts (postTitle, postContent, postTypeId, deadline, createdAt, courseId, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, mentorPost.getPostTitle());
             st.setString(2, mentorPost.getPostContent());
-            st.setString(3, mentorPost.getPostType());
+            st.setInt(3, mentorPost.getPostTypeId());
             st.setTimestamp(4, mentorPost.getDeadline()); // Lưu deadline với thông tin giờ
             st.setTimestamp(5, new Timestamp(System.currentTimeMillis())); // Lưu createdAt với thời gian hiện tại
             st.setInt(6, mentorPost.getCourseId());
@@ -72,6 +72,48 @@ public class MentorPostDAO extends DBContext {
         } catch (SQLException ex) {
             System.out.println(ex); // In ra lỗi nếu có
         }
+    }
+
+    public String getPostType(int postTypeId) {
+        String postType = null; // Biến để lưu trữ postType
+        String sql = "SELECT postType FROM MentorPostTypes WHERE postTypeId = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, postTypeId);
+
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                postType = rs.getString("postType");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return postType;
+    }
+
+    public Integer getPostTypeId(String postType) {
+        Integer postTypeId = null;
+        String sql = "SELECT postTypeId FROM MentorPostTypes WHERE postType = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, postType);
+
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                postTypeId = rs.getInt("postTypeId");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return postTypeId;
     }
 
     public static void main(String[] args) {

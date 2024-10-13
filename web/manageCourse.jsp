@@ -97,7 +97,7 @@
                     var selectedType = this.value;
                     var deadlineContainer = document.getElementById('deadlineContainer');
                     // Kiểm tra nếu loại bài viết là "exercise" hoặc "test"
-                    if (selectedType === 'exercise' || selectedType === 'test') {
+                    if (selectedType === 'Exercise' || selectedType === 'Test') {
                         deadlineContainer.style.display = 'block'; // Hiện trường deadline
                     } else {
                         deadlineContainer.style.display = 'none'; // Ẩn trường deadline
@@ -127,7 +127,7 @@
                                  data-title="${fn:escapeXml(post.postTitle)}"
                                  data-content="${fn:escapeXml(post.postContent)}"
                                  data-created-at="${fn:escapeXml(post.createdAt)}"
-                                 data-type="${fn:escapeXml(post.postType)}"
+                                 data-type="${fn:escapeXml(post.postTypeId)}"
                                  data-deadline="${fn:escapeXml(post.deadline)}"
                                  data-created-by="${fn:escapeXml(post.createdBy)}"
                                  data-post-id="${post.postId}"
@@ -143,13 +143,19 @@
                                         const createdBy = postElement.getAttribute('data-created-by');
                                         const postId = postElement.getAttribute('data-post-id').value;  // Lấy postId từ thuộc tính data-post-id
 
-                                        // Cập nhật thông tin hiển thị
+                                        let typeDisplay = "";
+                                        if (type === "1") {
+                                            typeDisplay = "Lecture";
+                                        } else if (type === "2") {
+                                            typeDisplay = "Excercise";
+                                        } else if (type === "3") {
+                                            typeDisplay = "Test";
+                                        }
                                         document.getElementById('postDetailTitle').innerText = title;
                                         document.getElementById('postDetailContent').innerText = content;
                                         document.getElementById('postDetailCreatedAt').innerText = createdAt ? new Date(createdAt).toLocaleDateString('en-GB') : 'N/A';
-                                        document.getElementById('postDetailType').innerText = type;
+                                        document.getElementById('postDetailType').innerText = typeDisplay;
                                         document.getElementById('postDetailDeadline').innerText = deadline ? new Date(deadline).toLocaleString('en-GB', {dateStyle: 'short', timeStyle: 'short'}) : 'N/A';
-                                        document.getElementById('postDetailCreatedBy').innerText = createdBy;
 
                                         const deleteButton = document.querySelector('.dropdown-menu .btn-danger');
                                         let link = "deleteMentorPost?postId=" + id + "&courseId=${course.courseId}";
@@ -231,9 +237,9 @@
                             <div class="form-group">
                                 <label for="postType">Type</label>
                                 <select class="form-control" id="addType" name="addType" required>
-                                    <option value="lecture">Lecture</option>
-                                    <option value="exercise">Exercise</option>
-                                    <option value="test">Test</option>
+                                    <option value="Lecture">Lecture</option>
+                                    <option value="Exercise">Exercise</option>
+                                    <option value="Test">Test</option>
                                 </select>
                             </div>
                             <div class="form-group" id="deadlineContainer" style="display: none;">
@@ -269,7 +275,6 @@
                         <p><strong>Created At:</strong> <span id="postDetailCreatedAt"></span></p>
                         <p><strong>Type:</strong> <span id="postDetailType"></span></p>
                         <p><strong>Deadline:</strong> <span id="postDetailDeadline"></span></p>
-                        <p><strong>Created By:</strong> <span id="postDetailCreatedBy"></span></p>
                     </div>
                 </div>
             </div>
