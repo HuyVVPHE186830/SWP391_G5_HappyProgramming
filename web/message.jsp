@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Message Chat</title>
-   <style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -81,17 +81,20 @@
 
     <div class="sidebar">
         <h3>Previous Conversations</h3>
+        <div>
+            <input type="text" id="searchInput" placeholder="Search by username..." onkeyup="searchConversations()">
+        </div>
         <c:forEach items="${sessionScope.conversations}" var="conversation">
-            <div class="message">
-                <a href="message?conversationId=${conversation.conversationId}">${conversation.conversationName}</a>
+            <div class="message conversation-item" data-username="${conversation.conversationName}">
+                <a href="sendMessage?conversationId=${conversation.conversationId}">${conversation.conversationName}</a>
             </div>
         </c:forEach>
     </div>
-    <!-- ----------------------------------------------------------------------------------------------------------- -->
+
     <div class="chat-area">
-        <h3>Chat with ${sessionScope.currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</h3>
+        <h3>Chat with ${currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</h3>
         <div class="messages">
-            <c:forEach items="${sessionScope.currentChatMessages}" var="message">
+            <c:forEach items="${currentChatMessages}" var="message">
                 <div class="message">
                     <strong>${message.sentBy}:</strong> ${message.msgContent} <em>(${message.sentAt})</em>
                 </div>
@@ -101,20 +104,34 @@
         <div class="send-message">
             <form action="sendMessage" method="post" style="width: 100%; display: flex;">
                 <input type="text" name="message" placeholder="Your message" required>
-                <input type="hidden" name="recipient" value="${sessionScope.currentChatRecipient.username}">
-                <input type="hidden" name="conversationId" value="${sessionScope.currentConversationId}">
+                <input type="hidden" name="recipient" value="${currentChatRecipient.username}">
+                <input type="hidden" name="conversationId" value="${currentConversationId}">
                 <button type="submit">Send</button>
             </form>
         </div>
     </div>
-    <!-- ----------------------------------------------------------------------------------------------------------- -->
 
     <div class="user-info">
         <h3>Recipient's Information</h3>
         <p>Name: ${sessionScope.currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</p>
-        <p>Status: ${sessionScope.currentChatRecipient.status}</p>
-        <p>Last seen: ${sessionScope.currentChatRecipient.lastSeen}</p>
     </div>
+
+    <script>
+        function searchConversations() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const conversationItems = document.getElementsByClassName('conversation-item');
+
+            for (let i = 0; i < conversationItems.length; i++) {
+                const username = conversationItems[i].getAttribute('data-username').toLowerCase();
+                if (username.includes(filter)) {
+                    conversationItems[i].style.display = ''; // Hiện nếu tìm thấy
+                } else {
+                    conversationItems[i].style.display = 'none'; // Ẩn nếu không tìm thấy
+                }
+            }
+        }
+    </script>
 
 </body>
 </html>
