@@ -1,10 +1,6 @@
-<%-- 
-    Document   : listpost
-    Created on : Oct 8, 2024, 2:34:32 PM
-    Author     : Sapphire
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="model.Blog"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -50,35 +46,25 @@
 
             <!-- Blog list placeholder -->
             <div class="row">
-                <%-- Sample static blogs. Replace this section with dynamic content later. --%>
                 <%
-                    // This is where your backend logic will go later, to fetch the latest blogs
-                    // For now, we simulate it with static content
-                    String[] blogTitles = {
-                        "How to Start with Java",
-                        "Understanding JSP and Servlets",
-                        "Introduction to Spring Boot",
-                        "Guide to Web Development with Bootstrap",
-                        "Top 5 Database Tips for Developers"
-                    };
-                    String[] blogSummaries = {
-                        "Learn the basics of Java programming and start your coding journey.",
-                        "A deep dive into JSP and Servlet architecture for dynamic web development.",
-                        "Discover the powerful Spring Boot framework for building Java applications.",
-                        "Explore Bootstrap to create responsive and mobile-first websites.",
-                        "Optimize your database for better performance with these tips."
-                    };
-                    for (int i = 0; i < blogTitles.length; i++) {
+                    List<Blog> blogs = (List<Blog>) request.getAttribute("blogs");
+                    if (blogs != null) {
+                        for (Blog blog : blogs) {
                 %>
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title"><%= blogTitles[i] %></h5>
-                            <p class="card-text"><%= blogSummaries[i] %></p>
-                            <a href="#" class="btn btn-primary">Read More</a>
+                            <h5 class="card-title"><%= blog.getTitle() %></h5>
+                            <p class="card-text"><%= blog.getContent().substring(0, Math.min(100, blog.getContent().length())) %>...</p>
+                            <a href="viewblogdetails?blogId=<%= blog.getBlogId() %>" class="btn btn-primary">Read More</a>
                         </div>
                     </div>
                 </div>
+                <% 
+                        } 
+                    } else {
+                %>
+                <p>No blogs available.</p>
                 <% } %>
             </div>
         </div>
