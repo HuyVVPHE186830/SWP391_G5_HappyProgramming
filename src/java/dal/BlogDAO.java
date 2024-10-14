@@ -82,13 +82,4 @@ public class BlogDAO extends DBContext {
 
         return list; // Return the list of blogs
     }
-
-    // Main method to test the getAllBlogs method
-    public static void main(String[] args) {
-        BlogDAO dao = new BlogDAO();
-        List<Blog> blogs = dao.getAllBlogs("antt");
-        for (Blog blog : blogs) {
-            System.out.println(blog.toString());
-        }
-    }
 }
