@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import model.User;
 
 @MultipartConfig
 public class SubmitBlogServlet extends HttpServlet {
@@ -44,7 +45,11 @@ public class SubmitBlogServlet extends HttpServlet {
                 imageUrls.add(imageUrl);
             }
         }
-        Blog newBlog = new Blog(0, title, content, "antt", imageUrls, tags);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user"); // Retrieve User object
+        String createdBy = user != null ? user.getUsername() : "defaultUsername"; // Replace with actual username logic
+
+        Blog newBlog = new Blog(0, title, content, createdBy, imageUrls, tags);
 
         // Create a new Blog object and save it using BlogDAO
         BlogDAO blogDAO = new BlogDAO();

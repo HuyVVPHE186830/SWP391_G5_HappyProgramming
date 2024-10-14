@@ -41,7 +41,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="mb-4">Latest Blogs</h1>
                 <!-- Add Blog Button -->
-                <a href="addblog.jsp" class="btn btn-success">Add Blog</a>
+                <a href="addblog.jsp" class="btn btn-success">Write Something!</a>
             </div>
 
             <!-- Blog list placeholder -->
