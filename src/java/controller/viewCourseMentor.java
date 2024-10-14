@@ -63,6 +63,9 @@ public class viewCourseMentor extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String orderby = request.getParameter("orderby");
+        if(orderby == null) {
+            orderby = "default";
+        }
         HttpSession session = request.getSession();
         UserDAO daoU = new UserDAO();
         CourseDAO daoC = new CourseDAO();
@@ -80,11 +83,11 @@ public class viewCourseMentor extends HttpServlet {
             }
             List<Course> otherCourse = daoC.getAllCoursesExceptOne(courseId);
             Course course = daoC.getCourseByCourseId(courseId);
-            session.setAttribute("mentorThisCourse", mentor);
-            session.setAttribute("courseOfMentor", course);
-            session.setAttribute("order", orderby);
-            session.setAttribute("otherCourseExO", otherCourse);
-            response.sendRedirect("viewCourseMentor.jsp");
+            request.setAttribute("mentorThisCourse", mentor);
+            request.setAttribute("courseOfMentor", course);
+            request.setAttribute("order", orderby);
+            request.setAttribute("otherCourseExO", otherCourse);
+            request.getRequestDispatcher("viewCourseMentor.jsp").forward(request, response);
         } catch (Exception e) {
 
         }

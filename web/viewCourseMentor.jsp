@@ -14,8 +14,32 @@
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
         <link href="CSS/viewcourse.css" rel="stylesheet">
         <style>
+            .mentor-cards {
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .mentor-card {
+                width: 270px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                text-align: center;
+                height: 500px;
+                overflow: hidden;
+            }
+
             .mentor-card:hover {
+                transform: translateY(-5px);
                 text-decoration: none;
+            }
+
+            .mentor-image-icon {
+                width: 100%;
+                height: 300px;
+                object-fit: cover;
+                margin-bottom: 15px;
             }
 
             #orderbyForm {
@@ -102,18 +126,18 @@
 
         <!-- MENTOR LIST -->
         <div  class="description">
-            <c:set var="cM" value="${sessionScope.courseOfMentor}"/>
+            <c:set var="cM" value="${requestScope.courseOfMentor}"/>
             <h6><a href="home" class="link">Home</a> <span>></span> <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> List Mentors of ${cM.courseName}</h6>
 
 
 
-            <c:if test="${not empty sessionScope.mentorThisCourse}">
+            <c:if test="${not empty requestScope.mentorThisCourse}">
 
                 <!-- SORT -->
                 <form id="orderbyForm" action="viewCourseMentor">
                     <select id="orderby" name="orderby">                                
-                        <option value="default" ${sessionScope.order == "default" ? 'selected' : ''}>Default</option>
-                        <option value="name" ${sessionScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
+                        <option value="default" ${requestScope.order == "default" ? 'selected' : ''}>Default</option>
+                        <option value="name" ${requestScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
                     </select>
                     <input type="hidden" name="courseId" value="${cM.courseId}">
                 </form>
@@ -147,7 +171,7 @@
 
                 <!-- CONTENT MENTOR -->
                 <div class="mentor-cards row">
-                    <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
+                    <c:forEach items="${requestScope.mentorThisCourse}" var="m">
                         <a href="viewMentor?userId=${m.id}&courseId=${cM.courseId}" class="mentor-card">
                             <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
                             <div class="mentor-body">
@@ -162,13 +186,13 @@
 
             </c:if>
 
-            <c:if test="${not empty sessionScope.keyword}">
-                <c:if test="${empty sessionScope.mentorThisCourse}">
+                <c:if test="${not empty requestScope.keyword}">
+                <c:if test="${empty requestScope.mentorThisCourse}">
                     <!-- SORT -->
                     <form id="orderbyForm" action="viewCourseMentor">
                         <select id="orderby" name="orderby">                                
-                            <option value="default" ${sessionScope.order == "default" ? 'selected' : ''}>Default</option>
-                            <option value="name" ${sessionScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
+                            <option value="default" ${requestScope.order == "default" ? 'selected' : ''}>Default</option>
+                            <option value="name" ${requestScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
                         </select>
                         <input type="hidden" name="courseId" value="${cM.courseId}">
                     </form>
@@ -198,21 +222,21 @@
                             document.getElementById('orderbyForm').submit();
                         });
                     </script>
-                    <h2 class="list-mentor">There are no mentors with a name like "${sessionScope.keyword}".</h2>
+                    <h2 class="list-mentor">There are no mentors with a name like "${requestScope.keyword}".</h2>
                 </c:if>
             </c:if>
 
-            <c:if test="${empty sessionScope.mentorThisCourse && empty sessionScope.keyword}">
+            <c:if test="${empty requestScope.mentorThisCourse && empty requestScope.keyword}">
                 <h2 class="list-mentor">This Course Does Not Have Any Mentor Yet</h2>
             </c:if>
 
 
             <!-- OTHER COURSES -->
-            <c:if test="${not empty sessionScope.otherCourseExO}">
+            <c:if test="${not empty requestScope.otherCourseExO}">
                 <h2 class="list-mentor">Other Courses You Can Explore</h2>
                 <div class="same-course-cards-wrapper">
                     <div class="same-course-cards">
-                        <c:forEach items="${sessionScope.otherCourseExO}" var="oC">
+                        <c:forEach items="${requestScope.otherCourseExO}" var="oC">
                             <a href="viewcourse?courseId=${oC.courseId}" class="same-course-card">
                                 <h3>${oC.courseName}</h3>
                             </a>

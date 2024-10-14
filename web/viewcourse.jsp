@@ -20,15 +20,18 @@
             .chat-button {
                 display: inline-block;
                 padding: 10px 15px;
-                background-color: #007bff; /* Bootstrap primary color */
+                background-color: #007bff;
                 color: white;
                 text-decoration: none;
                 border-radius: 5px;
-                margin-top: 10px; /* Space between name and button */
+                margin-top: 10px; 
+                transition: all 1s ease;
             }
 
             .chat-button:hover {
-                background-color: #0056b3; /* Darker shade on hover */
+                background-color: #0056b3; 
+                color: white;
+                text-decoration: none;
             }
         </style>
     </head>
@@ -39,24 +42,15 @@
 
         <!-- DESCRIPTION -->
         <div class="description">
-            <c:if test="${not empty sessionScope.courseDetail}">
-                <c:set var="cD" value="${sessionScope.courseDetail}"/>
+            <c:if test="${not empty requestScope.courseDetail}">
+                <c:set var="cD" value="${requestScope.courseDetail}"/>
                 <h6><a href="home" class="link">Home</a> <span>></span> ${cD.courseName}</h6>
                 <c:set var="count" value="${0}"/>
                 <h2>${cD.courseName}</h2>
                 <h3>Description:</h3>
                 <p>${cD.courseDescription}</p>
-                <c:forEach items="${sessionScope.participate}" var="p">
-                    <c:if test="${cD.courseId == p.courseId}">
-                        <c:forEach items="${sessionScope.mentor}" var="m">
-                            <c:if test="${p.username == m.username}">
-                                <c:set var="count" value="${count + 1}"/>
-                            </c:if>
-                        </c:forEach>
-                    </c:if>
-                </c:forEach>
-                <c:if test="${not empty sessionScope.mentorThisCourse}">
-                    <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
+                <c:if test="${not empty requestScope.mentorThisCourse}">
+                    <c:forEach items="${requestScope.mentorThisCourse}" var="m">
                         <c:set var="count" value="${count + 1}"/>
                     </c:forEach>
                 </c:if>
@@ -67,12 +61,12 @@
         </div>
 
         <!-- SAME COURSE -->
-        <c:if test="${not empty sessionScope.sameCourse}">
+        <c:if test="${not empty requestScope.sameCourse}">
             <h2 class="list-mentor">
                 <c:set var="hasPrinted" value="false" />
                 Same
-                <c:forEach items="${sessionScope.category}" var="ca">
-                    <c:forEach items="${sessionScope.sameCateId}" var="cId">
+                <c:forEach items="${requestScope.category}" var="ca">
+                    <c:forEach items="${requestScope.sameCateId}" var="cId">
                         <c:if test="${cId == ca.categoryId}">
                             <c:if test="${hasPrinted}">
                                 , 
@@ -96,11 +90,11 @@
         </c:if>
 
         <!-- OTHER COURSE -->
-        <c:if test="${not empty sessionScope.otherCourse}">
+        <c:if test="${not empty requestScope.otherCourse}">
             <h2 class="list-mentor">Other Courses</h2>
             <div class="same-course-cards-wrapper">
                 <div class="same-course-cards">
-                    <c:forEach items="${sessionScope.otherCourse}" var="oC">
+                    <c:forEach items="${requestScope.otherCourse}" var="oC">
                         <a href="viewcourse?courseId=${oC.courseId}" class="same-course-card">
                             <h3>${oC.courseName}</h3>
                         </a>
@@ -110,11 +104,11 @@
         </c:if>
 
         <!-- OTHER CATEGORY -->
-        <c:if test="${not empty sessionScope.category}">
+        <c:if test="${not empty requestScope.category}">
             <h2 class="list-category">Other Category You Can Discover</h2>
             <div class="category-cards-wrapper">
                 <div class="category-cards">
-                    <c:forEach items="${sessionScope.othercategory}" var="c" varStatus="status">
+                    <c:forEach items="${requestScope.othercategory}" var="c" varStatus="status">
                         <a href="allCourse?search=category&categoryId=${c.categoryId}" class="category-card" style="display: ${status.index < 4 ? 'block' : 'none'};">
                             <h3>${c.categoryName}</h3>
                         </a>
@@ -147,8 +141,8 @@
         <!-- MENTOR LIST -->
         <h2 class="list-mentor">Some Of Our Best Mentors For This Course</h2>
         <div class="mentor-cards">
-            <c:if test="${not empty sessionScope.mentorThisCourse}">
-                <c:forEach items="${sessionScope.mentorThisCourse}" var="m">
+            <c:if test="${not empty requestScope.mentorThisCourse}">
+                <c:forEach items="${requestScope.mentorThisCourse}" var="m">
                     <div class="mentor-card">
                         <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
                         <div class="mentor-body">
@@ -161,7 +155,7 @@
                 </c:forEach>
             </c:if>
 
-            <c:if test="${empty sessionScope.mentorThisCourse}">
+            <c:if test="${empty requestScope.mentorThisCourse}">
                 <h4>This Course Does Not Have Mentor Yet!</h4>
             </c:if>
         </div>
