@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@MultipartConfig
 public class SubmitBlogServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,9 +51,7 @@ public class SubmitBlogServlet extends HttpServlet {
         blogDAO.addBlog(newBlog); // Method to insert the new blog into the database
 
         // Redirect to the blog list after submission
-        PrintWriter out = response.getWriter();
-        out.print(title);
-//        response.sendRedirect(request.getContextPath() + "/viewblogs");
+        response.sendRedirect(request.getContextPath() + "/viewblogs");
     }
 
     private String saveImage(Part part) {
