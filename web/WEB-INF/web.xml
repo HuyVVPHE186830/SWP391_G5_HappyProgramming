@@ -108,6 +108,10 @@
         <servlet-name>viewBlogServlet</servlet-name>
         <servlet-class>controller.viewBlogServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewBlogDetailServlet</servlet-name>
+        <servlet-class>ViewBlogDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -215,5 +219,9 @@
     <servlet-mapping>
         <servlet-name>viewBlogServlet</servlet-name>
         <url-pattern>/viewblogs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewBlogDetailServlet</servlet-name>
+        <url-pattern>/viewBlogDetail</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -56,7 +56,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><%= blog.getTitle() %></h5>
                             <p class="card-text"><%= blog.getContent().substring(0, Math.min(100, blog.getContent().length())) %>...</p>
-                            <a href="viewblogdetails?blogId=<%= blog.getBlogId() %>" class="btn btn-primary">Read More</a>
+                            <a href="viewBlogDetail?id=<%= blog.getBlogId() %>" class="btn btn-primary">Read More</a>
                         </div>
                     </div>
                 </div>

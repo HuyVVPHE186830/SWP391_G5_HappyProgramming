@@ -13,12 +13,12 @@ public class BlogDAO extends DBContext {
     // Method to get all blogs created by a specific user
     public List<Blog> getAllBlogs(String userName) {
         List<Blog> list = new ArrayList<>();
-        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name " +
-                     "FROM Blogs b " +
-                     "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id " +
-                     "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id " +
-                     "LEFT JOIN tags t ON bt.tag_id = t.tag_id " +
-                     "WHERE b.user_Name = ? ORDER BY b.created_At DESC";
+        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
+                + "FROM Blogs b "
+                + "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id "
+                + "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id "
+                + "LEFT JOIN tags t ON bt.tag_id = t.tag_id "
+                + "WHERE b.user_Name = ? ORDER BY b.created_At DESC";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -82,4 +82,60 @@ public class BlogDAO extends DBContext {
 
         return list; // Return the list of blogs
     }
+    // Method to get a blog by its ID
+
+    public Blog getBlogById(int blogId) {
+        Blog blog = null;
+        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
+                + "FROM Blogs b "
+                + "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id "
+                + "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id "
+                + "LEFT JOIN tags t ON bt.tag_id = t.tag_id "
+                + "WHERE b.blog_Id = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, blogId); // Bind the blogId parameter
+            ResultSet rs = st.executeQuery();
+
+            // Temporary storage for blog data
+            List<String> imageUrls = new ArrayList<>();
+            List<Tag> tags = new ArrayList<>();
+
+            if (rs.next()) {
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String createdBy = rs.getString("user_Name");
+
+                // Create the Blog object
+                blog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
+
+                // Add imageUrl if available
+                String imageUrl = rs.getString("image_url");
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    imageUrls.add(imageUrl);
+                }
+
+                // Create a Tag object and add to the tags list
+                int tagId = rs.getInt("tag_id");
+                String tagName = rs.getString("tag_name");
+                if (tagName != null && !tagName.isEmpty()) {
+                    Tag tag = new Tag(tagId, tagName); // Create Tag object
+                    tags.add(tag); // Add Tag to list
+                }
+            }
+
+            // Set the tags and image URLs
+            if (blog != null) {
+                blog.setTags(tags);
+                blog.setImageUrls(imageUrls);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return blog; // Return the blog
+    }
+
 }
