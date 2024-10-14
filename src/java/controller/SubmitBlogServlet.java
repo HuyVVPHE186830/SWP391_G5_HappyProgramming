@@ -1,6 +1,7 @@
 package controller;
 
 import dal.BlogDAO;
+import dal.TagDAO;
 import model.Blog;
 import model.Tag;
 
@@ -13,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import model.User;
@@ -27,12 +27,22 @@ public class SubmitBlogServlet extends HttpServlet {
         String content = request.getParameter("blogContent");
         String tagsParam = request.getParameter("blogTags");
 
+        // Initialize DAO
+        TagDAO tagDAO = new TagDAO();
+
         // Split tags by comma and create a list
         List<Tag> tags = new ArrayList<>();
         if (tagsParam != null && !tagsParam.trim().isEmpty()) {
             String[] tagNames = tagsParam.split(",");
             for (String tagName : tagNames) {
-                tags.add(new Tag(0, tagName.trim())); // Tag ID will be assigned by the database
+                String trimmedTagName = tagName.trim();
+                
+                // Use getOrAddTag to retrieve existing tag or add a new one
+                int tagId = tagDAO.getOrAddTag(trimmedTagName);
+                if (tagId > 0) {
+                    Tag tag = new Tag(tagId, trimmedTagName);
+                    tags.add(tag); // Add the tag to the list
+                }
             }
         }
 
@@ -40,20 +50,22 @@ public class SubmitBlogServlet extends HttpServlet {
         List<String> imageUrls = new ArrayList<>();
         for (Part part : request.getParts()) {
             if (part.getName().equals("blogImages") && part.getSize() > 0) {
-                // Save the image and get its URL (you will need to implement saveImage() method)
                 String imageUrl = saveImage(part);
                 imageUrls.add(imageUrl);
             }
         }
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user"); // Retrieve User object
-        String createdBy = user != null ? user.getUsername() : "defaultUsername"; // Replace with actual username logic
 
+        // Retrieve the creator's information from the session
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        String createdBy = user != null ? user.getUsername() : "defaultUsername";
+
+        // Create a new Blog object
         Blog newBlog = new Blog(0, title, content, createdBy, imageUrls, tags);
 
-        // Create a new Blog object and save it using BlogDAO
+        // Save the new blog using BlogDAO
         BlogDAO blogDAO = new BlogDAO();
-        blogDAO.addBlog(newBlog); // Method to insert the new blog into the database
+        blogDAO.addBlog(newBlog);
 
         // Redirect to the blog list after submission
         response.sendRedirect(request.getContextPath() + "/viewblogs");
@@ -61,10 +73,9 @@ public class SubmitBlogServlet extends HttpServlet {
 
     private String saveImage(Part part) {
         // Implement this method to save the image and return the image URL
-        // This is a placeholder implementation. You should implement actual file saving logic.
         String fileName = part.getSubmittedFileName();
-        String imageUrl = "/path/to/images/" + fileName; // Replace with actual path where images are saved
-        // Save the image to the server here
+        String imageUrl = "/path/to/images/" + fileName; // Replace with the actual path where images are saved
+        // Logic to save the image file goes here (e.g., save to server)
         return imageUrl;
     }
 }
