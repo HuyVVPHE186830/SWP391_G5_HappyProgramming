@@ -2,6 +2,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.*, model.*, dal.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -108,8 +110,9 @@
             }
         </style>
         <script>
-            function validateNoSpacesOnly() {
-                const inputs = document.querySelectorAll('#addCourseForm input[type="text"], #addCourseForm textarea');
+            function validateNoSpacesOnly(formId) {
+                const form = document.getElementById(formId);
+                const inputs = form.querySelectorAll('input[type="text"], textarea');
                 let valid = true;
 
                 inputs.forEach(input => {
@@ -207,16 +210,8 @@
                                                     <button type="button" class="btn btn-primary" 
                                                             data-toggle="modal" 
                                                             data-target="#updateUserModal" 
-                                                            onclick="populateUpdateModal('${t.courseName}', '${t.categories}', '${t.courseDescription}')">
+                                                            onclick="populateUpdateModal('${t.courseId}', '${t.courseName}', '${t.categories}', '${t.courseDescription}')">
                                                         <i class="fa-solid fa-edit"></i>
-                                                    </button>
-
-                                                    <!-- Delete Button -->
-                                                    <button type="button" class="btn btn-danger" 
-                                                            data-toggle="modal" 
-                                                            data-target="#deleteUserModal" 
-                                                            onclick="populateDeleteModal()">
-                                                        <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -231,84 +226,11 @@
             </div>
         </main>
 
-        <!-- Update Modal HTML -->
-        <div id="updateUserModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="updateForm" action="<%= request.getContextPath() %>/UpdateUserInfoControl" method="post">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Update User Info</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Username (hidden) -->
-                            <input name="username" type="hidden" id="updateUsername">
-
-                            <!-- First Name -->
-                            <div class="form-group">
-                                <label>First Name</label>
-                                <input name="firstName" type="text" class="form-control" id="updateFirstName" required>
-                            </div>
-                            <!-- Last Name -->
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                <input name="lastName" type="text" class="form-control" id="updateLastName" required>
-                            </div>
-                            <!-- Date of Birth -->
-                            <div class="form-group">
-                                <label>Date of Birth</label>
-                                <input name="dob" type="date" class="form-control" id="updateDob" max="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>" required>
-                            </div>
-                            <!-- Email -->
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input name="email" type="email" class="form-control" id="updateEmail" required>
-                            </div>
-                            <!-- Avatar Path -->
-                            <div class="form-group">
-                                <label>Avatar Path</label>
-                                <input name="avatarPath" type="text" class="form-control" id="updateAvatarPath">
-                            </div>
-                            <!-- CV Path -->
-                            <div class="form-group">
-                                <label>CV Path</label>
-                                <input name="cvPath" type="text" class="form-control" id="updateCvPath">
-                            </div>
-                            <!-- Active Status -->
-                            <div class="form-group">
-                                <input name="activeStatus" type="checkbox" class="form-check-input" id="updateActiveStatus">
-                                <label class="form-check-label" for="updateActiveStatus">Active</label>
-                            </div>
-                            <!-- Verified Status -->
-                            <div class="form-group">
-                                <input name="isVerified" type="checkbox" class="form-check-input" id="updateIsVerified">
-                                <label class="form-check-label" for="updateIsVerified">Verified</label>
-                            </div>
-                            <!-- Role Selection (Dropdown) -->
-                            <div class="form-group">
-                                <label>Role</label>
-                                <select name="roleId" class="form-control" id="updateRoleId" required>
-                                    <option value="1">Admin</option>
-                                    <option value="2">Mentor</option>
-                                    <option value="3">Mentee</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-success" value="Update">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-
         <!-- Add Modal HTML -->
         <div id="addEmployeeModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="addCourseForm" action="<%= request.getContextPath() %>/addcourse" method="post" onsubmit="return validateNoSpacesOnly()">
+                    <form id="addCourseForm" action="<%= request.getContextPath() %>/addcourse" method="post" onsubmit="return validateNoSpacesOnly('addCourseForm')">
                         <div class="modal-header">
                             <h4 class="modal-title">Add Course</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -336,7 +258,7 @@
                             <!-- Description -->
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea id="description" name="description" class="form-control" placeholder="Enter description of the course" rows="3" required></textarea>
+                                <textarea id="description" name="description" class="form-control" placeholder="Enter description of the course" rows="5" required></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -348,28 +270,51 @@
             </div>
         </div>
 
-        <!-- Delete Modal HTML -->
-        <div id="deleteUserModal" class="modal fade">
+
+        <!-- Update Modal HTML -->
+        <div id="updateUserModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="deleteForm" action="<%= request.getContextPath() %>/DeleteUserInfoControl" method="post">
+                    <form id="updateCourseForm" action="<%= request.getContextPath() %>/updatecourse" method="post" onsubmit="return validateNoSpacesOnly('updateCourseForm')">
                         <div class="modal-header">
-                            <h4 class="modal-title">Deactivate User</h4>
+                            <h4 class="modal-title">Update Course Info</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <input name="username" type="hidden" id="deleteUsername">
-                            <p>Are you sure you want to deactivate this user?</p>
-                            <p class="text-warning"><small>The user will be marked as inactive.</small></p>
+                            <!-- Course ID -->
+                            <input name="courseId" type="hidden" id="updateCourseId">
+                            <!-- Course Name -->
+                            <div class="form-group">
+                                <label for="courseName">Course Name</label>
+                                <input type="text" id="updateCourseName" name="courseName" class="form-control" placeholder="Enter the name of the course" required>
+                            </div>
+                            <!-- Category -->
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="updateCategory" name="categoryIds" class="form-control" multiple>
+                                    <% 
+                                       for(Category c : list) { 
+                                    %> 
+                                    <option value="<%=c.getCategoryId()%>"><%=c.getCategoryName()%></option>
+                                    <% } %>
+                                </select>
+                                <small class="form-text text-muted">Hold down the Ctrl(Windows) or Command(Mac) button to select multiple options.</small>
+                            </div>
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="updateDescription" name="description" class="form-control" placeholder="Enter description of the course" rows="5" required></textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-danger" value="Deactivate">
+                            <input type="submit" class="btn btn-success" value="Update">
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
 
         <script>
             function resetForm() {
@@ -395,37 +340,12 @@
 
         <script src="js/calender.js"></script>
         <script type="text/javascript">
-            function populateUpdateModal(username, firstName, lastName, dob, email, avatarPath, cvPath, activeStatus, isVerified, roleId) {
-                document.getElementById('updateUsername').value = username;
-                document.getElementById('updateFirstName').value = firstName;
-                document.getElementById('updateLastName').value = lastName;
-                document.getElementById('updateDob').value = dob.split("T")[0]; // Format to YYYY-MM-DD
-                document.getElementById('updateEmail').value = email;
-                document.getElementById('updateAvatarPath').value = avatarPath;
-                document.getElementById('updateCvPath').value = cvPath;
-                document.getElementById('updateActiveStatus').checked = activeStatus;
-                document.getElementById('updateIsVerified').checked = isVerified;
-                document.getElementById('updateRoleId').value = roleId;
-            }
             // Function to populate the update modal
-            function populateUpdateModal(username, firstName, lastName, dob, mail, avatarPath, cvPath, activeStatus, isVerified, roleId) {
-                document.getElementById('updateUsername').value = username;
-                document.getElementById('updateFirstName').value = firstName;
-                document.getElementById('updateLastName').value = lastName;
-                document.getElementById('updateDob').value = dob;
-                document.getElementById('updateEmail').value = mail;
-                document.getElementById('updateAvatarPath').value = avatarPath;
-                document.getElementById('updateCvPath').value = cvPath;
-                document.getElementById('updateActiveStatus').checked = activeStatus;
-                document.getElementById('updateIsVerified').checked = isVerified;
-                document.getElementById('updateRoleId').value = roleId;
+            function populateUpdateModal(courseId, courseName, categories, courseDescription) {
+                document.getElementById('updateCourseId').value = courseId;
+                document.getElementById('updateCourseName').value = courseName;
+                document.getElementById('updateDescription').value = courseDescription;
             }
-
-            // Function to populate the delete modal
-            function populateDeleteModal(username) {
-                document.getElementById('deleteUsername').value = username;
-            }
-
         </script>
     </body>
 </html>

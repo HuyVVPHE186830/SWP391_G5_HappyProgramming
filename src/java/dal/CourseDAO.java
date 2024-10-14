@@ -1255,14 +1255,14 @@ public class CourseDAO extends DBContext {
         }
         return courses;
     }
-    
+
     public int getTotalParticipants(int courseId) {
         int totalParticipants = 0;
         String sql = "SELECT COUNT(*) AS TotalParticipants "
-                   + "FROM [Participate] "
-                   + "WHERE participateRole = ? "
-                   + "AND statusId = ? "
-                   + "AND courseId = ?";
+                + "FROM [Participate] "
+                + "WHERE participateRole = ? "
+                + "AND statusId = ? "
+                + "AND courseId = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Set parameters
@@ -1279,5 +1279,60 @@ public class CourseDAO extends DBContext {
             e.printStackTrace();
         }
         return totalParticipants;
+    }
+
+    public boolean updateCourse(Course c) {
+        boolean f = false;
+        if (isCourseNameDuplicate(c.getCourseId(), c.getCourseName())) {
+            return false;
+        }
+        String sql = "update Course set courseName = ?, courseDescription = ?"
+                + " where courseId = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, c.getCourseName());
+            ps.setString(2, c.getCourseDescription());
+            ps.setInt(3, c.getCourseId());
+
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+    
+    public boolean isCourseNameDuplicate(int courseId, String courseName) {
+        boolean isDuplicate = false;
+        String sql = "SELECT courseId FROM Course WHERE courseName = ? and courseId <> ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, courseName);
+            ps.setInt(2, courseId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                isDuplicate = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isDuplicate;
+    }
+    
+    public boolean deleteCourseCategory(int courseId) {
+        boolean f = false;
+        String sql = "DELETE FROM Course_Category WHERE courseId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, courseId);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return f;
     }
 }

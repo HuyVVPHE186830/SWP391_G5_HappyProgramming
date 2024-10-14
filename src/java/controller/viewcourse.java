@@ -75,27 +75,26 @@ public class viewcourse extends HttpServlet {
         UserDAO daoU = new UserDAO();
         try {
             int courseId = Integer.parseInt(courseId_str);
-            session.setAttribute("currentCourseId", courseId);     
             Course c = daoC.getCourseByCourseId(courseId);
             List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(courseId);
             List<Course> sameCourse = daoC.getSameCourse(courseId);
-            Category cate = daoCt.getCategoryByCategoryId(courseId);
+            Category cate = daoCt.getCategoryByCourseId(courseId);
             List<Course> otherCourse = daoC.getOtherCourseHasOtherCategory(sameCategoryId);
             List<User> mentor = daoU.getAllMentorByCourseId(courseId);
             List<Category> allCategory = daoCt.getAll();
             List<Category> category = daoCt.getAllExceptOne(sameCategoryId);
             
-            session.setAttribute("category", allCategory);
-            session.setAttribute("sameCateId", sameCategoryId);
-            session.setAttribute("othercategory", category);
-            session.setAttribute("otherCourse", otherCourse);
-            session.setAttribute("sameCourse", sameCourse);
-            session.setAttribute("categoryCourse", cate);
-            session.setAttribute("courseDetail", c);
-            session.setAttribute("mentorThisCourse", mentor);
-            response.sendRedirect("viewcourse.jsp?courseId=" + courseId);
+            request.setAttribute("category", allCategory);
+            request.setAttribute("sameCateId", sameCategoryId);
+            request.setAttribute("othercategory", category);
+            request.setAttribute("otherCourse", otherCourse);
+            request.setAttribute("sameCourse", sameCourse);
+            request.setAttribute("categoryCourse", cate);
+            request.setAttribute("courseDetail", c);
+            request.setAttribute("mentorThisCourse", mentor);
+            request.getRequestDispatcher("viewcourse.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace(); // In ra lỗi nếu có
+            e.printStackTrace();
         }
 
     }

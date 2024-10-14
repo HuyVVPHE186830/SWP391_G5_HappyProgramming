@@ -14,7 +14,7 @@ public class MentorPost {
     private int postId;
     private String postTitle;
     private String postContent;
-    private String postType;
+    private int postTypeId;
     private Timestamp deadline; // Đổi từ Date sang Timestamp
     private int courseId;
     private String createdBy;
@@ -26,21 +26,21 @@ public class MentorPost {
     }
     
     
-    public MentorPost(String postTitle, String postContent, String postType, Timestamp deadline, int courseId, String createdBy) {
+    public MentorPost(String postTitle, String postContent, int postTypeId, Timestamp deadline, int courseId, String createdBy) {
         this.postTitle = postTitle;
         this.postContent = postContent;
-        this.postType = postType;
+        this.postTypeId = postTypeId;
         this.deadline = deadline;
         this.courseId = courseId;
         this.createdBy = createdBy;
         this.createdAt = new Timestamp(System.currentTimeMillis()); // Gán thời gian hiện tại cho createdAt
     }
 
-    public MentorPost(int postId, String postTitle, String postContent, String postType, Timestamp deadline, int courseId, String createdBy, Timestamp createdAt) {
+    public MentorPost(int postId, String postTitle, String postContent, int postTypeId, Timestamp deadline, int courseId, String createdBy, Timestamp createdAt) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
-        this.postType = postType;
+        this.postTypeId = postTypeId;
         this.deadline = deadline;
         this.courseId = courseId;
         this.createdBy = createdBy;
@@ -74,12 +74,12 @@ public class MentorPost {
         this.postContent = postContent;
     }
 
-    public String getPostType() {
-        return postType;
+    public int getPostTypeId() {
+        return postTypeId;
     }
 
-    public void setPostType(String postType) {
-        this.postType = postType;
+    public void setPostTypeId(int postTypeId) {
+        this.postTypeId = postTypeId;
     }
 
     public Timestamp getDeadline() {
@@ -116,7 +116,7 @@ public class MentorPost {
 
     @Override
     public String toString() {
-        return "MentorPost{" + "postId=" + postId + ", postTitle=" + postTitle + ", postContent=" + postContent + ", postType=" + postType + ", deadline=" + deadline + ", courseId=" + courseId + ", createdBy=" + createdBy + ", createdAt=" + createdAt + '}';
+        return "MentorPost{" + "postId=" + postId + ", postTitle=" + postTitle + ", postContent=" + postContent + ", postTypeId=" + postTypeId + ", deadline=" + deadline + ", courseId=" + courseId + ", createdBy=" + createdBy + ", createdAt=" + createdAt + '}';
     }
 
     

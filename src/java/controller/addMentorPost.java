@@ -77,9 +77,12 @@ public class addMentorPost extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        MentorPostDAO mentorPostDAO = new MentorPostDAO();
         String postTitle = request.getParameter("addTitle");
         String postContent = request.getParameter("addContent");
         String postType = request.getParameter("addType");
+        int postTypeId = mentorPostDAO.getPostTypeId(postType);
+        
         String deadlineStr = request.getParameter("deadline");
         String courseIdStr = request.getParameter("courseId");
         int courseId = Integer.parseInt(courseIdStr);
@@ -102,14 +105,11 @@ public class addMentorPost extends HttpServlet {
         MentorPost mentorPost = new MentorPost();
         mentorPost.setPostTitle(postTitle);
         mentorPost.setPostContent(postContent);
-        mentorPost.setPostType(postType);
+        mentorPost.setPostTypeId(postTypeId);
         mentorPost.setDeadline(deadline);
         mentorPost.setCourseId(courseId);
         mentorPost.setCreatedBy(createdBy);
         mentorPost.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Đặt createdAt là thời gian hiện tại
-
-
-        MentorPostDAO mentorPostDAO = new MentorPostDAO();
         mentorPostDAO.addMentorPost(mentorPost);
 
         response.sendRedirect("manageCourse?courseId=" + courseId);
