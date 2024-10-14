@@ -6,16 +6,17 @@ public class Blog {
     private int blogId;
     private String title;
     private String content;
-    private String userName;
+    private String userName;  // Optional, if you still want to keep this
+    private String createdBy;  // New field for tracking the creator
     private List<String> imageUrls;
     private List<Tag> tags;
 
     // Constructors
-    public Blog(int blogId, String title, String content, String userName, List<String> imageUrls, List<Tag> tags) {
+    public Blog(int blogId, String title, String content, String createdBy, List<String> imageUrls, List<Tag> tags) {
         this.blogId = blogId;
         this.title = title;
         this.content = content;
-        this.userName = userName;
+        this.createdBy = createdBy;  // Set the createdBy field
         this.imageUrls = imageUrls;
         this.tags = tags;
     }
@@ -53,6 +54,14 @@ public class Blog {
         this.userName = userName;
     }
 
+    public String getCreatedBy() {
+        return createdBy;  // Getter for createdBy
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;  // Setter for createdBy
+    }
+
     public List<String> getImageUrls() {
         return imageUrls;
     }
@@ -76,6 +85,7 @@ public class Blog {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", userName='" + userName + '\'' +
+                ", createdBy='" + createdBy + '\'' +  // Include createdBy in the string representation
                 ", imageUrls=" + imageUrls +
                 ", tags=" + tags +
                 '}';

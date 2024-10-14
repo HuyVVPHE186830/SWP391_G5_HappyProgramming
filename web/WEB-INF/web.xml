@@ -112,6 +112,10 @@
         <servlet-name>ViewBlogDetailServlet</servlet-name>
         <servlet-class>controller.ViewBlogDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubmitBlogServlet</servlet-name>
+        <servlet-class>controller.SubmitBlogServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -223,5 +227,9 @@
     <servlet-mapping>
         <servlet-name>ViewBlogDetailServlet</servlet-name>
         <url-pattern>/viewBlogDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubmitBlogServlet</servlet-name>
+        <url-pattern>/submitBlog</url-pattern>
     </servlet-mapping>
 </web-app>
