@@ -4,7 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import model.Blog;
 import model.Tag;
 
@@ -83,60 +87,67 @@ public class BlogDAO extends DBContext {
     }
 
     // Method to get a blog by its ID
-    public Blog getBlogById(int blogId) {
-        Blog blog = null;
-        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
-                + "FROM Blogs b "
-                + "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id "
-                + "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id "
-                + "LEFT JOIN tags t ON bt.tag_id = t.tag_id "
-                + "WHERE b.blog_Id = ?";
+public Blog getBlogById(int blogId) {
+    Blog blog = null;
+    String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
+            + "FROM Blogs b "
+            + "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id "
+            + "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id "
+            + "LEFT JOIN tags t ON bt.tag_id = t.tag_id "
+            + "WHERE b.blog_Id = ?";
 
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, blogId); // Bind the blogId parameter
-            ResultSet rs = st.executeQuery();
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, blogId); // Bind the blogId parameter
+        ResultSet rs = st.executeQuery();
 
-            // Temporary storage for blog data
-            List<String> imageUrls = new ArrayList<>();
-            List<Tag> tags = new ArrayList<>();
+        // Temporary storage for blog data
+        Set<String> imageUrls = new HashSet<>(); // Use a Set for unique image URLs
+        Map<Integer, Tag> tagMap = new HashMap<>(); // Use a Map for unique Tags
 
-            while (rs.next()) {
-                // Create the Blog object only once
-                if (blog == null) {
-                    String title = rs.getString("title");
-                    String content = rs.getString("content");
-                    String createdBy = rs.getString("user_Name");
+        while (rs.next()) {
+            // Create the Blog object only once
+            if (blog == null) {
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String createdBy = rs.getString("user_Name");
 
-                    // Create the Blog object
-                    blog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
-                }
+                // Create the Blog object
+                blog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
+            }
 
-                // Add imageUrl if available
-                String imageUrl = rs.getString("image_url");
-                if (imageUrl != null && !imageUrl.isEmpty()) {
-                    imageUrls.add(imageUrl);
-                }
+            // Add imageUrl if available
+            String imageUrl = rs.getString("image_url");
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                imageUrls.add(imageUrl); // Use set to ensure uniqueness
+            }
 
-                // Create a Tag object and add to the tags list
-                int tagId = rs.getInt("tag_id");
+            // Check if tagId is not null
+            Integer tagId = rs.getInt("tag_id");
+            if (tagId != null) {
                 String tagName = rs.getString("tag_name");
                 if (tagName != null && !tagName.isEmpty()) {
-                    Tag tag = new Tag(tagId, tagName); // Create Tag object
-                    tags.add(tag); // Add Tag to list
+                    // Check if tag already exists in the map
+                    if (!tagMap.containsKey(tagId)) {
+                        Tag tag = new Tag(tagId, tagName); // Create Tag object
+                        tagMap.put(tagId, tag); // Store in map to ensure uniqueness
+                    }
                 }
             }
-
-            // Set the tags and image URLs
-            if (blog != null) {
-                blog.setTags(tags);
-                blog.setImageUrls(imageUrls);
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex);
         }
 
-        return blog; // Return the blog
+        // Set the tags and image URLs
+        if (blog != null) {
+            blog.setTags(new ArrayList<>(tagMap.values())); // Get unique tags from the map
+            blog.setImageUrls(new ArrayList<>(imageUrls)); // Convert Set back to List for image URLs
+        }
+
+    } catch (SQLException ex) {
+        System.out.println(ex);
     }
+
+    return blog; // Return the blog
+}
+
+
 }

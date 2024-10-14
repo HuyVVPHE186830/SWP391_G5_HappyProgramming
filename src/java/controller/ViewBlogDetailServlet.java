@@ -26,8 +26,7 @@ public class ViewBlogDetailServlet extends HttpServlet {
         request.setAttribute("blog", blog);
 
         // Forward to the JSP page
-                PrintWriter out = response.getWriter();
-        out.print(blog.toString());
-//        request.getRequestDispatcher("viewBlogDetails.jsp").forward(request, response);
+
+        request.getRequestDispatcher("viewBlogDetails.jsp").forward(request, response);
     }
 }
