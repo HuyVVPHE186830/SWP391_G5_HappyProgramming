@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class ViewBlogDetailServlet extends HttpServlet {
 
@@ -25,6 +26,8 @@ public class ViewBlogDetailServlet extends HttpServlet {
         request.setAttribute("blog", blog);
 
         // Forward to the JSP page
-        request.getRequestDispatcher("viewBlogDetails.jsp").forward(request, response);
+                PrintWriter out = response.getWriter();
+        out.print(blog.toString());
+//        request.getRequestDispatcher("viewBlogDetails.jsp").forward(request, response);
     }
 }
