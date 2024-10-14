@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.Category;
 import model.Conversation;
 import model.Course;
 import model.User;
@@ -146,6 +147,24 @@ public class ConversationDAO extends DBContext {
             e.printStackTrace();
         }
         return participants;
+    }
+
+    public List<UserConversation> getAllUserConversationsForUser() {
+        String sql = "SELECT * FROM [User_Conversation]";
+        List<UserConversation> list = new ArrayList<>();
+         try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int conversationId = rs.getInt("conversationId");
+                String username = rs.getString("username");
+                UserConversation c = new UserConversation(conversationId, username);
+                list.add(c);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
     }
 
 }

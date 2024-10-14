@@ -81,7 +81,7 @@ public class sendMessage extends HttpServlet {
         Conversation conversation = conversationDAO.getConversationBetweenUsers(currentUser.getUsername(), recipient.getUsername());
         if (conversation == null) {
             conversation = new Conversation();
-            conversation.setConversationName("Chat between " + currentUser.getUsername() + " and " + recipient.getUsername());
+            conversation.setConversationName(recipient.getUsername());
             conversationDAO.createConversation(conversation, currentUser.getUsername(), recipient.getUsername());
         }
 
@@ -93,6 +93,8 @@ public class sendMessage extends HttpServlet {
         session.setAttribute("currentChatMessages", messages);
         session.setAttribute("currentConversationId", conversation.getConversationId());
         session.setAttribute("conversations", conversationDAO.getAllConversationsForUser(currentUser.getUsername()));
+        session.setAttribute("userConversation", conversationDAO.getAllUserConversationsForUser());
+        session.setAttribute("userList2", userDAO.getAll());
 
         // Chuyển hướng đến trang chat
         request.getRequestDispatcher("message.jsp").forward(request, response);
