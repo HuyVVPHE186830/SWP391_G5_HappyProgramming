@@ -17,8 +17,7 @@ public class viewBlogServlet extends HttpServlet {
             throws ServletException, IOException {
         // Fetch blogs from DAO
         BlogDAO blogDAO = new BlogDAO();
-        String userName = "antt"; // Replace with actual user (could be dynamic)
-        List<Blog> blogs = blogDAO.getAllBlogs(userName);
+        List<Blog> blogs = blogDAO.getAllBlogs();
 
         // Set blogs as a request attribute
         request.setAttribute("blogs", blogs);

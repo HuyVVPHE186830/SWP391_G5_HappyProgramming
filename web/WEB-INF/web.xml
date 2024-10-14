@@ -110,7 +110,7 @@
     </servlet>
     <servlet>
         <servlet-name>ViewBlogDetailServlet</servlet-name>
-        <servlet-class>ViewBlogDetailServlet</servlet-class>
+        <servlet-class>controller.ViewBlogDetailServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>

@@ -1,3 +1,5 @@
+package controller;
+
 import dal.BlogDAO;
 import model.Blog;
 
