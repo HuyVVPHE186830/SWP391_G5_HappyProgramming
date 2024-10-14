@@ -10,8 +10,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,8 @@ public class SubmitBlogServlet extends HttpServlet {
                 imageUrls.add(imageUrl);
             }
         }
-        String createdBy = (String) request.getSession().getAttribute("user"); // Assuming username is stored in the session
+        HttpSession session = request.getSession();
+        String createdBy = (String) session.getAttribute("user"); // Assuming username is stored in the session
         Blog newBlog = new Blog(0, title, content, createdBy,imageUrls, tags ); // username should be dynamically set
 
         // Create a new Blog object and save it using BlogDAO
@@ -49,7 +52,9 @@ public class SubmitBlogServlet extends HttpServlet {
         blogDAO.addBlog(newBlog); // Method to insert the new blog into the database
 
         // Redirect to the blog list after submission
-        response.sendRedirect(request.getContextPath() + "/viewblogs");
+        PrintWriter out = response.getWriter();
+        out.print(newBlog.toString());
+//        response.sendRedirect(request.getContextPath() + "/viewblogs");
     }
 
     private String saveImage(Part part) {
