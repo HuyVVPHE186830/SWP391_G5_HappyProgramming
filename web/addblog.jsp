@@ -31,7 +31,8 @@
         <div class="container mt-5">
             <h1>Create a New Blog Post</h1>
 
-            <form action="submitBlog.jsp" method="POST" enctype="multipart/form-data">
+            <!-- Change the action to point to the servlet -->
+            <form action="submitBlog" method="POST" enctype="multipart/form-data">
                 <!-- Blog Title -->
                 <div class="mb-3">
                     <label for="blogTitle" class="form-label">Blog Title</label>

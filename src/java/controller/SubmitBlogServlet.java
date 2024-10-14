@@ -22,7 +22,7 @@ public class SubmitBlogServlet extends HttpServlet {
         String title = request.getParameter("blogTitle");
         String content = request.getParameter("blogContent");
         String tagsParam = request.getParameter("blogTags");
-        
+
         // Split tags by comma and create a list
         List<Tag> tags = new ArrayList<>();
         if (tagsParam != null && !tagsParam.trim().isEmpty()) {
@@ -41,9 +41,10 @@ public class SubmitBlogServlet extends HttpServlet {
                 imageUrls.add(imageUrl);
             }
         }
+        String createdBy = (String) request.getSession().getAttribute("user"); // Assuming username is stored in the session
+        Blog newBlog = new Blog(0, title, content, createdBy,imageUrls, tags ); // username should be dynamically set
 
         // Create a new Blog object and save it using BlogDAO
-        Blog newBlog = new Blog(0, title, content, "username", tags, imageUrls); // Replace "username" with actual username
         BlogDAO blogDAO = new BlogDAO();
         blogDAO.addBlog(newBlog); // Method to insert the new blog into the database
 
