@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class SubmitBlogServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,9 +44,7 @@ public class SubmitBlogServlet extends HttpServlet {
                 imageUrls.add(imageUrl);
             }
         }
-        HttpSession session = request.getSession();
-        String createdBy = (String) session.getAttribute("user"); // Assuming username is stored in the session
-        Blog newBlog = new Blog(0, title, content, createdBy,imageUrls, tags ); // username should be dynamically set
+        Blog newBlog = new Blog(0, title, content, "antt", imageUrls, tags);
 
         // Create a new Blog object and save it using BlogDAO
         BlogDAO blogDAO = new BlogDAO();
@@ -53,7 +52,7 @@ public class SubmitBlogServlet extends HttpServlet {
 
         // Redirect to the blog list after submission
         PrintWriter out = response.getWriter();
-        out.print(newBlog.toString());
+        out.print(title);
 //        response.sendRedirect(request.getContextPath() + "/viewblogs");
     }
 
