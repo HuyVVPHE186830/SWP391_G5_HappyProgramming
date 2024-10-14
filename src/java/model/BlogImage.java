@@ -1,3 +1,5 @@
+package model;
+
 public class BlogImage {
     private int imageId;
     private int blogId;
