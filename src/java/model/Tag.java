@@ -4,7 +4,7 @@ public class Tag {
     private int tagId;
     private String tagName;
 
-    // Constructors
+    // Constructor
     public Tag(int tagId, String tagName) {
         this.tagId = tagId;
         this.tagName = tagName;
@@ -25,13 +25,5 @@ public class Tag {
 
     public void setTagName(String tagName) {
         this.tagName = tagName;
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "tagId=" + tagId +
-                ", tagName='" + tagName + '\'' +
-                '}';
     }
 }
