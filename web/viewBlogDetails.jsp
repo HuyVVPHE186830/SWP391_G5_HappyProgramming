@@ -89,7 +89,7 @@
                     if (blog != null) {
                 %>
                 <h1 class="blog-title"><%= blog.getTitle() %></h1>
-                <p class="author-info"><strong>By:</strong> <%= blog.getUserName() %></p>
+                <p class="author-info"><strong>By:</strong> <%= blog.getCreatedBy() %></p>
                 <p><%= blog.getContent() %></p>
 
                 <h3>Images:</h3>
