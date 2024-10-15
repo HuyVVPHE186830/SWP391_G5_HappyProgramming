@@ -22,8 +22,7 @@ public class SearchBlogServlet extends HttpServlet {
         List<Blog> blogs = blogDAO.searchBlogs(query); // Perform search based on the query
         
         request.setAttribute("blogs", blogs); // Set the search results as a request attribute
-        PrintWriter out = response.getWriter();
-        out.print(blogs.toString());
-//        request.getRequestDispatcher("listpost.jsp").forward(request, response); // Forward to the forum.jsp to display results
+
+        request.getRequestDispatcher("listpost.jsp").forward(request, response); // Forward to the forum.jsp to display results
     }
 }

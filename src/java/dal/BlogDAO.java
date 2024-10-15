@@ -292,32 +292,83 @@ public class BlogDAO extends DBContext {
     }
 
     public List<Blog> searchBlogs(String query) {
-        List<Blog> blogs = new ArrayList<>();
-        String sql = "SELECT * FROM blogs WHERE title LIKE ? OR content LIKE ? OR blog_id IN (SELECT blog_id FROM blog_tags WHERE tag_id IN (SELECT tag_id FROM tags WHERE tag_name LIKE ?))";
+        List<Blog> list = new ArrayList<>();
+        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
+                + "FROM Blogs b "
+                + "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id "
+                + "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id "
+                + "LEFT JOIN tags t ON bt.tag_id = t.tag_id "
+                + "WHERE b.title LIKE ? OR b.content LIKE ? OR b.blog_Id IN ("
+                + "SELECT bt.blog_id FROM blog_tags bt "
+                + "INNER JOIN tags tg ON bt.tag_id = tg.tag_id WHERE tg.tag_name LIKE ?) "
+                + "ORDER BY b.created_At DESC";
 
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
 
             String searchQuery = "%" + query + "%"; // Prepare query for SQL LIKE
-            ps.setString(1, searchQuery);
-            ps.setString(2, searchQuery);
-            ps.setString(3, searchQuery);
+            st.setString(1, searchQuery);
+            st.setString(2, searchQuery);
+            st.setString(3, searchQuery);
 
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = st.executeQuery();
+
+            // Temporary storage for blog data
+            int currentBlogId = -1;
+            Blog currentBlog = null;
+            List<String> imageUrls = new ArrayList<>();
+            List<Tag> tags = new ArrayList<>();
+
             while (rs.next()) {
-                int blogId = rs.getInt("blog_id");
-                String title = rs.getString("title");
-                String content = rs.getString("content");
-                String createdBy = rs.getString("created_by");
-                // Assuming imageUrls is stored as a comma-separated string
-                String[] imageUrls = rs.getString("image_urls").split(",");
+                int blogId = rs.getInt("blog_Id");
 
-                Blog blog = new Blog(blogId, title, content, createdBy, List.of(imageUrls), new ArrayList<>()); // Add tags later if needed
-                blogs.add(blog);
+                if (blogId != currentBlogId) {
+                    if (currentBlog != null) {
+                        currentBlog.setTags(tags);
+                        currentBlog.setImageUrls(imageUrls);
+                        list.add(currentBlog);
+                    }
+
+                    // Create a new Blog object for a new blogId
+                    String title = rs.getString("title");
+                    String content = rs.getString("content");
+                    String createdBy = rs.getString("user_Name");
+
+                    currentBlog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
+                    currentBlogId = blogId;
+
+                    // Reset imageUrls and tags lists for the new blog
+                    imageUrls = new ArrayList<>();
+                    tags = new ArrayList<>();
+                }
+
+                // Add the current row's imageUrl if available
+                String imageUrl = rs.getString("image_url");
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    imageUrls.add(imageUrl);
+                }
+
+                // Create a new Tag object if available
+                int tagId = rs.getInt("tag_id");
+                String tagName = rs.getString("tag_name");
+                if (tagName != null && !tagName.isEmpty()) {
+                    Tag tag = new Tag(tagId, tagName); // Create Tag object
+                    tags.add(tag); // Add Tag to list
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle SQL exception
+
+            // Add the last blog in the result set
+            if (currentBlog != null) {
+                currentBlog.setTags(tags);
+                currentBlog.setImageUrls(imageUrls);
+                list.add(currentBlog);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
-        return blogs;
+
+        return list; // Return the list of blogs
     }
+
 }
