@@ -337,8 +337,9 @@
                 <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> <!-- Giới hạn chiều rộng tối đa -->
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title" id="memberListModalLabel">List Mentee</h3>
+                            <h3 class="modal-title" id="memberListModalLabel">List Mentee: ${member}</h3>
                         </div>
+                        <p class="modal-title" style="margin: 10px 0 0 20px">Course: ${course.courseName}</p>
                         <div class="modal-body">
                             <!-- Bảng hiển thị thông tin mentee -->
                             <table class="table table-bordered">
@@ -356,9 +357,9 @@
                                         <c:forEach var="user" items="${listMentee}">
                                             <tr>
                                                 <td>
-                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;">
+                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
-                                                <td>${user.firstName} ${user.lastName}</td>
+                                                <td>${user.lastName} ${user.firstName}</td>
                                                 <td>${user.mail}</td>
                                                 <td>${user.dob}</td>
                                                 <td>
@@ -389,8 +390,9 @@
                 <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> <!-- Giới hạn chiều rộng tối đa -->
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title" id="requestListModalLabel">List Request</h3>
+                            <h3 class="modal-title" id="requestListModalLabel">List Request: ${rmember}</h3>
                         </div>
+                        <p class="modal-title" style="margin: 10px 0 0 20px">Course: ${course.courseName}</p>
                         <div class="modal-body">
                             <!-- Bảng hiển thị thông tin yêu cầu -->
                             <table class="table table-bordered">
@@ -408,9 +410,9 @@
                                         <c:forEach var="user" items="${listRequest}">
                                             <tr>
                                                 <td>
-                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;">
+                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
-                                                <td>${user.firstName} ${user.lastName}</td>
+                                                <td>${user.lastName} ${user.firstName}</td>
                                                 <td>${user.mail}</td> <!-- Thêm Email -->
                                                 <td>${user.dob}</td> <!-- Thêm Ngày sinh -->
                                                 <td>
