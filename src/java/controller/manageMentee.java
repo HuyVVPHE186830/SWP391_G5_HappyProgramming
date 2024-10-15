@@ -4,12 +4,9 @@
  */
 package controller;
 
-import dal.CategoryDAO;
-import dal.CourseCategoryDAO;
 import dal.CourseDAO;
 import dal.MentorPostDAO;
 import dal.UserDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -27,7 +24,7 @@ import model.User;
  *
  * @author Huy Võ
  */
-public class manageCourse extends HttpServlet {
+public class manageMentee extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +43,10 @@ public class manageCourse extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet manageCourse</title>");
+            out.println("<title>Servlet manageMentee</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet manageCourse at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet manageMentee at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,33 +64,6 @@ public class manageCourse extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        CourseDAO daoC = new CourseDAO();
-        UserDAO daoU = new UserDAO();
-        String courseIdString = request.getParameter("courseId");
-        int courseId = Integer.parseInt(courseIdString);
-        List<Course> courses = daoC.getAll();
-        Course course = null;
-        for (Course c : courses) {
-            if (c.getCourseId() == courseId) {
-                course = c;
-            }
-        }
-        int member = daoC.getTotalParticipants(course.getCourseId());
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-        MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());
-        List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1);
-        List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1);
-        session.setAttribute("member", member);
-        session.setAttribute("course", course);
-        session.setAttribute("posts", posts);
-        session.setAttribute("listMentee", listMentee);
-        request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 
     /**
@@ -107,7 +77,13 @@ public class manageCourse extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String username = request.getParameter("username");
+        int courseId = Integer.parseInt(request.getParameter("courseId"));
+        CourseDAO daoC = new CourseDAO();
+
+        daoC.banMentee(courseId, username, -1);
+
+        response.sendRedirect("manageCourse?courseId=" + courseId);
     }
 
     /**
@@ -120,4 +96,21 @@ public class manageCourse extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public static void main(String[] args) {
+        CourseDAO daoC = new CourseDAO();
+        UserDAO daoU = new UserDAO();
+        List<String> menteeUsername = daoC.getMenteeByCourse(1, 1);
+        List<User> listU = new ArrayList<User>();
+        for (String string : menteeUsername) {
+            User user = daoU.getUserByUsernameM(string);
+            if (user != null) {
+                listU.add(user);
+            } else {
+                System.out.println("User not found for username: " + string);
+            }
+        }
+        for (User user : listU) {
+            System.out.println(user.toString());
+        }
+    }
 }

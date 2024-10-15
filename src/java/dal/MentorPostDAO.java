@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import model.MentorPost;
 import java.sql.Timestamp;
+import model.User;
 
 /**
  *
@@ -114,6 +115,37 @@ public class MentorPostDAO extends DBContext {
         }
 
         return postTypeId;
+    }
+
+    public void updateMentorPost(MentorPost mentorPost, int postId) {
+        String sql = "UPDATE MentorPosts SET postTitle = ?, postContent = ?, postTypeId = ?, deadline = ? WHERE postId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, mentorPost.getPostTitle());
+            st.setString(2, mentorPost.getPostContent());
+            st.setInt(3, mentorPost.getPostTypeId());
+            st.setTimestamp(4, mentorPost.getDeadline());
+            st.setInt(5, postId);
+            st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public List<User> getMenteeList(int courseId, int status) {
+        CourseDAO daoC = new CourseDAO();
+        UserDAO daoU = new UserDAO();
+        List<String> username = daoC.getMenteeByCourse(courseId, status);
+        List<User> listMentee = new ArrayList<>();
+        for (String string : username) {
+            User user1 = daoU.getUserByUsernameM(string);
+            if (user1 != null) {
+                listMentee.add(user1);
+            } else {
+                System.out.println("User not found for username: " + string);
+            }
+        }
+        return listMentee;
     }
 
     public static void main(String[] args) {

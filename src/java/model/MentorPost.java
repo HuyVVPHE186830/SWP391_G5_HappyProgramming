@@ -35,6 +35,13 @@ public class MentorPost {
         this.createdBy = createdBy;
         this.createdAt = new Timestamp(System.currentTimeMillis()); // Gán thời gian hiện tại cho createdAt
     }
+    
+    public MentorPost(String postTitle, String postContent, int postTypeId, Timestamp deadline) {
+        this.postTitle = postTitle;
+        this.postContent = postContent;
+        this.postTypeId = postTypeId;
+        this.deadline = deadline;
+    }
 
     public MentorPost(int postId, String postTitle, String postContent, int postTypeId, Timestamp deadline, int courseId, String createdBy, Timestamp createdAt) {
         this.postId = postId;
