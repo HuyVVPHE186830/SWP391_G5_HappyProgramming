@@ -228,6 +228,8 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="editPostModalLabel_${post.postId}">Edit Post</h5>
                                         </div>
+                                        <strong><p class="modal-title" style="margin: 10px 0 0 20px">Course: ${course.courseName}</p> </strong>
+                                        <p class="modal-title" style="margin: 10px 0 0 20px">Last change: <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" /></p>
                                         <div class="modal-body">
                                             <form id="editPostForm_${post.postId}" action="editMentorPost" method="POST">
                                                 <input type="hidden" name="postId" value="${post.postId}">
@@ -253,8 +255,14 @@
                                                     <input type="datetime-local" class="form-control" id="editDeadline_${post.postId}" name="editDeadline" value="${post.deadline}">
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">Back</button>
-                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
+                                                        <i class="fas fa-arrow-left"></i> <!-- Biểu tượng Back -->
+                                                    </button>
+
+                                                    <!-- Nút Save với biểu tượng lưu trữ -->
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-save"></i> <!-- Biểu tượng Save -->
+                                                    </button>
                                                 </div>
                                             </form>
                                         </div>
@@ -285,7 +293,11 @@
 
                         </div>
                         <!-- Nút để mở modal -->
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">New Post</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                            <i class="fas fa-plus"></i> <!-- Biểu tượng Add -->
+                            New Post
+                        </button>
+
                     </div>
                 </div>
             </div>
@@ -299,6 +311,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
                         </div>
+                        <strong><p class="modal-title" style="margin: 10px 0 0 20px">Course: ${course.courseName}</p> </strong>
                         <div class="modal-body">
                             <form id="mentorPostForm" action="addMentorPost" method="POST">
                                 <input type="hidden" name="courseId" value="${course.courseId}">
@@ -324,8 +337,11 @@
                                     <input type="datetime-local" class="form-control" id="deadline" name="deadline">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-check"></i> <!-- Biểu tượng Check -->
+                                    </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>
