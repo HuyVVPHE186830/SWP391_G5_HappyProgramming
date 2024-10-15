@@ -73,7 +73,7 @@ public class SubmitBlogServlet extends HttpServlet {
 
     private String saveImage(Part part) {
         String fileName = part.getSubmittedFileName();
-        String imageUrl = "img/" + fileName; // Replace with actual path
+        String imageUrl = "blogimg/" + fileName; // Replace with actual path
         return imageUrl;
     }
 }
