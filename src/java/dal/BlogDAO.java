@@ -178,6 +178,73 @@ public class BlogDAO extends DBContext {
         }
     }
 
+    private void addTagToBlog(int blogId, Tag tag) {
+        // First, get the tag ID by name (without inserting new tags)
+        int tagId = getTagIdByName(tag.getTagName());
+
+        // Only associate the tag if it exists in the database
+        if (tagId > 0) {
+            String sql = "INSERT INTO blog_tags (blog_id, tag_id) VALUES (?, ?)";
+            try {
+                PreparedStatement st = connection.prepareStatement(sql);
+                st.setInt(1, blogId);
+                st.setInt(2, tagId);
+                st.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        } else {
+            System.out.println("Tag not found in the database: " + tag.getTagName());
+        }
+    }
+
+    // Method to get tag ID by tag name
+    public int getTagIdByName(String tagName) {
+        String sql = "SELECT tag_id FROM tags WHERE tag_name = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, tagName);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("tag_id"); // Return tag ID if found
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return 0; // Return 0 if tag not found
+    }
+
+    // Method to add a blog and associate it with tags
+    public void addBlogWithTags(Blog blog, List<Integer> tagIds) {
+        String sql = "INSERT INTO Blogs (title, content, user_name, created_At, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            st.setString(1, blog.getTitle());
+            st.setString(2, blog.getContent());
+            st.setString(3, blog.getCreatedBy());
+            st.executeUpdate();
+
+            // Get the generated blog ID
+            ResultSet generatedKeys = st.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int blogId = generatedKeys.getInt(1);
+
+                // Add images
+                for (String imageUrl : blog.getImageUrls()) {
+                    addImageToBlog(blogId, imageUrl);
+                }
+
+                // Add tags
+                for (int tagId : tagIds) {
+                    addTagToBlog(blogId, tagId);
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    // Method to add an image to a blog
     private void addImageToBlog(int blogId, String imageUrl) {
         String sql = "INSERT INTO blog_images (blog_id, image_url) VALUES (?, ?)";
         try {
@@ -190,36 +257,17 @@ public class BlogDAO extends DBContext {
         }
     }
 
-    private void addTagToBlog(int blogId, Tag tag) {
+    // Method to add a tag to a blog
+    private void addTagToBlog(int blogId, int tagId) {
         String sql = "INSERT INTO blog_tags (blog_id, tag_id) VALUES (?, ?)";
         try {
-            // Assuming you have a method to get the tag ID by name
-            int tagId = getTagIdByName(tag.getTagName());
-            if (tagId > 0) {
-                PreparedStatement st = connection.prepareStatement(sql);
-                st.setInt(1, blogId);
-                st.setInt(2, tagId);
-                st.executeUpdate();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-    }
-
-    // Assuming you have this method in your DAO class to get tag ID by name
-    private int getTagIdByName(String tagName) {
-        String sql = "SELECT tag_id FROM tags WHERE tag_name = ?"; // Example query
-        try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, tagName);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("tag_id");
-            }
+            st.setInt(1, blogId);
+            st.setInt(2, tagId);
+            st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        return 0; // Replace with actual logic
     }
 
     public List<Tag> getAllTags() {
@@ -240,7 +288,6 @@ public class BlogDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace(); // Proper error handling/logging should be here
         }
-
         return tags;
     }
 }
