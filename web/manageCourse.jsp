@@ -334,74 +334,112 @@
             </div>
 
             <div class="modal fade" id="memberListModal" tabindex="-1" aria-labelledby="memberListModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" style="width: 25%">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> <!-- Giới hạn chiều rộng tối đa -->
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title" id="memberListModalLabel">List Mentee</h3>
                         </div>
                         <div class="modal-body">
-                            <ul class="list-group">
-                                <c:if test="${not empty listMentee}">
-                                    <c:forEach var="user" items="${listMentee}">
-                                        <li class="list-group-item d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; margin-right:15px;">
-                                                <span>${user.firstName} ${user.lastName}</span>
-                                            </div>
-                                            <!-- Nút Ban -->
-                                            <form action="manageMentee" method="post">
-                                                <input type="hidden" name="courseId" value="${course.courseId}">
-                                                <input type="hidden" name="username" value="${user.username}">
-                                                <button type="submit" class="btn btn-danger btn-sm">Ban</button>
-                                            </form>
-                                        </li>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${empty listMentee}">
-                                    <li class="list-group-item">No mentees found.</li>
+                            <!-- Bảng hiển thị thông tin mentee -->
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Date of Birth</th>
+                                        <th>Action</th> <!-- Nút Ban -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:if test="${not empty listMentee}">
+                                        <c:forEach var="user" items="${listMentee}">
+                                            <tr>
+                                                <td>
+                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;">
+                                                </td>
+                                                <td>${user.firstName} ${user.lastName}</td>
+                                                <td>${user.mail}</td>
+                                                <td>${user.dob}</td>
+                                                <td>
+                                                    <form action="manageMentee" method="post">
+                                                        <input type="hidden" name="courseId" value="${course.courseId}">
+                                                        <input type="hidden" name="username" value="${user.username}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Ban</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                     </c:if>
-                            </ul>
+                                    <c:if test="${empty listMentee}">
+                                        <tr>
+                                            <td colspan="5" class="text-center">No mentees found.</td>
+                                        </tr>
+                                    </c:if>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="modal fade" id="requestListModal" tabindex="-1" aria-labelledby="memberListModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" style="width: 28%">
+
+
+            <div class="modal fade" id="requestListModal" tabindex="-1" aria-labelledby="requestListModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> <!-- Giới hạn chiều rộng tối đa -->
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title" id="memberListModalLabel">List Mentee</h3>
+                            <h3 class="modal-title" id="requestListModalLabel">List Request</h3>
                         </div>
                         <div class="modal-body">
-                            <ul class="list-group">
-                                <c:if test="${not empty listRequest}">
-                                    <c:forEach var="user" items="${listRequest}">
-                                        <li class="list-group-item d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; margin-right:15px;">
-                                                <span>${user.firstName} ${user.lastName}</span>
-                                            </div>
-                                            <!-- Nút Ban -->
-                                            <form action="manageMentee" method="get">
-                                                <input type="hidden" name="courseId" value="${course.courseId}">
-                                                <input type="hidden" name="username" value="${user.username}">
-                                                <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
-                                                    <i class="fas fa-check"></i> <!-- Icon dấu tick -->
-                                                </button>
-                                                <button type="submit" class="btn btn-danger btn-sm" name="action" value="decline">
-                                                    <i class="fas fa-times"></i> <!-- Icon dấu X -->
-                                                </button>
-                                            </form>
-                                        </li>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${empty listRequest}">
-                                    <li class="list-group-item">No request found.</li>
+                            <!-- Bảng hiển thị thông tin yêu cầu -->
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Date of Birth</th>
+                                        <th>Action</th> <!-- Nút Accept/Decline -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:if test="${not empty listRequest}">
+                                        <c:forEach var="user" items="${listRequest}">
+                                            <tr>
+                                                <td>
+                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;">
+                                                </td>
+                                                <td>${user.firstName} ${user.lastName}</td>
+                                                <td>${user.mail}</td> <!-- Thêm Email -->
+                                                <td>${user.dob}</td> <!-- Thêm Ngày sinh -->
+                                                <td>
+                                                    <form action="manageMentee" method="get">
+                                                        <input type="hidden" name="courseId" value="${course.courseId}">
+                                                        <input type="hidden" name="username" value="${user.username}">
+                                                        <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
+                                                            <i class="fas fa-check"></i> <!-- Icon dấu tick -->
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger btn-sm" name="action" value="decline">
+                                                            <i class="fas fa-times"></i> <!-- Icon dấu X -->
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                     </c:if>
-                            </ul>
+                                    <c:if test="${empty listRequest}">
+                                        <tr>
+                                            <td colspan="5" class="text-center">No request found.</td>
+                                        </tr>
+                                    </c:if>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+
+
     </body>
 </html>
