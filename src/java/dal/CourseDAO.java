@@ -1260,7 +1260,7 @@ public class CourseDAO extends DBContext {
         return courses;
     }
 
-    public int getTotalParticipants(int courseId) {
+    public int getTotalParticipants(int courseId, int status) {
         int totalParticipants = 0;
         String sql = "SELECT COUNT(*) AS TotalParticipants "
                 + "FROM [Participate] "
@@ -1271,7 +1271,7 @@ public class CourseDAO extends DBContext {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Set parameters
             preparedStatement.setInt(1, 3);
-            preparedStatement.setInt(2, 1);
+            preparedStatement.setInt(2, status);
             preparedStatement.setInt(3, courseId);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {

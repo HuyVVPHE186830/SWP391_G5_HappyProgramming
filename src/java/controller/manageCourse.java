@@ -79,7 +79,8 @@ public class manageCourse extends HttpServlet {
                 course = c;
             }
         }
-        int member = daoC.getTotalParticipants(course.getCourseId());
+        int member = daoC.getTotalParticipants(course.getCourseId(), 1);
+        int rmember = daoC.getTotalParticipants(course.getCourseId(), 0);
         User user = (User) session.getAttribute("user");
         if (user == null) {
             response.sendRedirect("login.jsp");
@@ -88,11 +89,15 @@ public class manageCourse extends HttpServlet {
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
         List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());
         List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1);
+        List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0);
         List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1);
+        List<User> listRequest = mentorPostDAO.getMenteeList(courseId, 0);
         session.setAttribute("member", member);
+        session.setAttribute("rmember", rmember);
         session.setAttribute("course", course);
         session.setAttribute("posts", posts);
         session.setAttribute("listMentee", listMentee);
+        session.setAttribute("listRequest", listRequest);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 

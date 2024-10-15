@@ -79,6 +79,14 @@
             .post {
                 cursor: pointer;
             }
+            .icon-link {
+                font-size: 1.2rem; /* Tăng kích thước văn bản */
+                margin-right: 20px; /* Khoảng cách giữa các thẻ */
+            }
+
+            .icon {
+                font-size: 1.5rem; /* Tăng kích thước biểu tượng */
+            }
         </style>
     </head>
     <body>
@@ -90,7 +98,9 @@
             } else {
                 Course course = (Course) session.getAttribute("course");
                 int member = (int) session.getAttribute("member");
+                int rmember = (int) session.getAttribute("rmember");
                 List<User> listMentee = (List<User>) session.getAttribute("listMentee");
+                List<User> listRequest = (List<User>) session.getAttribute("listRequest");
             }
         %>
 
@@ -264,10 +274,15 @@
                 <div class="col-md-4">
                     <div class="side-panel">
                         <div class="d-flex align-items-center mb-4">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#memberListModal" class="text-decoration-none">
-                                <i class="fas fa-users" style="cursor: pointer;"></i>&nbsp; 
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#memberListModal" class="text-decoration-none icon-link">
+                                <i class="fas fa-users icon"></i>&nbsp; 
                                 <strong>${member}</strong>
                             </a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
+                                <i class="fas fa-bell icon"></i>
+                                <strong>${rmember}</strong>
+                            </a>
+
                         </div>
                         <!-- Nút để mở modal -->
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">New Post</button>
@@ -351,6 +366,42 @@
                 </div>
             </div>
 
-
+            <div class="modal fade" id="requestListModal" tabindex="-1" aria-labelledby="memberListModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" style="width: 28%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="memberListModalLabel">List Mentee</h3>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                <c:if test="${not empty listRequest}">
+                                    <c:forEach var="user" items="${listRequest}">
+                                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; margin-right:15px;">
+                                                <span>${user.firstName} ${user.lastName}</span>
+                                            </div>
+                                            <!-- Nút Ban -->
+                                            <form action="manageMentee" method="get">
+                                                <input type="hidden" name="courseId" value="${course.courseId}">
+                                                <input type="hidden" name="username" value="${user.username}">
+                                                <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
+                                                    <i class="fas fa-check"></i> <!-- Icon dấu tick -->
+                                                </button>
+                                                <button type="submit" class="btn btn-danger btn-sm" name="action" value="decline">
+                                                    <i class="fas fa-times"></i> <!-- Icon dấu X -->
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </c:forEach>
+                                </c:if>
+                                <c:if test="${empty listRequest}">
+                                    <li class="list-group-item">No request found.</li>
+                                    </c:if>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </body>
 </html>
