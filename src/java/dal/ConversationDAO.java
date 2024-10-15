@@ -152,7 +152,7 @@ public class ConversationDAO extends DBContext {
     public List<UserConversation> getAllUserConversationsForUser() {
         String sql = "SELECT * FROM [User_Conversation]";
         List<UserConversation> list = new ArrayList<>();
-         try {
+        try {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -167,4 +167,63 @@ public class ConversationDAO extends DBContext {
         return list;
     }
 
+    public void editConversationNameById(int conversationIdParam, String newConversationName) {
+        String sql = "UPDATE [Conversation] SET conversationName = ? WHERE conversationId = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, newConversationName);
+            preparedStatement.setInt(2, conversationIdParam);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Success");
+            } else {
+                System.out.println("Can not find ID: " + conversationIdParam);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteConversationNameById(int conversationIdParam) {
+        String sql = "DELETE FROM [dbo].[Conversation]\n"
+                + "      WHERE conversationId = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, conversationIdParam);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Success");
+            } else {
+                System.out.println("Can not find ID: " + conversationIdParam);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteMessageById(int messageIdParam) {
+        String sql = "DELETE FROM [dbo].[Message]\n"
+                + "      WHERE messageId = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, messageIdParam);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Success");
+            } else {
+                System.out.println("Can not find ID: " + messageIdParam);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        ConversationDAO dao = new ConversationDAO();
+        dao.deleteMessageById(13);
+    }
 }

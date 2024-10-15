@@ -21,7 +21,7 @@ import model.User;
  * @author yeuda
  */
 public class MessageDAO extends DBContext {
-
+    
     public List<Message> getMessagesByConversationId(int conversationId) {
         List<Message> messages = new ArrayList<>();
         String query = "SELECT * FROM Message WHERE conversationId = ? ORDER BY sentAt";
@@ -39,6 +39,7 @@ public class MessageDAO extends DBContext {
                     message.setSentAt(rs.getTimestamp("sentAt"));
                     message.setMsgContent(rs.getString("msgContent"));
                     message.setContentType(rs.getString("contentType"));
+                    message.setMessageId(rs.getInt("messageId"));
 
                     messages.add(message);
                 }

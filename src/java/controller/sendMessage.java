@@ -3,30 +3,30 @@ package controller;
 import dal.ConversationDAO;
 import dal.MessageDAO;
 import dal.UserDAO;
-import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.List;
+import java.sql.SQLException;
 import model.Conversation;
 import model.Message;
-import java.sql.SQLException;
 import model.User;
 
 public class sendMessage extends HttpServlet {
 
-    MessageDAO messageDAO = new MessageDAO();
+    private MessageDAO messageDAO = new MessageDAO();
+    private ConversationDAO conversationDAO = new ConversationDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String conversationIdParam = request.getParameter("conversationId");
 
-        // Lấy người dùng hiện tại
         User currentUser = (User) session.getAttribute("user");
 
         if (currentUser == null || (username == null && conversationIdParam == null)) {
@@ -38,14 +38,12 @@ public class sendMessage extends HttpServlet {
         User recipient = null;
 
         if (username != null) {
-            // Nếu có username, lấy recipient từ username
             recipient = userDAO.getUserByUsernameM(username);
             if (recipient == null) {
                 response.sendRedirect("error.jsp");
                 return;
             }
         } else if (conversationIdParam != null) {
-            // Nếu có conversationId, lấy recipient từ cuộc hội thoại
             int conversationId;
             try {
                 conversationId = Integer.parseInt(conversationIdParam);
@@ -57,8 +55,6 @@ public class sendMessage extends HttpServlet {
                 return;
             }
 
-            // Lấy conversation và recipient từ conversationId
-            ConversationDAO conversationDAO = new ConversationDAO();
             Conversation conversation = conversationDAO.getConversationById(conversationId);
             if (conversation != null) {
                 List<String> participantUsernames = conversationDAO.getParticipantsByConversationId(conversationId);
@@ -77,15 +73,13 @@ public class sendMessage extends HttpServlet {
         }
 
         // Kiểm tra và tạo cuộc hội thoại nếu chưa tồn tại
-        ConversationDAO conversationDAO = new ConversationDAO();
         Conversation conversation = conversationDAO.getConversationBetweenUsers(currentUser.getUsername(), recipient.getUsername());
         if (conversation == null) {
             conversation = new Conversation();
-            conversation.setConversationName(recipient.getUsername());
+            conversation.setConversationName("Chat between " + currentUser.getUsername() + " and " + recipient.getUsername());
             conversationDAO.createConversation(conversation, currentUser.getUsername(), recipient.getUsername());
         }
 
-        // Lấy danh sách tin nhắn
         List<Message> messages = messageDAO.getMessagesByConversationId(conversation.getConversationId());
 
         // Lưu thông tin vào session
@@ -96,7 +90,6 @@ public class sendMessage extends HttpServlet {
         session.setAttribute("userConversation", conversationDAO.getAllUserConversationsForUser());
         session.setAttribute("userList2", userDAO.getAll());
 
-        // Chuyển hướng đến trang chat
         request.getRequestDispatcher("message.jsp").forward(request, response);
     }
 
@@ -104,21 +97,20 @@ public class sendMessage extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
 
-        // Lấy các tham số từ request
         String messageContent = request.getParameter("message");
         String recipientUsername = request.getParameter("recipient");
 
-        // Kiểm tra các tham số
         if (currentUser == null || messageContent == null || recipientUsername == null) {
             response.sendRedirect("error.jsp");
             return;
         }
 
-        // Kiểm tra và lấy cuộc hội thoại
-        ConversationDAO conversationDAO = new ConversationDAO();
         Conversation conversation = conversationDAO.getConversationBetweenUsers(currentUser.getUsername(), recipientUsername);
+        if (conversation == null) {
+            response.sendRedirect("error.jsp");
+            return;
+        }
 
-        // Tạo đối tượng Message
         Message message = new Message();
         message.setConversationId(conversation.getConversationId());
         message.setSentBy(currentUser.getUsername());
@@ -126,7 +118,6 @@ public class sendMessage extends HttpServlet {
         message.setMsgContent(messageContent);
         message.setContentType("text");
 
-        // Lưu tin nhắn vào cơ sở dữ liệu
         try {
             messageDAO.saveMessage(message);
         } catch (SQLException e) {
@@ -135,7 +126,6 @@ public class sendMessage extends HttpServlet {
             return;
         }
 
-        // Cập nhật thông tin recipient và messages vào session
         UserDAO userDAO = new UserDAO();
         User recipient = userDAO.getUserByUsernameM(recipientUsername);
         if (recipient == null) {
@@ -148,7 +138,6 @@ public class sendMessage extends HttpServlet {
         session.setAttribute("currentChatMessages", messages);
         session.setAttribute("currentConversationId", conversation.getConversationId());
 
-        // Redirect về trang chat với cùng các tham số
         response.sendRedirect("sendMessage?conversationId=" + conversation.getConversationId() + "&recipient=" + recipientUsername);
     }
 }
