@@ -125,7 +125,8 @@
                         <c:if test="${!status.last && status.index != requestScope.otherCourseMentor.size() - 2}">, </c:if>
                     </c:forEach>
                     <br>
-                    ${mD.lastName} ${mD.firstName} has been our mentor since <span style="font-weight: 500"><fmt:formatDate value="${mD.createdDate}" pattern="dd/MM/yyyy"/></span>. Over the years, this mentor has contributed significantly to the growth and development of our community. With a passion for teaching and guiding, ${mD.lastName} has helped numerous learners achieve their goals. Their dedication and expertise are reflected in the wide range of courses they provide. 
+                    ${mD.lastName} ${mD.firstName} has been our mentor since <span style="font-weight: 500"><fmt:formatDate value="${mD.createdDate}" pattern="dd/MM/yyyy"/></span>. Over the years, this mentor has contributed significantly to the growth and development of our community. With a passion for teaching and guiding, ${mD.lastName} ${mD.firstName} 
+                    has helped numerous learners achieve their goals. Their dedication and expertise are reflected in the wide range of courses they provide. 
                     <br>
                     Whether you're a beginner or an advanced learner, this mentor has something valuable to offer in each course.
                 </h5>
