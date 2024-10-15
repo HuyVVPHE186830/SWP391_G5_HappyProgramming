@@ -54,17 +54,16 @@ public class SubmitBlogServlet extends HttpServlet {
         // Create a new Blog object and save it using BlogDAO
         BlogDAO blogDAO = new BlogDAO();
         blogDAO.addBlog(newBlog); // Method to insert the new blog into the database
-PrintWriter out = response.getWriter();
-out.print(blogDAO);
+
         // Redirect to the blog list after submission
-//        response.sendRedirect(request.getContextPath() + "/viewblogs");
+        response.sendRedirect(request.getContextPath() + "/viewblogs");
     }
 
     private String saveImage(Part part) {
         // Implement this method to save the image and return the image URL
         // This is a placeholder implementation. You should implement actual file saving logic.
         String fileName = part.getSubmittedFileName();
-        String imageUrl = "/path/to/images/" + fileName; // Replace with actual path where images are saved
+        String imageUrl = "C:\\Users\\Sapphire\\OneDrive - MSFT\\Pictures\\Screenshots" + fileName; // Replace with actual path where images are saved
         // Save the image to the server here
         return imageUrl;
     }
