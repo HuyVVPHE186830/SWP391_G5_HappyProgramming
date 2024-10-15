@@ -5,24 +5,18 @@
 package controller;
 
 import dal.CourseDAO;
-import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import model.Course;
-import model.User;
 
 /**
  *
- * @author Admin
+ * @author Huy Võ
  */
-public class viewCourseMentor extends HttpServlet {
+public class requestScreen extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +35,10 @@ public class viewCourseMentor extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet viewCourseMentor</title>");
+            out.println("<title>Servlet requestScreen</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet viewCourseMentor at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet requestScreen at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,35 +56,7 @@ public class viewCourseMentor extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String orderby = request.getParameter("orderby");
-        if(orderby == null) {
-            orderby = "default";
-        }
-        HttpSession session = request.getSession();
-        UserDAO daoU = new UserDAO();
-        CourseDAO daoC = new CourseDAO();
-        String courseId_str = request.getParameter("courseId");
-
-        try {
-
-            int courseId = Integer.parseInt(courseId_str);
-            List<User> mentor = new ArrayList<>();
-            if (orderby.equals("default")) {
-                mentor = daoU.getAllMentorByCourseId(courseId);
-            }
-            if (orderby.equals("name")) {
-                mentor = daoU.getAllMentorByCourseIdOrderByName(courseId);
-            }
-            List<Course> otherCourse = daoC.getAllCoursesExceptOne(courseId);
-            Course course = daoC.getCourseByCourseId(courseId);
-            request.setAttribute("mentorThisCourse", mentor);
-            request.setAttribute("courseOfMentor", course);
-            request.setAttribute("order", orderby);
-            request.setAttribute("otherCourseExO", otherCourse);
-            request.getRequestDispatcher("viewCourseMentor.jsp").forward(request, response);
-        } catch (Exception e) {
-
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -104,28 +70,17 @@ public class viewCourseMentor extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        UserDAO daoU = new UserDAO();
+        String username = request.getParameter("username");
+        int courseId = Integer.parseInt(request.getParameter("courseId"));
         CourseDAO daoC = new CourseDAO();
-        String courseId_str = request.getParameter("courseId");
-        String keyword = request.getParameter("keyword");
-        try {
 
-            int courseId = Integer.parseInt(courseId_str);
-            List<User> mentor = daoU.getAllMentorBySearchKey(courseId, keyword);
-            Course course = daoC.getCourseByCourseId(courseId);
-            List<Course> otherCourse = daoC.getAllCoursesExceptOne(courseId);
-            if(mentor == null) {
-                request.setAttribute("searchNull", null);
-            }
-            request.setAttribute("keyword", keyword);
-            request.setAttribute("mentorThisCourse", mentor);
-            request.setAttribute("courseOfMentor", course);
-            request.setAttribute("otherCourseExO", otherCourse);
-            request.getRequestDispatcher("viewCourseMentor.jsp").forward(request, response);
-        } catch (Exception e) {
+        // Gọi phương thức banMentee với giá trị 0 để gửi yêu cầu
+        daoC.banMentee(courseId, username, 0);
 
-        }
+        // Thiết lập thông báo
+        request.setAttribute("message", "Your request is waiting!");
+
+        request.getRequestDispatcher("request.jsp").forward(request, response);
     }
 
     /**

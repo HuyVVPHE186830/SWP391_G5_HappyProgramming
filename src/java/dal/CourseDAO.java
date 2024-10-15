@@ -23,9 +23,13 @@ public class CourseDAO extends DBContext {
 //        in.add(1);
 //        in.add(3);
 //        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-        List<Course> list = dao.getAllCourse3(1);
+        List<Course> list = dao.getSameCourse(1);
         for (Course course : list) {
             System.out.println(course);
+        }
+        List<String> string = dao.getMenteeByCourse(1, 1);
+        for (String string1 : string) {
+            System.out.println(string1);
         }
 //        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
 //        System.out.println(totalRecord);
@@ -1256,7 +1260,7 @@ public class CourseDAO extends DBContext {
         return courses;
     }
 
-    public int getTotalParticipants(int courseId) {
+    public int getTotalParticipants(int courseId, int status) {
         int totalParticipants = 0;
         String sql = "SELECT COUNT(*) AS TotalParticipants "
                 + "FROM [Participate] "
@@ -1267,7 +1271,7 @@ public class CourseDAO extends DBContext {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Set parameters
             preparedStatement.setInt(1, 3);
-            preparedStatement.setInt(2, 1);
+            preparedStatement.setInt(2, status);
             preparedStatement.setInt(3, courseId);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -1302,7 +1306,7 @@ public class CourseDAO extends DBContext {
         }
         return f;
     }
-    
+
     public boolean isCourseNameDuplicate(int courseId, String courseName) {
         boolean isDuplicate = false;
         String sql = "SELECT courseId FROM Course WHERE courseName = ? and courseId <> ?";
@@ -1319,7 +1323,7 @@ public class CourseDAO extends DBContext {
         }
         return isDuplicate;
     }
-    
+
     public boolean deleteCourseCategory(int courseId) {
         boolean f = false;
         String sql = "DELETE FROM Course_Category WHERE courseId = ?";
@@ -1334,5 +1338,47 @@ public class CourseDAO extends DBContext {
             e.printStackTrace();
         }
         return f;
+    }
+
+    public List<String> getMenteeByCourse(int courseId, int status) {
+        List<String> usernames = new ArrayList<>();
+
+        String sql = "SELECT username "
+                + "FROM [Participate] "
+                + "WHERE courseId = ? "
+                + "AND participateRole = ? "
+                + "AND statusId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, courseId); // courseId
+            preparedStatement.setInt(2, 3); // participateRole
+            preparedStatement.setInt(3, status); // statusId
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    usernames.add(resultSet.getString("username"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usernames;
+    }
+
+    public void banMentee(int courseId, String username, int status) {
+        String sql = "UPDATE Participate SET statusId = ? WHERE courseId = ? AND username = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, status);     // Trạng thái muốn cập nhật, ví dụ: -1
+            statement.setInt(2, courseId);   // ID của khóa học
+            statement.setString(3, username); // Tên tài khoản của mentee
+
+            // Thực thi câu lệnh update
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

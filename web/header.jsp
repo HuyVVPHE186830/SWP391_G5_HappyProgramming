@@ -196,7 +196,8 @@
                     <c:if test="${sessionScope.user != null}">
                     <li><a href="viewMyCourses">My Courses</a></li>
                     <li><a href="#">Chat</a></li>
-                    </c:if>
+                    <li><a href="viewblogs">Blog</a></li>
+                </c:if>
             </ul>
 
             <!-- USER AVATAR -->   

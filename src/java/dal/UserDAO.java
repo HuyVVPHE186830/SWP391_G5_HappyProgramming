@@ -129,7 +129,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "select [User].* from [User] join Participate on Participate.username = [User].username\n"
                 + "join Course on Course.courseId = Participate.courseId\n"
-                + "where [User].roleId = 2 and course.courseId = ?\n"
+                + "where [User].roleId = 2 and course.courseId = ? and Participate.ParticipateRole = 2\n"
                 + "order by [User].id";
         try (PreparedStatement pre = connection.prepareStatement(sql)) {
             pre.setInt(1, courseId);
@@ -163,7 +163,7 @@ public class UserDAO extends DBContext {
         String sql = "SELECT [User].* FROM [User] "
                 + "JOIN Participate ON Participate.username = [User].username "
                 + "JOIN Course ON Course.courseId = Participate.courseId "
-                + "WHERE [User].roleId = 2 AND Course.courseId = ? "
+                + "WHERE [User].roleId = 2 AND Course.courseId = ? and Participate.ParticipateRole = 2 "
                 + "AND ([User].firstName COLLATE Latin1_General_CI_AI LIKE ? "
                 + "OR [User].lastName COLLATE Latin1_General_CI_AI LIKE ?) "
                 + "ORDER BY [User].id";
@@ -200,7 +200,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "select [User].* from [User] join Participate on Participate.username = [User].username\n"
                 + "join Course on Course.courseId = Participate.courseId\n"
-                + "where [User].roleId = 2 and Course.courseId = ?\n"
+                + "where [User].roleId = 2 and Course.courseId = ? and Participate.ParticipateRole = 2\n"
                 + "ORDER BY [User].firstName";
         try (PreparedStatement pre = connection.prepareStatement(sql)) {
             pre.setInt(1, courseId);
@@ -233,7 +233,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "select [User].* from [User] join Participate on Participate.username = [User].username\n"
                 + "join Course on Course.courseId = Participate.courseId\n"
-                + "where [User].roleId = 2 and Course.courseId = ?\n"
+                + "where [User].roleId = 2 and Course.courseId = ? and Participate.ParticipateRole = 2\n"
                 + "and [User].username <> ?";
         try (PreparedStatement pre = connection.prepareStatement(sql)) {
             pre.setInt(1, courseId);
@@ -696,8 +696,11 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
-        User user = dao.getUserByUsernameM("anmentor");
-        
+        User user = dao.getUserByUsernameM("antt");
+        List<User> list = dao.getAllMentorBySearchKey(1, "h");
+        for(User l : list) {
+            System.out.println(l);
+        }
         if(user != null){
             System.out.println(user);
         }else{

@@ -106,8 +106,10 @@
                         <h3>Course: ${cM.courseName} <a href="allCourse?search=category&categoryId=${cT.categoryId}" class="link-2">(${cT.categoryName})</a></h3>
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
-                        <form action="#">
-                            <a href="#?courseId=${cM.courseId}" class="button-enroll">Enroll</a>
+                        <form action="requestScreen" method="post">
+                            <input type="hidden" name="courseId" value="${cM.courseId}">
+                            <input type="hidden" name="username" value="${sessionScope.user.username}">
+                            <button type="submit" class="button-enroll">Enroll</button>
                         </form>
                     </div>
                 </div>
@@ -123,7 +125,8 @@
                         <c:if test="${!status.last && status.index != requestScope.otherCourseMentor.size() - 2}">, </c:if>
                     </c:forEach>
                     <br>
-                    ${mD.lastName} ${mD.firstName} has been our mentor since <span style="font-weight: 500"><fmt:formatDate value="${mD.createdDate}" pattern="dd/MM/yyyy"/></span>. Over the years, this mentor has contributed significantly to the growth and development of our community. With a passion for teaching and guiding, ${mD.lastName} has helped numerous learners achieve their goals. Their dedication and expertise are reflected in the wide range of courses they provide. 
+                    ${mD.lastName} ${mD.firstName} has been our mentor since <span style="font-weight: 500"><fmt:formatDate value="${mD.createdDate}" pattern="dd/MM/yyyy"/></span>. Over the years, this mentor has contributed significantly to the growth and development of our community. With a passion for teaching and guiding, ${mD.lastName} ${mD.firstName} 
+                    has helped numerous learners achieve their goals. Their dedication and expertise are reflected in the wide range of courses they provide. 
                     <br>
                     Whether you're a beginner or an advanced learner, this mentor has something valuable to offer in each course.
                 </h5>

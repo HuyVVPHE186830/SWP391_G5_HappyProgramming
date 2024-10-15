@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.Course;
 import model.MentorPost;
@@ -78,17 +79,25 @@ public class manageCourse extends HttpServlet {
                 course = c;
             }
         }
-        int member = daoC.getTotalParticipants(course.getCourseId());
-        session.setAttribute("member", member);
-        session.setAttribute("course", course);
+        int member = daoC.getTotalParticipants(course.getCourseId(), 1);
+        int rmember = daoC.getTotalParticipants(course.getCourseId(), 0);
         User user = (User) session.getAttribute("user");
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());// Lấy danh sách bài viết
+        List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());
+        List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1);
+        List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0);
+        List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1);
+        List<User> listRequest = mentorPostDAO.getMenteeList(courseId, 0);
+        session.setAttribute("member", member);
+        session.setAttribute("rmember", rmember);
+        session.setAttribute("course", course);
         session.setAttribute("posts", posts);
+        session.setAttribute("listMentee", listMentee);
+        session.setAttribute("listRequest", listRequest);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 
