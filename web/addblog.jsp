@@ -8,19 +8,6 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- TinyMCE Rich Text Editor -->
-        <script src="https://cdn.tiny.cloud/1/jn35tb6fg85y8jhv9uuko65dc5rbnudhn1kbxd772zat35tx/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-
-        <script>
-            tinymce.init({
-                selector: '#blogContent', // ID of the textarea where the rich text editor will appear
-                plugins: 'code image link media lists', // Plugins for handling images, media, links, code blocks, etc.
-                toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | image link media code',
-                menubar: false,
-                height: 400
-            });
-        </script>
     </head>
     <body>
 
@@ -38,7 +25,7 @@
                     <input type="text" class="form-control" id="blogTitle" name="blogTitle" placeholder="Enter your blog title" required>
                 </div>
 
-                <!-- Blog Content (Rich Text Editor) -->
+                <!-- Blog Content -->
                 <div class="mb-3">
                     <label for="blogContent" class="form-label">Content</label>
                     <textarea id="blogContent" name="blogContent" class="form-control" placeholder="Write your blog content here..." rows="10" required></textarea>
