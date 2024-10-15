@@ -290,4 +290,34 @@ public class BlogDAO extends DBContext {
         }
         return tags;
     }
+
+    public List<Blog> searchBlogs(String query) {
+        List<Blog> blogs = new ArrayList<>();
+        String sql = "SELECT * FROM blogs WHERE title LIKE ? OR content LIKE ? OR blog_id IN (SELECT blog_id FROM blog_tags WHERE tag_id IN (SELECT tag_id FROM tags WHERE tag_name LIKE ?))";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            String searchQuery = "%" + query + "%"; // Prepare query for SQL LIKE
+            ps.setString(1, searchQuery);
+            ps.setString(2, searchQuery);
+            ps.setString(3, searchQuery);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int blogId = rs.getInt("blog_id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String createdBy = rs.getString("created_by");
+                // Assuming imageUrls is stored as a comma-separated string
+                String[] imageUrls = rs.getString("image_urls").split(",");
+
+                Blog blog = new Blog(blogId, title, content, createdBy, List.of(imageUrls), new ArrayList<>()); // Add tags later if needed
+                blogs.add(blog);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle SQL exception
+        }
+        return blogs;
+    }
 }
