@@ -116,13 +116,13 @@ public class viewCourseMentor extends HttpServlet {
             Course course = daoC.getCourseByCourseId(courseId);
             List<Course> otherCourse = daoC.getAllCoursesExceptOne(courseId);
             if(mentor == null) {
-                session.setAttribute("searchNull", null);
+                request.setAttribute("searchNull", null);
             }
-            session.setAttribute("keyword", keyword);
-            session.setAttribute("mentorThisCourse", mentor);
-            session.setAttribute("courseOfMentor", course);
-            session.setAttribute("otherCourseExO", otherCourse);
-            response.sendRedirect("viewCourseMentor.jsp");
+            request.setAttribute("keyword", keyword);
+            request.setAttribute("mentorThisCourse", mentor);
+            request.setAttribute("courseOfMentor", course);
+            request.setAttribute("otherCourseExO", otherCourse);
+            request.getRequestDispatcher("viewCourseMentor.jsp").forward(request, response);
         } catch (Exception e) {
 
         }

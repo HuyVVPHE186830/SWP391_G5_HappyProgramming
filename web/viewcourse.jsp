@@ -80,7 +80,7 @@
             </h2>
             <div class="same-course-cards-wrapper">
                 <div class="same-course-cards">
-                    <c:forEach items="${sessionScope.sameCourse}" var="sC">
+                    <c:forEach items="${requestScope.sameCourse}" var="sC">
                         <a href="viewcourse?courseId=${sC.courseId}" class="same-course-card">
                             <h3>${sC.courseName}</h3>
                         </a>
