@@ -195,7 +195,7 @@
                 <li><a href="allCourse">Courses</a></li>
                     <c:if test="${sessionScope.user != null}">
                     <li><a href="viewMyCourses">My Courses</a></li>
-                    <li><a href="#">Chat</a></li>
+                    <li><a href="sendMessage?conversationId=27">Chat</a></li>
                     <li><a href="viewblogs">Blog</a></li>
                 </c:if>
             </ul>

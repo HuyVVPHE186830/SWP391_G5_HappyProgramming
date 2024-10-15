@@ -26,9 +26,9 @@ public class DBContext {
         // For example : StudentDBContext extends DBContext , 
         //where StudentDBContext is located in dal package, 
         try {
-            String user = "vuhd";
-            String pass = "HavanaSapphire15";
-            String url = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=HappyProgramming";
+            String user = "sasa";
+            String pass = "123";
+            String url = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=HappyPro6";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {

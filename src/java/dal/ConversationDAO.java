@@ -48,10 +48,13 @@ public class ConversationDAO extends DBContext {
 
     public List<Conversation> getAllConversationsForUser(String username) {
         List<Conversation> conversations = new ArrayList<>();
-        String query = "SELECT c.conversationId, c.conversationName "
-                + "FROM Conversation c "
-                + "JOIN User_Conversation uc ON c.conversationId = uc.conversationId "
-                + "WHERE uc.username = ?";
+        String query = "SELECT c.conversationId, c.conversationName\n"
+                + "FROM Conversation c\n"
+                + "JOIN User_Conversation uc ON c.conversationId = uc.conversationId\n"
+                + "JOIN Message m ON c.conversationId = m.conversationId\n"
+                + "WHERE uc.username = ?\n"
+                + "GROUP BY c.conversationId, c.conversationName\n"
+                + "ORDER BY MAX(m.sentAt) DESC";
 
         try (
                 PreparedStatement stmt = connection.prepareStatement(query)) {

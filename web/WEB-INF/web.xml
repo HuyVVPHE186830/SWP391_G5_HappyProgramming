@@ -105,10 +105,10 @@
         <servlet-class>controller.deleteMentorPost</servlet-class>
     </servlet>
     <servlet>
-<<<<<<< HEAD
         <servlet-name>manageConversation</servlet-name>
         <servlet-class>controller.manageConversation</servlet-class>
-=======
+    </servlet>
+    <servlet>
         <servlet-name>viewBlogServlet</servlet-name>
         <servlet-class>controller.viewBlogServlet</servlet-class>
     </servlet>
@@ -131,7 +131,6 @@
     <servlet>
         <servlet-name>requestScreen</servlet-name>
         <servlet-class>controller.requestScreen</servlet-class>
->>>>>>> 147b667fd3bc88d5cd7ab19845524b597318518f
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
@@ -238,10 +237,11 @@
         <url-pattern>/deleteMentorPost</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-<<<<<<< HEAD
         <servlet-name>manageConversation</servlet-name>
         <url-pattern>/manageConversation</url-pattern>
-=======
+    </servlet-mapping>
+    <servlet-mapping>
+
         <servlet-name>viewBlogServlet</servlet-name>
         <url-pattern>/viewblogs</url-pattern>
     </servlet-mapping>
@@ -264,6 +264,5 @@
     <servlet-mapping>
         <servlet-name>requestScreen</servlet-name>
         <url-pattern>/requestScreen</url-pattern>
->>>>>>> 147b667fd3bc88d5cd7ab19845524b597318518f
     </servlet-mapping>
 </web-app>

@@ -62,7 +62,7 @@ public class manageConversation extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-
+        String conversationIdPr = request.getParameter("conversationId");
         // get session
         HttpSession session = request.getSession();
         // get action
@@ -83,7 +83,7 @@ public class manageConversation extends HttpServlet {
             default:
 
         }
-        response.sendRedirect("sendMessage?conversationId=1");
+        response.sendRedirect("sendMessage?conversationId=" + conversationIdPr);
 
     }
 
@@ -119,7 +119,7 @@ public class manageConversation extends HttpServlet {
     }
 
     private void deleteMessage(HttpServletRequest request) {
-         try {
+        try {
             int messageIdParam = Integer.parseInt(request.getParameter("messageId"));
             conversationDAO.deleteMessageById(messageIdParam);
         } catch (NumberFormatException ex) {

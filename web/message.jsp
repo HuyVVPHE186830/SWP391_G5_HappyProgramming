@@ -190,42 +190,79 @@
                 text-decoration: none;
             }
             .ms-options-menu a:hover,
-
+            .action-icons {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            .action-icons button {
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 20px;
+            }
+            /* Style for the input field */
+            .styled-input {
+                padding: 8px; /* Slightly smaller padding */
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                width: calc(100% - 22px); /* Adjust width */
+                margin-right: 5px; /* Less spacing between input and button */
+            }
+            /* Style for the button */
+            .styled-button {
+                background-color: #5e3fd3; /* Purple background */
+                color: white; /* White text */
+                border: none; /* No border */
+                border-radius: 5px; /* Rounded corners */
+                padding: 8px 12px; /* Smaller padding */
+                cursor: pointer; /* Pointer cursor */
+                font-size: 14px; /* Smaller font size */
+            }
+            /* Flex container for input and button */
+            .input-group {
+                display: flex;
+                align-items: center; /* Center align items vertically */
+            }
+            /* Show the edit form only when the checkbox is checked */
+            #editToggle:checked ~ .edit-form {
+                display: block; /* Show edit form when checked */
+            }
         </style>
     </head>
     <body>
 
-     <div class="sidebar">
-    <h3>Conversations</h3>
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Tìm kiếm cuộc hội thoại..." onkeyup="searchConversations()">
-    </div>
-    <div class="conversation-list">
-        <c:set var="displayedConversations" value=""/>
-        <c:forEach items="${sessionScope.conversations}" var="conversation">
-            <c:set var="avatarPath" value=""/>
-            <c:set var="hasUser" value="false"/>
-            <c:forEach items="${sessionScope.userConversation}" var="userConversation">
-                <c:if test="${userConversation.conversationId == conversation.conversationId}">
-                    <c:forEach items="${sessionScope.userList2}" var="userList">
-                        <c:if test="${userList.username == userConversation.username}">
-                            <c:if test="${userList.avatarPath != null && userList.avatarPath != ''}">
-                                <c:set var="avatarPath" value="data:image/jpeg;base64,${userList.avatarPath}"/>
-                            </c:if>
-                            <c:set var="hasUser" value="true"/>
+        <div class="sidebar">
+            <h3>Conversations</h3>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchConversations()">
+            </div>
+            <div class="conversation-list">
+                <c:set var="displayedConversations" value=""/>
+                <c:forEach items="${sessionScope.conversations}" var="conversation">
+                    <c:set var="avatarPath" value=""/>
+                    <c:set var="hasUser" value="false"/>
+                    <c:forEach items="${sessionScope.userConversation}" var="userConversation">
+                        <c:if test="${userConversation.conversationId == conversation.conversationId}">
+                            <c:forEach items="${sessionScope.userList2}" var="userList">
+                                <c:if test="${userList.username == userConversation.username}">
+                                    <c:if test="${userList.avatarPath != null && userList.avatarPath != ''}">
+                                        <c:set var="avatarPath" value="data:image/jpeg;base64,${userList.avatarPath}"/>
+                                    </c:if>
+                                    <c:set var="hasUser" value="true"/>
+                                </c:if>
+                            </c:forEach>
                         </c:if>
                     </c:forEach>
-                </c:if>
-            </c:forEach>
-            <c:if test="${hasUser}">
-                <div class="conversation-item" data-username="${conversation.conversationName}" onclick="location.href = 'sendMessage?conversationId=${conversation.conversationId}'">
-                    <img src="${avatarPath != '' ? avatarPath : 'path/to/default-avatar.png'}" alt="Avatar" class="avatar-image">
-                    <div class="conversation-name">${conversation.conversationName}</div>
-                </div>
-            </c:if>
-        </c:forEach>
-    </div>
-</div>
+                    <c:if test="${hasUser}">
+                        <div class="conversation-item" data-username="${conversation.conversationName}" onclick="location.href = 'sendMessage?conversationId=${conversation.conversationId}'">
+                            <img src="${avatarPath != '' ? avatarPath : 'path/to/default-avatar.png'}" alt="Avatar" class="avatar-image">
+                            <div class="conversation-name">${conversation.conversationName}</div>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </div>
+        </div>
 
 
 
@@ -236,13 +273,17 @@
             <div class="messages">
                 <c:forEach items="${currentChatMessages}" var="message">
                     <div class="message ${message.sentBy == sessionScope.currentUser.username ? 'sent' : 'received'}">
-                        <strong>${message.messageId}:</strong> ${message.msgContent} <em>(${message.sentAt})</em>
+                        <strong>${message.sentBy}:</strong> ${message.msgContent} <em>(${message.sentAt})</em>
                         <div class="ms-options-icon" tabindex="0">&#x22EE;</div>
                         <div class="ms-options-menu">
                             <a href="#">Edit</a>
-                                        <form action="manageConversation?action=delete-conversation" method="post" style="display: inline;">
-
-                            <a href="manageConversation?action=delete-message&messageId=${message.messageId}">Delete</a>
+                            <form action="manageConversation?action=delete-message" method="post" style="display: inline;" id="deleteForm-${message.messageId}">
+                                <input type="hidden" name="conversationId" value="${currentConversationId}">
+                                <input type="hidden" name="messageId" value="${message.messageId}"> 
+                            </form>
+                            <a href="#" onclick="if (confirm('Are you sure you want to delete this message?')) {
+                                        document.getElementById('deleteForm-${message.messageId}').submit();
+                                    }">Delete</a>                       
                         </div>
                     </div>
                 </c:forEach>
@@ -258,88 +299,49 @@
             </div>
         </div>
 
-<div class="user-info">
-    <h3>Conversation manage</h3>
-    <div class="user-details">
-        <img src="data:image/jpeg;base64,${sessionScope.currentChatRecipient.avatarPath}" alt="Avatar" class="avatar-image">
-        <p>Name: ${sessionScope.currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</p>
-        <p>DOB: ${sessionScope.currentChatRecipient.dob}</p>
-        <p>Email: ${sessionScope.currentChatRecipient.mail}</p>
-        <p>Status: ${sessionScope.currentChatRecipient.activeStatus}</p>
-        <p>Role: 
-            ${sessionScope.currentChatRecipient.roleId == 1 ? 'Mentee' : 
-              (sessionScope.currentChatRecipient.roleId == 2 ? 'Mentor' : 'Unknown Role')}
-        </p>    
+        <div class="user-info">
+            <h3>Conversation manage</h3>
+            <div class="user-details">
+                <img src="data:image/jpeg;base64,${sessionScope.currentChatRecipient.avatarPath}" alt="Avatar" class="avatar-image">
+                <p>Name: ${sessionScope.currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</p>
+                <p>DOB: ${sessionScope.currentChatRecipient.dob}</p>
+                <p>Email: ${sessionScope.currentChatRecipient.mail}</p>
+                <p>Status: ${sessionScope.currentChatRecipient.activeStatus}</p>
+                <p>Role: 
+                    ${sessionScope.currentChatRecipient.roleId == 1 ? 'Mentee' : 
+                      (sessionScope.currentChatRecipient.roleId == 2 ? 'Mentor' : 'Unknown Role')}
+                </p>    
 
-        <div class="action-icons">
-            <input type="checkbox" id="editToggle" style="display:none;">
-            <label for="editToggle" style="cursor: pointer;">✏️</label>
-            <form action="manageConversation?action=delete-conversation" method="post" style="display: inline;">
-                <input type="hidden" name="conversationId" value="${currentConversationId}">
-                <button type="submit" onclick="return confirm('Are you sure you want to delete this conversation?');">🗑️</button>
-            </form>
-        </div>
-</br>
-</br>
-        <div class="edit-form" style="display: none;">
-            <form action="manageConversation?action=edit-conversation" method="post">
-                <input type="hidden" name="conversationId" value="${currentConversationId}">
-                <div class="input-group">
-                    <input type="text" name="newConversationName" placeholder="New Conversation Name" required class="styled-input">
-                    <button type="submit" class="styled-button">Update</button>
+                <div class="action-icons">
+                    <input type="checkbox" id="editToggle" style="display:none;">
+                    <label for="editToggle" style="cursor: pointer;">✏️</label>
+                    <form action="manageConversation?action=delete-conversation" method="post" style="display: inline;">
+                        <input type="hidden" name="conversationId" value="${currentConversationId}">
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this conversation?');">🗑️</button>
+                    </form>
                 </div>
-            </form>
+                </br>
+                </br>
+                <div class="edit-form" style="display: none;">
+                    <form action="manageConversation?action=edit-conversation" method="post">
+                        <input type="hidden" name="conversationId" value="${currentConversationId}">
+                        <div class="input-group">
+                            <input type="text" name="newConversationName" placeholder="New Conversation Name" required class="styled-input">
+                            <button type="submit" class="styled-button">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-<style>
-    .action-icons {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .action-icons button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 20px;
-    }
-    /* Style for the input field */
-    .styled-input {
-        padding: 8px; /* Slightly smaller padding */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: calc(100% - 22px); /* Adjust width */
-        margin-right: 5px; /* Less spacing between input and button */
-    }
-    /* Style for the button */
-    .styled-button {
-        background-color: #5e3fd3; /* Purple background */
-        color: white; /* White text */
-        border: none; /* No border */
-        border-radius: 5px; /* Rounded corners */
-        padding: 8px 12px; /* Smaller padding */
-        cursor: pointer; /* Pointer cursor */
-        font-size: 14px; /* Smaller font size */
-    }
-    /* Flex container for input and button */
-    .input-group {
-        display: flex;
-        align-items: center; /* Center align items vertically */
-    }
-    /* Show the edit form only when the checkbox is checked */
-    #editToggle:checked ~ .edit-form {
-        display: block; /* Show edit form when checked */
-    }
-</style>
 
-<script>
-    document.getElementById('editToggle').addEventListener('change', function() {
-        const editForm = document.querySelector('.edit-form');
-        editForm.style.display = this.checked ? 'block' : 'none';
-    });
-</script>
+
+        <script>
+            document.getElementById('editToggle').addEventListener('change', function () {
+                const editForm = document.querySelector('.edit-form');
+                editForm.style.display = this.checked ? 'block' : 'none';
+            });
+        </script>
 
 
 
