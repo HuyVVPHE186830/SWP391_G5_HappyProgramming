@@ -221,4 +221,26 @@ public class BlogDAO extends DBContext {
         }
         return 0; // Replace with actual logic
     }
+
+    public List<Tag> getAllTags() {
+        List<Tag> tags = new ArrayList<>();
+        String sql = "SELECT tag_id, tag_name FROM tags"; // Adjust table and field names as per your DB schema
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            // Iterate through the result set and create Tag objects
+            while (rs.next()) {
+                int tagId = rs.getInt("tag_id");
+                String tagName = rs.getString("tag_name");
+
+                Tag tag = new Tag(tagId, tagName);
+                tags.add(tag);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Proper error handling/logging should be here
+        }
+
+        return tags;
+    }
 }

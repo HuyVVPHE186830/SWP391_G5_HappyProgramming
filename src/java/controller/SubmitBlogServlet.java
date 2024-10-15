@@ -20,7 +20,7 @@ import model.User;
 
 @MultipartConfig
 public class SubmitBlogServlet extends HttpServlet {
-
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Retrieve blog title, content, and tags
         String title = request.getParameter("blogTitle");
@@ -58,7 +58,15 @@ public class SubmitBlogServlet extends HttpServlet {
         // Redirect to the blog list after submission
         response.sendRedirect(request.getContextPath() + "/viewblogs");
     }
-
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        BlogDAO blogDAO = new BlogDAO();
+        List<Tag> tags = blogDAO.getAllTags(); // Get all tags from the database
+        request.setAttribute("tags", tags); // Set the list of tags as a request attribute
+        request.getRequestDispatcher("addblog.jsp").forward(request, response);
+    }
+    
     private String saveImage(Part part) {
         // Implement this method to save the image and return the image URL
         // This is a placeholder implementation. You should implement actual file saving logic.

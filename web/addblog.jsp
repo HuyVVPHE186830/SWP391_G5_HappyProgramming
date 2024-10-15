@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -38,11 +39,16 @@
                     <small class="form-text text-muted">You can upload multiple images.</small>
                 </div>
 
-                <!-- Tags -->
+                <!-- Tags Dropdown -->
                 <div class="mb-3">
                     <label for="blogTags" class="form-label">Tags</label>
-                    <input type="text" class="form-control" id="blogTags" name="blogTags" placeholder="Add tags, separated by commas">
-                    <small class="form-text text-muted">Add relevant tags for your blog post.</small>
+                    <select class="form-control" id="blogTags" name="blogTags">
+                        <option value="">Select a tag</option>
+                        <c:forEach var="tag" items="${tags}">
+                            <option value="${tag.tagId}">${tag.tagName}</option>
+                        </c:forEach>
+                    </select>
+                    <small class="form-text text-muted">Select a relevant tag for your blog post.</small>
                 </div>
 
                 <!-- Submit Button -->
