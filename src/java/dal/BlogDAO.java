@@ -4,15 +4,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import model.Blog;
 import model.Tag;
 
 public class BlogDAO extends DBContext {
 
-    // Method to get all blogs
+    // Method to get all blogs created by a specific user
     public List<Blog> getAllBlogs() {
         List<Blog> list = new ArrayList<>();
         String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
@@ -87,7 +89,7 @@ public class BlogDAO extends DBContext {
     // Method to get a blog by its ID
     public Blog getBlogById(int blogId) {
         Blog blog = null;
-        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_Name, bi.image_url, t.tag_id, t.tag_name "
+        String sql = "SELECT b.blog_Id, b.title, b.content, b.user_name, bi.image_url, t.tag_id, t.tag_name "
                 + "FROM Blogs b "
                 + "LEFT JOIN blog_images bi ON b.blog_Id = bi.blog_id "
                 + "LEFT JOIN blog_tags bt ON b.blog_Id = bt.blog_id "
@@ -101,14 +103,14 @@ public class BlogDAO extends DBContext {
 
             // Temporary storage for blog data
             Set<String> imageUrls = new HashSet<>(); // Use a Set for unique image URLs
-            List<Tag> tags = new ArrayList<>(); // Use a List for unique Tags
+            Map<Integer, Tag> tagMap = new HashMap<>(); // Use a Map for unique Tags
 
             while (rs.next()) {
                 // Create the Blog object only once
                 if (blog == null) {
                     String title = rs.getString("title");
                     String content = rs.getString("content");
-                    String createdBy = rs.getString("user_Name");
+                    String createdBy = rs.getString("user_name");
 
                     // Create the Blog object
                     blog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
@@ -121,19 +123,22 @@ public class BlogDAO extends DBContext {
                 }
 
                 // Check if tagId is not null
-                int tagId = rs.getInt("tag_id");
-                if (tagId > 0) {
+                Integer tagId = rs.getInt("tag_id");
+                if (tagId != null) {
                     String tagName = rs.getString("tag_name");
                     if (tagName != null && !tagName.isEmpty()) {
-                        Tag tag = new Tag(tagId, tagName); // Create Tag object
-                        tags.add(tag); // Add Tag to list
+                        // Check if tag already exists in the map
+                        if (!tagMap.containsKey(tagId)) {
+                            Tag tag = new Tag(tagId, tagName); // Create Tag object
+                            tagMap.put(tagId, tag); // Store in map to ensure uniqueness
+                        }
                     }
                 }
             }
 
             // Set the tags and image URLs
             if (blog != null) {
-                blog.setTags(tags); // Get unique tags from the list
+                blog.setTags(new ArrayList<>(tagMap.values())); // Get unique tags from the map
                 blog.setImageUrls(new ArrayList<>(imageUrls)); // Convert Set back to List for image URLs
             }
 
@@ -144,87 +149,76 @@ public class BlogDAO extends DBContext {
         return blog; // Return the blog
     }
 
-    // Method to get all tags from the database
-    public List<Tag> getAllTags() {
-        List<Tag> tags = new ArrayList<>();
-        String sql = "SELECT tag_id, tag_name FROM tags";
+    // Method to add a new blog post
+    public void addBlog(Blog blog) {
+        String sql = "INSERT INTO Blogs (title, content, user_name, created_At, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
+            st.setString(1, blog.getTitle());
+            st.setString(2, blog.getContent());
+            st.setString(3, blog.getCreatedBy()); // Use createdBy for user name
+            st.executeUpdate();
 
-            while (rs.next()) {
-                int tagId = rs.getInt("tag_id");
-                String tagName = rs.getString("tag_name");
-                tags.add(new Tag(tagId, tagName));
+            // Get the generated blog ID
+            ResultSet generatedKeys = st.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int blogId = generatedKeys.getInt(1);
+                // Insert image URLs
+                for (String imageUrl : blog.getImageUrls()) {
+                    addImageToBlog(blogId, imageUrl);
+                }
+                // Insert tags
+                for (Tag tag : blog.getTags()) {
+                    addTagToBlog(blogId, tag);
+                }
             }
-
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-
-        return tags; // Return the list of tags
     }
 
-    // Method to add a new blog post
-    public int addBlog(Blog blog) throws SQLException {
-        connection.setAutoCommit(false); // Start transaction
-        int generatedId = 0;
-
-        try {
-            String sql = "INSERT INTO blogs (title, content, user_name, created_at, updated_at) VALUES (?, ?, ?, GETDATE(), GETDATE())";
-            try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, blog.getTitle());
-                ps.setString(2, blog.getContent());
-                ps.setString(3, blog.getCreatedBy());
-
-                ps.executeUpdate();
-
-                ResultSet generatedKeys = ps.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    generatedId = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Creating blog failed, no ID obtained.");
-                }
-            }
-
-            // Add images and tags
-            addBlogImages(generatedId, blog.getImageUrls());
-            addBlogTags(generatedId, blog.getTags());
-
-            connection.commit();
-        } catch (SQLException ex) {
-            connection.rollback();
-            System.err.println("Error saving blog: " + ex.getMessage());
-            throw ex;
-        } finally {
-            connection.setAutoCommit(true);
-        }
-
-        return generatedId;
-    }
-
-    private void addBlogImages(int blogId, List<String> imageUrls) throws SQLException {
+    private void addImageToBlog(int blogId, String imageUrl) {
         String sql = "INSERT INTO blog_images (blog_id, image_url) VALUES (?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            for (String imageUrl : imageUrls) {
-                ps.setInt(1, blogId);
-                ps.setString(2, imageUrl);
-                ps.addBatch();
-            }
-            ps.executeBatch();
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, blogId);
+            st.setString(2, imageUrl);
+            st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
     }
 
-    private void addBlogTags(int blogId, List<Tag> tags) throws SQLException {
+    private void addTagToBlog(int blogId, Tag tag) {
         String sql = "INSERT INTO blog_tags (blog_id, tag_id) VALUES (?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            for (Tag tag : tags) {
-                ps.setInt(1, blogId);
-                ps.setInt(2, tag.getTagId());
-                ps.addBatch();
+        try {
+            // Assuming you have a method to get the tag ID by name
+            int tagId = getTagIdByName(tag.getTagName());
+            if (tagId > 0) {
+                PreparedStatement st = connection.prepareStatement(sql);
+                st.setInt(1, blogId);
+                st.setInt(2, tagId);
+                st.executeUpdate();
             }
-            ps.executeBatch();
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
+    }
+
+    // Assuming you have this method in your DAO class to get tag ID by name
+    private int getTagIdByName(String tagName) {
+        String sql = "SELECT tag_id FROM tags WHERE tag_name = ?"; // Example query
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, tagName);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("tag_id");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return 0; // Replace with actual logic
     }
 }
