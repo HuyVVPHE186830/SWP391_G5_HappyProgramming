@@ -81,7 +81,6 @@
         <servlet-class>controller.sendMessage</servlet-class>
     </servlet>
     <servlet>
-
         <servlet-name>viewCourseMentor</servlet-name>
         <servlet-class>controller.viewCourseMentor</servlet-class>
     </servlet>
@@ -104,6 +103,14 @@
     <servlet>
         <servlet-name>deleteMentorPost</servlet-name>
         <servlet-class>controller.deleteMentorPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>editMentorPost</servlet-name>
+        <servlet-class>controller.editMentorPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>manageMentee</servlet-name>
+        <servlet-class>controller.manageMentee</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
@@ -208,5 +215,13 @@
     <servlet-mapping>
         <servlet-name>deleteMentorPost</servlet-name>
         <url-pattern>/deleteMentorPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editMentorPost</servlet-name>
+        <url-pattern>/editMentorPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageMentee</servlet-name>
+        <url-pattern>/manageMentee</url-pattern>
     </servlet-mapping>
 </web-app>

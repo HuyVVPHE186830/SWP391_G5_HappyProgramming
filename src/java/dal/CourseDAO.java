@@ -27,6 +27,10 @@ public class CourseDAO extends DBContext {
         for (Course course : list) {
             System.out.println(course);
         }
+        List<String> string = dao.getMenteeByCourse(1, 1);
+        for (String string1 : string) {
+            System.out.println(string1);
+        }
 //        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
 //        System.out.println(totalRecord);
     }
@@ -1255,14 +1259,14 @@ public class CourseDAO extends DBContext {
         }
         return courses;
     }
-    
+
     public int getTotalParticipants(int courseId) {
         int totalParticipants = 0;
         String sql = "SELECT COUNT(*) AS TotalParticipants "
-                   + "FROM [Participate] "
-                   + "WHERE participateRole = ? "
-                   + "AND statusId = ? "
-                   + "AND courseId = ?";
+                + "FROM [Participate] "
+                + "WHERE participateRole = ? "
+                + "AND statusId = ? "
+                + "AND courseId = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Set parameters
@@ -1280,4 +1284,49 @@ public class CourseDAO extends DBContext {
         }
         return totalParticipants;
     }
+
+    public List<String> getMenteeByCourse(int courseId, int status) {
+        List<String> usernames = new ArrayList<>();
+
+        String sql = "SELECT username "
+                + "FROM [Participate] "
+                + "WHERE courseId = ? "
+                + "AND participateRole = ? "
+                + "AND statusId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            // Set parameters
+            preparedStatement.setInt(1, courseId); // courseId
+            preparedStatement.setInt(2, 3); // participateRole
+            preparedStatement.setInt(3, status); // statusId
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    usernames.add(resultSet.getString("username"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usernames;
+    }
+
+    public void banMentee(int courseId, String username, int status) {
+    String sql = "UPDATE Participate SET statusId = ? WHERE courseId = ? AND username = ?";
+    
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+        statement.setInt(1, status);     // Trạng thái muốn cập nhật, ví dụ: -1
+        statement.setInt(2, courseId);   // ID của khóa học
+        statement.setString(3, username); // Tên tài khoản của mentee
+        
+        // Thực thi câu lệnh update
+        statement.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+
 }

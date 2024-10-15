@@ -696,7 +696,7 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
-        User user = dao.getUserByUsernameM("anmentor");
+        User user = dao.getUserByUsernameM("antt");
         
         if(user != null){
             System.out.println(user);

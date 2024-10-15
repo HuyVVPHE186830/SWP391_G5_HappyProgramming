@@ -4,12 +4,7 @@
  */
 package controller;
 
-import dal.CategoryDAO;
-import dal.CourseCategoryDAO;
-import dal.CourseDAO;
 import dal.MentorPostDAO;
-import dal.UserDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,17 +12,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import model.Course;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import model.MentorPost;
-import model.User;
 
 /**
  *
  * @author Huy Võ
  */
-public class manageCourse extends HttpServlet {
+public class editMentorPost extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +41,10 @@ public class manageCourse extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet manageCourse</title>");
+            out.println("<title>Servlet editMentorPost</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet manageCourse at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet editMentorPost at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,33 +62,6 @@ public class manageCourse extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        CourseDAO daoC = new CourseDAO();
-        UserDAO daoU = new UserDAO();
-        String courseIdString = request.getParameter("courseId");
-        int courseId = Integer.parseInt(courseIdString);
-        List<Course> courses = daoC.getAll();
-        Course course = null;
-        for (Course c : courses) {
-            if (c.getCourseId() == courseId) {
-                course = c;
-            }
-        }
-        int member = daoC.getTotalParticipants(course.getCourseId());
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-        MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());
-        List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1);
-        List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1);
-        session.setAttribute("member", member);
-        session.setAttribute("course", course);
-        session.setAttribute("posts", posts);
-        session.setAttribute("listMentee", listMentee);
-        request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 
     /**
@@ -107,7 +75,29 @@ public class manageCourse extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        MentorPostDAO mentorPostDAO = new MentorPostDAO();
+        String courseIdStr = request.getParameter("courseId");
+        int courseId = Integer.parseInt(courseIdStr);
+        String postIdStr = request.getParameter("postId");
+        int postId = Integer.parseInt(postIdStr);
+        String title = request.getParameter("editTitle");
+        String content = request.getParameter("editContent");
+        String type = request.getParameter("editType");
+        int postTypeId = mentorPostDAO.getPostTypeId(type);
+        String deadlineStr = request.getParameter("editDeadline");
+
+        Timestamp deadline = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        try {
+            Date date = dateFormat.parse(deadlineStr);
+            deadline = new Timestamp(date.getTime());
+        } catch (ParseException e) {
+            System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
+        }
+        MentorPost mp = new MentorPost(title, content, postTypeId, deadline);
+        mentorPostDAO.updateMentorPost(mp, postId);
+        response.sendRedirect("manageCourse?courseId=" + courseId);
     }
 
     /**
