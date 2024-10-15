@@ -286,7 +286,6 @@
                         </div>
                         <!-- Nút để mở modal -->
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">New Post</button>
-                        <button class="btn btn-secondary">To Course Manage</button>
                     </div>
                 </div>
             </div>
