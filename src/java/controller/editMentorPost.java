@@ -95,7 +95,8 @@ public class editMentorPost extends HttpServlet {
         } catch (ParseException e) {
             System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
         }
-        MentorPost mp = new MentorPost(title, content, postTypeId, deadline);
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        MentorPost mp = new MentorPost(title, content, postTypeId, deadline, time);
         mentorPostDAO.updateMentorPost(mp, postId);
         response.sendRedirect("manageCourse?courseId=" + courseId);
     }

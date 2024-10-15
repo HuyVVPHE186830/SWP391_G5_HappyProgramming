@@ -20,19 +20,24 @@ import model.User;
 
 @MultipartConfig
 public class SubmitBlogServlet extends HttpServlet {
-    
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Retrieve blog title, content, and tags
         String title = request.getParameter("blogTitle");
         String content = request.getParameter("blogContent");
         String tagsParam = request.getParameter("blogTags");
 
-        // Split tags by comma and create a list
-        List<Tag> tags = new ArrayList<>();
+        // Split tags by comma
+        List<Integer> tagIds = new ArrayList<>(); // List of tag IDs
         if (tagsParam != null && !tagsParam.trim().isEmpty()) {
             String[] tagNames = tagsParam.split(",");
+            BlogDAO blogDAO = new BlogDAO();
             for (String tagName : tagNames) {
-                tags.add(new Tag(0, tagName.trim())); // Tag ID will be assigned by the database
+                tagName = tagName.trim(); // Clean up any extra spaces
+                int tagId = blogDAO.getTagIdByName(tagName); // Search tag by name, assume it returns 0 if not found
+                if (tagId > 0) {
+                    tagIds.add(tagId); // Add the tag ID if found
+                }
             }
         }
 
@@ -40,39 +45,35 @@ public class SubmitBlogServlet extends HttpServlet {
         List<String> imageUrls = new ArrayList<>();
         for (Part part : request.getParts()) {
             if (part.getName().equals("blogImages") && part.getSize() > 0) {
-                // Save the image and get its URL (you will need to implement saveImage() method)
                 String imageUrl = saveImage(part);
                 imageUrls.add(imageUrl);
             }
         }
+
+        // Retrieve User from session
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user"); // Retrieve User object
-        String createdBy = user != null ? user.getUsername() : "defaultUsername"; // Replace with actual username logic
+        User user = (User) session.getAttribute("user");
+        String createdBy = user != null ? user.getUsername() : "defaultUsername";
 
-        Blog newBlog = new Blog(0, title, content, createdBy, imageUrls, tags);
+        // Create Blog object and add it to the database
+        Blog newBlog = new Blog(0, title, content, createdBy, imageUrls, new ArrayList<>());
 
-        // Create a new Blog object and save it using BlogDAO
         BlogDAO blogDAO = new BlogDAO();
-        blogDAO.addBlog(newBlog); // Method to insert the new blog into the database
-
-        // Redirect to the blog list after submission
+        blogDAO.addBlogWithTags(newBlog, tagIds);
         response.sendRedirect(request.getContextPath() + "/viewblogs");
     }
-    
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+
+    // Handle getting the list of tags
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         BlogDAO blogDAO = new BlogDAO();
-        List<Tag> tags = blogDAO.getAllTags(); // Get all tags from the database
-        request.setAttribute("tags", tags); // Set the list of tags as a request attribute
+        List<Tag> tags = blogDAO.getAllTags();
+        request.setAttribute("tags", tags);
         request.getRequestDispatcher("addblog.jsp").forward(request, response);
     }
-    
+
     private String saveImage(Part part) {
-        // Implement this method to save the image and return the image URL
-        // This is a placeholder implementation. You should implement actual file saving logic.
         String fileName = part.getSubmittedFileName();
-        String imageUrl = "C:\\Users\\Sapphire\\OneDrive - MSFT\\Pictures\\Screenshots" + fileName; // Replace with actual path where images are saved
-        // Save the image to the server here
+        String imageUrl = "blogimg/" + fileName; // Replace with actual path
         return imageUrl;
     }
 }

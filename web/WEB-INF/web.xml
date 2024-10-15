@@ -241,7 +241,6 @@
         <url-pattern>/manageConversation</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-
         <servlet-name>viewBlogServlet</servlet-name>
         <url-pattern>/viewblogs</url-pattern>
     </servlet-mapping>

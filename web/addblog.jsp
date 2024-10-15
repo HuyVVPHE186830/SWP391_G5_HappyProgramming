@@ -45,7 +45,7 @@
                     <select class="form-control" id="blogTags" name="blogTags">
                         <option value="">Select a tag</option>
                         <c:forEach var="tag" items="${tags}">
-                            <option value="${tag.tagId}">${tag.tagName}</option>
+                            <option value="${tag.tagName}">${tag.tagName}</option>
                         </c:forEach>
                     </select>
                     <small class="form-text text-muted">Select a relevant tag for your blog post.</small>
