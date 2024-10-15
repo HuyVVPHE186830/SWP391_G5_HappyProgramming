@@ -45,12 +45,6 @@
                     <small class="form-text text-muted">Add relevant tags for your blog post.</small>
                 </div>
 
-                <!-- Options (Check Box) -->
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="notifyMe" name="notifyMe">
-                    <label class="form-check-label" for="notifyMe">Notify me via email about updates</label>
-                </div>
-
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary">Publish Blog</button>
             </form>
