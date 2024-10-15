@@ -105,6 +105,8 @@
         <servlet-class>controller.deleteMentorPost</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>manageConversation</servlet-name>
+        <servlet-class>controller.manageConversation</servlet-class>
         <servlet-name>viewBlogServlet</servlet-name>
         <servlet-class>controller.viewBlogServlet</servlet-class>
     </servlet>
@@ -233,6 +235,8 @@
         <url-pattern>/deleteMentorPost</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>manageConversation</servlet-name>
+        <url-pattern>/manageConversation</url-pattern>
         <servlet-name>viewBlogServlet</servlet-name>
         <url-pattern>/viewblogs</url-pattern>
     </servlet-mapping>
