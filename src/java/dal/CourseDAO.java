@@ -23,7 +23,7 @@ public class CourseDAO extends DBContext {
 //        in.add(1);
 //        in.add(3);
 //        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-        List<Course> list = dao.getAllCourse3(1);
+        List<Course> list = dao.getSameCourse(1);
         for (Course course : list) {
             System.out.println(course);
         }
