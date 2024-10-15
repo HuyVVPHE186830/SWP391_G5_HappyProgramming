@@ -107,6 +107,8 @@
     <servlet>
         <servlet-name>manageConversation</servlet-name>
         <servlet-class>controller.manageConversation</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>viewBlogServlet</servlet-name>
         <servlet-class>controller.viewBlogServlet</servlet-class>
     </servlet>
@@ -237,6 +239,8 @@
     <servlet-mapping>
         <servlet-name>manageConversation</servlet-name>
         <url-pattern>/manageConversation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>viewBlogServlet</servlet-name>
         <url-pattern>/viewblogs</url-pattern>
     </servlet-mapping>
