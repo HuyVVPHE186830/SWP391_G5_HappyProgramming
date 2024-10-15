@@ -124,6 +124,10 @@
         <servlet-name>manageMentee</servlet-name>
         <servlet-class>controller.manageMentee</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>requestScreen</servlet-name>
+        <servlet-class>controller.requestScreen</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -247,5 +251,9 @@
     <servlet-mapping>
         <servlet-name>manageMentee</servlet-name>
         <url-pattern>/manageMentee</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>requestScreen</servlet-name>
+        <url-pattern>/requestScreen</url-pattern>
     </servlet-mapping>
 </web-app>

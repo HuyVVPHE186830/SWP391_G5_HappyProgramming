@@ -106,8 +106,10 @@
                         <h3>Course: ${cM.courseName} <a href="allCourse?search=category&categoryId=${cT.categoryId}" class="link-2">(${cT.categoryName})</a></h3>
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
-                        <form action="#">
-                            <a href="#?courseId=${cM.courseId}" class="button-enroll">Enroll</a>
+                        <form action="requestScreen" method="post">
+                            <input type="hidden" name="courseId" value="${cM.courseId}">
+                            <input type="hidden" name="username" value="${sessionScope.user.username}">
+                            <button type="submit" class="button-enroll">Enroll</button>
                         </form>
                     </div>
                 </div>

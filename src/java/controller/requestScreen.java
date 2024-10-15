@@ -5,26 +5,18 @@
 package controller;
 
 import dal.CourseDAO;
-import dal.MentorPostDAO;
-import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import model.Course;
-import model.MentorPost;
-import model.User;
 
 /**
  *
  * @author Huy Võ
  */
-public class manageMentee extends HttpServlet {
+public class requestScreen extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +35,10 @@ public class manageMentee extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet manageMentee</title>");
+            out.println("<title>Servlet requestScreen</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet manageMentee at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet requestScreen at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,18 +56,7 @@ public class manageMentee extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
-        int courseId = Integer.parseInt(request.getParameter("courseId"));
-        String action = request.getParameter("action"); // Lấy tham số action
-        CourseDAO daoC = new CourseDAO();
-
-        if ("accept".equals(action)) {
-            daoC.banMentee(courseId, username, 1);
-        } else if ("decline".equals(action)) {
-            daoC.banMentee(courseId, username, -1);
-        }
-
-        response.sendRedirect("manageCourse?courseId=" + courseId);
+        processRequest(request, response);
     }
 
     /**
@@ -93,9 +74,13 @@ public class manageMentee extends HttpServlet {
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         CourseDAO daoC = new CourseDAO();
 
-        daoC.banMentee(courseId, username, -1);
+        // Gọi phương thức banMentee với giá trị 0 để gửi yêu cầu
+        daoC.banMentee(courseId, username, 0);
 
-        response.sendRedirect("manageCourse?courseId=" + courseId);
+        // Thiết lập thông báo
+        request.setAttribute("message", "Your request is waiting!");
+
+        request.getRequestDispatcher("request.jsp").forward(request, response);
     }
 
     /**
@@ -108,21 +93,4 @@ public class manageMentee extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public static void main(String[] args) {
-        CourseDAO daoC = new CourseDAO();
-        UserDAO daoU = new UserDAO();
-        List<String> menteeUsername = daoC.getMenteeByCourse(1, 1);
-        List<User> listU = new ArrayList<User>();
-        for (String string : menteeUsername) {
-            User user = daoU.getUserByUsernameM(string);
-            if (user != null) {
-                listU.add(user);
-            } else {
-                System.out.println("User not found for username: " + string);
-            }
-        }
-        for (User user : listU) {
-            System.out.println(user.toString());
-        }
-    }
 }
