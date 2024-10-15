@@ -1,8 +1,10 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Blog {
+
     private int blogId;
     private String title;
     private String content;
@@ -19,6 +21,11 @@ public class Blog {
         this.createdBy = createdBy;  // Set the createdBy field
         this.imageUrls = imageUrls;
         this.tags = tags;
+    }
+
+    public Blog() {
+        this.imageUrls = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
     // Getters and Setters
@@ -80,14 +87,15 @@ public class Blog {
 
     @Override
     public String toString() {
-        return "Blog{" +
-                "blogId=" + blogId +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", userName='" + userName + '\'' +
-                ", createdBy='" + createdBy + '\'' +  // Include createdBy in the string representation
-                ", imageUrls=" + imageUrls +
-                ", tags=" + tags +
-                '}';
+        return "Blog{"
+                + "blogId=" + blogId
+                + ", title='" + title + '\''
+                + ", content='" + content + '\''
+                + ", userName='" + userName + '\''
+                + ", createdBy='" + createdBy + '\''
+                + // Include createdBy in the string representation
+                ", imageUrls=" + imageUrls
+                + ", tags=" + tags
+                + '}';
     }
 }

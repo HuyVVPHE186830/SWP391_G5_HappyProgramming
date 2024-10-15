@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Tag" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,17 +40,23 @@
                 <small class="form-text text-muted">You can upload multiple images.</small>
             </div>
 
-            <!-- Tags -->
+            <!-- Tags Drop-down -->
             <div class="mb-3">
                 <label for="blogTags" class="form-label">Tags</label>
-                <input type="text" class="form-control" id="blogTags" name="blogTags" placeholder="Add tags, separated by commas">
-                <small class="form-text text-muted">Add relevant tags for your blog post.</small>
-            </div>
-
-            <!-- Options (Check Box) -->
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="notifyMe" name="notifyMe">
-                <label class="form-check-label" for="notifyMe">Notify me via email about updates</label>
+                <select class="form-select" id="blogTags" name="blogTags" multiple>
+                    <option value="" disabled>Select tags</option>
+                    <%
+                        List<Tag> tags = (List<Tag>) request.getAttribute("tags");
+                        if (tags != null) {
+                            for (Tag tag : tags) {
+                    %>
+                    <option value="<%= tag.getTagId() %>"><%= tag.getTagName() %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
+                <small class="form-text text-muted">Select relevant tags for your blog post.</small>
             </div>
 
             <!-- Submit Button -->
