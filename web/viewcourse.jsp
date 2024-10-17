@@ -105,7 +105,7 @@
 
         <!-- OTHER CATEGORY -->
         <c:if test="${not empty requestScope.category}">
-            <h2 class="list-category">Other Category You Can Discover</h2>
+            <h2 class="list-category">Other Category You Can Explore</h2>
             <div class="category-cards-wrapper">
                 <div class="category-cards">
                     <c:forEach items="${requestScope.othercategory}" var="c" varStatus="status">
