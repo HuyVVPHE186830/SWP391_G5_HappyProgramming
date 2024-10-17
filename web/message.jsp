@@ -219,19 +219,16 @@
                 cursor: pointer; /* Pointer cursor */
                 font-size: 14px; /* Smaller font size */
             }
-            /* Flex container for input and button */
             .input-group {
                 display: flex;
                 align-items: center; /* Center align items vertically */
             }
-            /* Show the edit form only when the checkbox is checked */
             #editToggle:checked ~ .edit-form {
                 display: block; /* Show edit form when checked */
             }
         </style>
     </head>
     <body>
-
         <div class="sidebar">
             <h3>Conversations</h3>
             <div class="search-container">
@@ -263,9 +260,6 @@
                 </c:forEach>
             </div>
         </div>
-
-
-
         <div class="chat-area">
             <div class="recipient-header">
                 <h3>${currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</h3>
@@ -276,7 +270,13 @@
                         <strong>${message.sentBy}:</strong> ${message.msgContent} <em>(${message.sentAt})</em>
                         <div class="ms-options-icon" tabindex="0">&#x22EE;</div>
                         <div class="ms-options-menu">
-                            <a href="#">Edit</a>
+                            <form action="manageConversation?action=edit-message" method="post" style="display: inline;" id="editForm-${message.messageId}">
+                                <input type="hidden" name="conversationId" value="${currentConversationId}">
+                                <input type="hidden" name="messageId" value="${message.messageId}"> 
+                            </form>
+                            <a href="#" onclick="if (confirm('Are you sure you want to savethis message?')) {
+                                        document.getElementById('editForm-${message.messageId}').submit();
+                                    }">Edit</a>                       
                             <form action="manageConversation?action=delete-message" method="post" style="display: inline;" id="deleteForm-${message.messageId}">
                                 <input type="hidden" name="conversationId" value="${currentConversationId}">
                                 <input type="hidden" name="messageId" value="${message.messageId}"> 
@@ -288,7 +288,6 @@
                     </div>
                 </c:forEach>
             </div>
-
             <div class="send-message">
                 <form action="sendMessage" method="post" style="width: 100%; display: flex;">
                     <input type="text" name="message" placeholder="Your message" required>
@@ -298,7 +297,6 @@
                 </form>
             </div>
         </div>
-
         <div class="user-info">
             <h3>Conversation manage</h3>
             <div class="user-details">
@@ -333,20 +331,12 @@
                 </div>
             </div>
         </div>
-
-
-
         <script>
             document.getElementById('editToggle').addEventListener('change', function () {
                 const editForm = document.querySelector('.edit-form');
                 editForm.style.display = this.checked ? 'block' : 'none';
             });
         </script>
-
-
-
-
-
         <script>
             function searchConversations() {
                 const input = document.getElementById('searchInput');
@@ -362,7 +352,40 @@
                     }
                 }
             }
+
+            function fetchLatestMessages() {
+                const conversationId = '${currentConversationId}'; // Lấy ID cuộc trò chuyện từ session
+                const recipientUsername = '${currentChatRecipient.username}'; // Lấy username của người nhận
+
+                // Tạo URL để gọi servlet
+                const url = 'sendMessage?conversationId=' + conversationId + '&username=' + recipientUsername;
+
+                fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text(); // Nhận dữ liệu dưới dạng text
+                        })
+                        .then(data => {
+                            // Tạo một DOMParser để phân tích dữ liệu HTML
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(data, 'text/html');
+
+                            // Lấy phần tử chứa tin nhắn mới nhất
+                            const newMessages = doc.querySelector('.messages').innerHTML;
+
+                            // Cập nhật nội dung của phần tin nhắn
+                            const messagesContainer = document.querySelector('.messages');
+                            messagesContainer.innerHTML = newMessages; // Cập nhật nội dung
+                        })
+                        .catch(error => console.error('Error fetching messages:', error));
+            }
+
+            // Gọi hàm fetchLatestMessages sau mỗi 2 giây
+            setInterval(fetchLatestMessages, 2000);
         </script>
+
 
     </body>
 </html>

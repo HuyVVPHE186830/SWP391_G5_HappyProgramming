@@ -79,6 +79,9 @@ public class manageConversation extends HttpServlet {
             case "delete-message":
                 deleteMessage(request);
                 break;
+            case "edit-message":
+                editMessage(request);
+                break;
 
             default:
 
@@ -122,6 +125,16 @@ public class manageConversation extends HttpServlet {
         try {
             int messageIdParam = Integer.parseInt(request.getParameter("messageId"));
             conversationDAO.deleteMessageById(messageIdParam);
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void editMessage(HttpServletRequest request) {
+        try {
+            int messageIdParam = Integer.parseInt(request.getParameter("messageId"));
+            String newMsgContenT = request.getParameter("newMsgContent");
+            conversationDAO.editMessageById(messageIdParam, newMsgContenT);
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         }

@@ -229,4 +229,22 @@ public class ConversationDAO extends DBContext {
         ConversationDAO dao = new ConversationDAO();
         dao.deleteMessageById(13);
     }
+
+    public void editMessageById(int messageIdParam, String newMsgContent) {
+        String sql = "UPDATE [Message] SET msgContent = ? WHERE conversationId = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, newMsgContent);
+            preparedStatement.setInt(2, messageIdParam);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Success");
+            } else {
+                System.out.println("Can not find ID: " + messageIdParam);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
