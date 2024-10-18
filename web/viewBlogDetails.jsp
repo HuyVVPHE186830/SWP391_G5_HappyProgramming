@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.Blog"%>
-<%@page import="model.Tag"%>
+<%@page import="model.*"%>
+<%@page import="java.util.*"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -75,6 +77,41 @@
             .back-button {
                 margin-top: 20px;
             }
+
+            .comment, .reply {
+                padding: 15px;
+                background-color: #f8f9fa;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                border-left: 5px solid #007bff;
+            }
+
+            .comment-body, .reply-body {
+                flex-grow: 1;
+                margin-left: 5px;
+            }
+
+            .comment-actions button {
+                font-size: 14px;
+                padding: 0;
+            }
+
+            img.rounded-circle {
+                object-fit: cover;
+            }
+
+            .comment-form, .comment-section {
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+            
+            .comment-section {
+                margin-top: 10px;
+            }
+            
+            .btn_submit {
+                margin-top: -10px;
+            }
         </style>
     </head>
     <body>
@@ -126,6 +163,102 @@
             </div>
         </div>
 
+        <!-- Comment Form -->
+        <div class="comment-form">
+            <h4>Leave a Comment:</h4>
+            <form id="commentForm" action="addBlogComment" method="POST">
+                <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                <div class="mb-3">
+                    <textarea name="commentContent" class="form-control" rows="3" placeholder="Write your comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn_submit">Submit</button>
+            </form>
+        </div>
+
+        <div class="comment-section">
+            <%
+                List<BlogComment> comments = (List<BlogComment>) request.getAttribute("comments");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                if (comments != null && !comments.isEmpty()) {
+                    for (BlogComment comment : comments) {
+                        User commenter = comment.getUser(); // Assuming each comment has a User object linked
+            %>
+            <div class="comment d-flex align-items-start">
+                <!-- Displaying User's Profile Picture -->
+                <img src="data:image/jpeg;base64, <%= commenter.getAvatarPath() %>" alt="Avatar" class="avatar-image-mini">
+                <div class="comment-body ms-3">
+                    <!-- Displaying Commenter's Name -->
+                    <p><strong><%= commenter.getLastName() + " " + commenter.getFirstName() %></strong></p>
+                    <p><%= comment.getCommentContent() %></p>
+                    <p><small>Posted on: <%= sdf.format(comment.getCommentedAt()) %></small></p>
+
+                    <!-- Reply Buttons -->
+                    <div class="comment-actions">
+                        <button type="button" class="btn btn-link reply-btn" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
+                    </div>
+
+                    <!-- Display Replies -->
+                    <div class="replies" id="replies-<%= comment.getCommentId() %>">
+                        <%
+                            for (BlogComment reply : comment.getReplies()) {
+                                User replier = reply.getUser(); // Assuming reply also has User object
+                        %>
+                        <div class="reply d-flex align-items-start">
+                            <!-- Displaying Replier's Profile Picture -->
+                            <img src="data:image/jpeg;base64, <%= replier.getAvatarPath() %>" alt="Avatar" class="avatar-image-mini">
+                            <div class="reply-body ms-3">
+                                <!-- Displaying Replier's Name -->
+                                <p><strong><%= replier.getLastName() + " " + replier.getFirstName() %></strong></p>
+                                <p><%= reply.getCommentContent() %></p>
+                                <p><small>Posted on: <%= sdf.format(reply.getCommentedAt()) %></small></p>
+                            </div>
+                        </div>
+                        <%
+                            }
+                        %>
+                    </div>
+
+                    <!-- Reply form -->
+                    <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none;">
+                        <form id="replyForm" action="addBlogComment" method="POST">
+                            <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
+                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                            <div class="mb-3">
+                                <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Reply</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <%
+                    }
+                } else {
+            %>
+            <p>No comments yet. Be the first to comment!</p>
+            <%
+                }
+            %>
+        </div>
+
+        <!-- JavaScript to handle reply form display -->
+        <script>
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-comment-id');
+                    const replyForm = document.getElementById('reply-form-' + commentId);
+
+                    // Toggle reply form visibility
+                    if (replyForm.style.display === 'none') {
+                        replyForm.style.display = 'block';
+                    } else {
+                        replyForm.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+
         <!-- Image Modal -->
         <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -154,5 +287,8 @@
                 modalImage.src = imageUrl; // Update the modal's image source
             });
         </script>
+
+        <!-- FOOTER -->
+        <jsp:include page="footer.jsp"/>
     </body>
 </html>
