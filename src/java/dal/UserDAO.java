@@ -696,7 +696,7 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
-        User user = dao.getUserByUsernameM("antt");
+        User user = dao.getUserById(31);
         List<User> list = dao.getAllMentorBySearchKey(1, "h");
         for(User l : list) {
             System.out.println(l);
