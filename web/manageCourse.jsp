@@ -174,7 +174,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                <c:set var="maxLength" value="100" />
+                                <c:set var="maxLength" value="120" />
                                 <c:choose>
                                     <c:when test="${fn:length(post.postContent) > maxLength}">
                                         <p>${fn:substring(post.postContent, 0, maxLength)}...</p>
@@ -184,8 +184,6 @@
                                     </c:otherwise>
                                 </c:choose>
                             </div>
-
-                            <!-- Modal xem chi tiết bài viết -->
                             <div class="modal fade" id="postDetailModal_${post.postId}" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -220,8 +218,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Modal chỉnh sửa bài viết -->
                             <div class="modal fade" id="editPostModal_${post.postId}" tabindex="-1" aria-labelledby="editPostModalLabel_${post.postId}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -257,8 +253,6 @@
                                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
                                                         <i class="fas fa-arrow-left"></i> <!-- Biểu tượng Back -->
                                                     </button>
-
-                                                    <!-- Nút Save với biểu tượng lưu trữ -->
                                                     <button type="submit" class="btn btn-primary">
                                                         <i class="fas fa-save"></i> <!-- Biểu tượng Save -->
                                                     </button>
