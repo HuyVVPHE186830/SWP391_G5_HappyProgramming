@@ -174,7 +174,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                <c:set var="maxLength" value="120" />
+                                <c:set var="maxLength" value="100" />
                                 <c:choose>
                                     <c:when test="${fn:length(post.postContent) > maxLength}">
                                         <p>${fn:substring(post.postContent, 0, maxLength)}...</p>
