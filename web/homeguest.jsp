@@ -42,7 +42,6 @@
                 function checkInput() {
                     var keyword = document.getElementById('keyword').value.trim();
                     var submitBtn = document.getElementById('submit-btn');
-
                     if (keyword !== "") {
                         submitBtn.disabled = false;
                     } else {
@@ -182,6 +181,9 @@
                 </div>
                 <a href="allCourse" class="more-course-button">View All Courses</a>
             </div>
+
+            <!-- CHATGPT -->
+            <jsp:include page="AI.jsp"/>
 
             <!-- FOOTER -->
             <jsp:include page="footer.jsp"/>

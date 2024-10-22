@@ -125,6 +125,9 @@
                 </div>
             </div>
 
+            <!-- CHATGPT -->
+            <jsp:include page="AI.jsp"/>
+
             <!-- FOOTER -->
             <jsp:include page="footer.jsp"/>
     </body>
