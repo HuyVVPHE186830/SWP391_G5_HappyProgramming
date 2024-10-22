@@ -107,7 +107,7 @@ public class BlogCommentDAO extends DBContext {
                 comment.setCommentId(commentId);
                 comment.setCommentedAt(rs.getTimestamp("commentedAt"));
                 comment.setCommentContent(rs.getString("commentContent"));
-
+                comment.setBlog(blogDAO.getBlogById(rs.getInt("blogId")));
                 // Retrieve the user who commented
                 User user = userDAO.getUserByUsernameM(rs.getString("commentedBy"));
                 comment.setUser(user);
@@ -119,23 +119,45 @@ public class BlogCommentDAO extends DBContext {
 
         return comment;
     }
-    
+
     public void addComment(BlogComment comment) {
-    String sql = "INSERT INTO Comment (commentedAt, commentContent, blogId, commentedBy, parentId) VALUES (?, ?, ?, ?, ?)";
-    try {
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setTimestamp(1, comment.getCommentedAt());
-        ps.setString(2, comment.getCommentContent());
-        ps.setInt(3, comment.getBlog().getBlogId());
-        ps.setString(4, comment.getUser().getUsername());
-        if (comment.getParent() != null) {
-            ps.setInt(5, comment.getParent().getCommentId());
-        } else {
-            ps.setNull(5, java.sql.Types.INTEGER);
+        String sql = "INSERT INTO Comment (commentedAt, commentContent, blogId, commentedBy, parentId) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setTimestamp(1, comment.getCommentedAt());
+            ps.setString(2, comment.getCommentContent());
+            ps.setInt(3, comment.getBlog().getBlogId());
+            ps.setString(4, comment.getUser().getUsername());
+            if (comment.getParent() != null) {
+                ps.setInt(5, comment.getParent().getCommentId());
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-}
+
+    public void deleteComment(int commentId) {
+        String sql = "DELETE FROM Comment WHERE commentId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, commentId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void deleteReplies(int parentId) {
+        String sql = "DELETE FROM Comment WHERE parentId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, parentId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

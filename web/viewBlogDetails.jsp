@@ -84,6 +84,7 @@
                 margin-bottom: 15px;
                 border-radius: 8px;
                 border-left: 5px solid #007bff;
+                position: relative;
             }
 
             .comment-body, .reply-body {
@@ -104,13 +105,20 @@
                 padding-left: 50px;
                 padding-right: 50px;
             }
-            
+
             .comment-section {
                 margin-top: 10px;
+                position: relative;
             }
-            
+
             .btn_submit {
                 margin-top: -10px;
+            }
+
+            .comment-actions .dropdown {
+                position: absolute;
+                top: 10px;
+                right: 10px;
             }
         </style>
     </head>
@@ -195,6 +203,19 @@
                     <!-- Reply Buttons -->
                     <div class="comment-actions">
                         <button type="button" class="btn btn-link reply-btn" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
+
+                        <% User u = (User)session.getAttribute("user");
+                           if (commenter.getId() == u.getId()) { %>
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item edit-comment" href="#" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
+                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
+                            </ul>
+                        </div>
+                        <% } %>
                     </div>
 
                     <!-- Display Replies -->
@@ -211,6 +232,20 @@
                                 <p><strong><%= replier.getLastName() + " " + replier.getFirstName() %></strong></p>
                                 <p><%= reply.getCommentContent() %></p>
                                 <p><small>Posted on: <%= sdf.format(reply.getCommentedAt()) %></small></p>
+                                <div class="comment-actions">
+
+                                    <% if (replier.getId() == u.getId()) { %>
+                                    <div class="dropdown">
+                                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item edit-comment" href="#" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
+                                            <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
                         <%
