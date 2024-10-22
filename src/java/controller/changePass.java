@@ -1,4 +1,3 @@
-
 package controller;
 
 import dal.UserDAO;
@@ -12,36 +11,33 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 
 public class changePass extends HttpServlet {
-   
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet changePass</title>");  
+            out.println("<title>Servlet changePass</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet changePass at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet changePass at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
             int id = Integer.parseInt(request.getParameter("id"));
@@ -54,7 +50,7 @@ public class changePass extends HttpServlet {
             u.setPassword(newPass);
 
             UserDAO dao = new UserDAO();
-                boolean f = dao.checkPassword(id, curPass);
+            boolean f = dao.checkPassword(id, curPass);
             if (f) {
                 boolean f2 = dao.changePass(u);
                 if (f2) {
@@ -75,7 +71,6 @@ public class changePass extends HttpServlet {
         }
     }
 
-    
     @Override
     public String getServletInfo() {
         return "Short description";
