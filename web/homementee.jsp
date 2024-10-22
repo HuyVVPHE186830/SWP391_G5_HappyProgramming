@@ -181,9 +181,6 @@
                 <a href="allCourse" class="more-course-button">View All Courses</a>
             </div>
 
-            <!-- CHATGPT -->
-            <jsp:include page="AI.jsp"/>
-            
             <!-- FOOTER -->
             <jsp:include page="footer.jsp"/>
         </div>
