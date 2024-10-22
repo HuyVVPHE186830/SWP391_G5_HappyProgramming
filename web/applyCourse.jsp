@@ -56,6 +56,7 @@
         <jsp:include page="header.jsp"/>
         
         <!-- FORM -->
+        <h1>APPLY COURSE</h1>
         <c:set var="user" value="${sessionScope.user}"/>
         <form action="action" class="course-form">
             <label for="name" class="form-label">Name: </label>
