@@ -149,12 +149,24 @@ public class BlogCommentDAO extends DBContext {
             e.printStackTrace();
         }
     }
-    
+
     public void deleteReplies(int parentId) {
         String sql = "DELETE FROM Comment WHERE parentId = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, parentId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editComment(int commentId, String updatedContent) {
+        String sql = "UPDATE Comment SET commentContent = ? WHERE commentId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, updatedContent);
+            ps.setInt(2, commentId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

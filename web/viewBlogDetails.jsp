@@ -177,13 +177,13 @@
             <form id="commentForm" action="addBlogComment" method="POST">
                 <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
                 <div class="mb-3">
-                    <textarea name="commentContent" class="form-control" rows="3" placeholder="Write your comment"></textarea>
+                    <textarea id="commentContent" name="commentContent" class="form-control" rows="3" placeholder="Write your comment"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary btn_submit">Submit</button>
             </form>
         </div>
 
-        <div class="comment-section">
+        <div class="comment-section" id="commentSection">
             <%
                 List<BlogComment> comments = (List<BlogComment>) request.getAttribute("comments");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -200,6 +200,17 @@
                     <p><%= comment.getCommentContent() %></p>
                     <p><small>Posted on: <%= sdf.format(comment.getCommentedAt()) %></small></p>
 
+                    <div class="edit-comment-form" id="edit-form-<%= comment.getCommentId() %>" style="display: none;">
+                        <form id="editCommentForm" method="POST" action="editBlogComment">
+                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                            <input type="hidden" name="commentId" value="<%= comment.getCommentId() %>">
+                            <div class="mb-3">
+                                <textarea name="commentContent" class="form-control" rows="2"><%= comment.getCommentContent() %></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn_submit">Save</button>
+                        </form>
+                    </div>
+
                     <!-- Reply Buttons -->
                     <div class="comment-actions">
                         <button type="button" class="btn btn-link reply-btn" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
@@ -211,7 +222,7 @@
                                 <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item edit-comment" href="#" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
+                                <li><a class="dropdown-item edit-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
                                 <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
                             </ul>
                         </div>
@@ -240,12 +251,24 @@
                                             <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item edit-comment" href="#" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
+                                            <li><a class="dropdown-item edit-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
                                             <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
                                         </ul>
                                     </div>
                                     <% } %>
                                 </div>
+                                
+                                <div class="edit-comment-form" id="edit-form-<%= reply.getCommentId() %>" style="display: none;">
+                                    <form id="editCommentForm" method="POST" action="editBlogComment">
+                                        <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                                        <input type="hidden" name="commentId" value="<%= reply.getCommentId() %>">
+                                        <div class="mb-3">
+                                            <textarea name="commentContent" class="form-control" rows="2"><%= reply.getCommentContent() %></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn_submit">Save</button>
+                                    </form>
+                                </div>
+                                        
                             </div>
                         </div>
                         <%
@@ -261,7 +284,7 @@
                             <div class="mb-3">
                                 <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Reply</button>
+                            <button type="submit" class="btn btn-primary btn_submit">Reply</button>
                         </form>
                     </div>
                 </div>
@@ -292,6 +315,50 @@
                     }
                 });
             });
+            // Toggle edit comment form
+            document.querySelectorAll('.edit-comment').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-comment-id');
+                    const editForm = document.getElementById('edit-form-' + commentId);
+                    const commentContent = document.querySelector('.comment-body[data-comment-id="' + commentId + '"]');
+
+                    // Toggle edit form visibility
+                    if (editForm.style.display === 'none') {
+                        editForm.style.display = 'block';
+                    } else {
+                        editForm.style.display = 'none';
+                    }
+                });
+            });
+
+// AJAX function to edit a comment
+            function editComment(commentId) {
+                const form = document.getElementById('edit-form-' + commentId);
+                const formData = new FormData(form);
+
+                fetch('editBlogComment', {
+                    method: 'POST',
+                    body: formData
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update the comment content on the page
+                                const commentContent = document.querySelector('.comment-body[data-comment-id="' + commentId + '"]');
+                                commentContent.querySelector('p').innerText = data.updatedContent;
+
+                                // Hide the edit form
+                                form.style.display = 'none';
+                            } else {
+                                alert('Failed to edit the comment.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+
+                return false; // Prevent form submission
+            }
         </script>
 
         <!-- Image Modal -->
