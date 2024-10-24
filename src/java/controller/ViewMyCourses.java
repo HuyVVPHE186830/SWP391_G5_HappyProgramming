@@ -19,7 +19,6 @@ import model.User;
 import util.PageControl;
 
 public class ViewMyCourses extends HttpServlet {
-
     
     private final CourseDAO courseDAO = new CourseDAO();
     private final UserDAO userDAO = new UserDAO();
