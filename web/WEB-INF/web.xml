@@ -140,6 +140,10 @@
         <servlet-name>StatisticsController</servlet-name>
         <servlet-class>admin.StatisticsController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChatBotServlet</servlet-name>
+        <servlet-class>controller.ChatBotServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -279,5 +283,9 @@
     <servlet-mapping>
         <servlet-name>StatisticsController</servlet-name>
         <url-pattern>/StatisticsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatBotServlet</servlet-name>
+        <url-pattern>/ChatBotServlet</url-pattern>
     </servlet-mapping>
 </web-app>
