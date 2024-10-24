@@ -21,8 +21,8 @@
         <servlet-class>controller.verifyServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>addcourse</servlet-name>
-        <servlet-class>admin.AddCourse</servlet-class>
+        <servlet-name>AddCourse</servlet-name>
+        <servlet-class>admin.addcourse</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewAllCourse</servlet-name>
@@ -173,7 +173,7 @@
         <url-pattern>/verify</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>addcourse</servlet-name>
+        <servlet-name>AddCourse</servlet-name>
         <url-pattern>/addcourse</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
