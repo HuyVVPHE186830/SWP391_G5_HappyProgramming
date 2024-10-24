@@ -9,6 +9,5 @@ package constant;
  * @author Sapphire
  */
 public class AIConstant {
-public static final String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
 
 }
