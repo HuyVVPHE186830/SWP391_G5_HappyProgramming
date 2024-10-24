@@ -52,8 +52,8 @@
             }
 
             .modal-body {
-                max-height: 70vh; /* Đặt chiều cao tối đa cho modal */
-                overflow-y: auto; /* Cho phép cuộn dọc nếu nội dung quá dài */
+                max-height: 70vh;
+                overflow-y: auto;
             }
 
             .post {
@@ -80,12 +80,12 @@
                 cursor: pointer;
             }
             .icon-link {
-                font-size: 1.2rem; /* Tăng kích thước văn bản */
-                margin-right: 20px; /* Khoảng cách giữa các thẻ */
+                font-size: 1.2rem;
+                margin-right: 20px;
             }
 
             .icon {
-                font-size: 1.5rem; /* Tăng kích thước biểu tượng */
+                font-size: 1.5rem;
             }
         </style>
     </head>
@@ -123,22 +123,18 @@
                         var selectedType = this.value;
                         var deadlineContainer = document.getElementById('deadlineContainer_' + postId);
                         var deadlineInput = document.getElementById('editDeadline_' + postId);
-
-                        // Lưu giá trị deadline trước đó để khôi phục nếu cần
                         var previousDeadline = deadlineInput.value;
 
                         if (selectedType === 'Exercise' || selectedType === 'Test') {
-                            deadlineContainer.style.display = 'block'; // Hiện deadline
-                            // Khôi phục giá trị deadline nếu có
+                            deadlineContainer.style.display = 'block';
                             if (previousDeadline) {
-                                deadlineInput.value = previousDeadline; // Khôi phục giá trị
+                                deadlineInput.value = previousDeadline;
                             }
                         } else {
-                            deadlineContainer.style.display = 'none'; // Ẩn deadline
-                            deadlineInput.value = ''; // Xóa giá trị của deadline
+                            deadlineContainer.style.display = 'none';
+                            deadlineInput.value = '';
                         }
                     });
-                    // Gọi sự kiện change ngay để khởi tạo trạng thái ban đầu
                     select.dispatchEvent(new Event('change'));
                 });
 
@@ -157,7 +153,6 @@
             </div>
 
             <div class="row">
-                <!-- Left side: Posts -->
                 <div class="col-md-8">
                     <c:if test="${not empty sessionScope.posts}">
                         <c:forEach var="post" items="${sessionScope.posts}">
@@ -251,10 +246,10 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
-                                                        <i class="fas fa-arrow-left"></i> <!-- Biểu tượng Back -->
+                                                        <i class="fas fa-arrow-left"></i>
                                                     </button>
                                                     <button type="submit" class="btn btn-primary">
-                                                        <i class="fas fa-save"></i> <!-- Biểu tượng Save -->
+                                                        <i class="fas fa-save"></i>
                                                     </button>
                                                 </div>
                                             </form>
@@ -271,7 +266,6 @@
                     </c:if>
                 </div>
 
-                <!-- Right side: Buttons and member info -->
                 <div class="col-md-4">
                     <div class="side-panel">
                         <div class="d-flex align-items-center mb-4">
@@ -285,9 +279,8 @@
                             </a>
 
                         </div>
-                        <!-- Nút để mở modal -->
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
-                            <i class="fas fa-plus"></i> <!-- Biểu tượng Add -->
+                            <i class="fas fa-plus"></i>
                             New Post
                         </button>
 
@@ -295,8 +288,6 @@
                 </div>
             </div>
 
-
-            <!-- Modal tạo post -->
             <!-- Modal tạo post -->
             <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered"> <!-- Thêm lớp modal-dialog-centered -->
