@@ -121,7 +121,7 @@
         <servlet-class>controller.SubmitBlogServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>editMentorPost</servlet-name>
+        <servlet-name>EditMentorPost</servlet-name>
         <servlet-class>controller.EditMentorPost</servlet-class>
     </servlet>
     <servlet>
@@ -265,7 +265,7 @@
         <url-pattern>/submitBlog</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>editMentorPost</servlet-name>
+        <servlet-name>EditMentorPost</servlet-name>
         <url-pattern>/editMentorPost</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
