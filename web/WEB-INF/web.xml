@@ -81,7 +81,7 @@
         <servlet-class>controller.SendMessage</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>viewCourseMentor</servlet-name>
+        <servlet-name>ViewCourseMentor</servlet-name>
         <servlet-class>controller.ViewCourseMentor</servlet-class>
     </servlet>
     <servlet>
@@ -225,7 +225,7 @@
         <url-pattern>/sendMessage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>viewCourseMentor</servlet-name>
+        <servlet-name>ViewCourseMentor</servlet-name>
         <url-pattern>/viewCourseMentor</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
