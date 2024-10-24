@@ -33,7 +33,7 @@ public class login extends HttpServlet {
         if (error != null) {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-        googlelogin gg = new googlelogin();
+        GoogleLogin gg = new GoogleLogin();
         String accessToken = gg.getToken(code);
         GoogleAccount acc = gg.getUserInfo(accessToken);
 
