@@ -1,6 +1,6 @@
 package util;
 
-import constant.Iconstant;
+import constant.IConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -52,7 +52,7 @@ public class Email {
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sendTo, false));
             msg.setSubject("HAPPY PROGRAMING WARNING: AUTHENTIC EMAIL, DO NOT SHARE!" );
             msg.setSentDate(new Date());
-            String resetLink = Iconstant.GOOGLE_REDIRECT_RESET;
+            String resetLink = IConstant.GOOGLE_REDIRECT_RESET;
             msg.setContent("Your new password is: " + newPass + ". You can change your password <a href=\"" + resetLink + "\">HERE</a>", "text/html");
             Transport.send(msg);
             test = true;
