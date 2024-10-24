@@ -22,7 +22,7 @@
     </servlet>
     <servlet>
         <servlet-name>addcourse</servlet-name>
-        <servlet-class>admin.addcourse</servlet-class>
+        <servlet-class>admin.AddCourse</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewAllCourse</servlet-name>
