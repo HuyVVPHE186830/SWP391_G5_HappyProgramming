@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import model.MentorPost;
 
-
 /**
  *
  * @author Huy Võ
