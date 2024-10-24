@@ -39,7 +39,8 @@ public class GoogleLogin extends HttpServlet {
     public static String getToken(String code) throws ClientProtocolException, IOException {
 
         String response = Request.Post(IConstant.GOOGLE_LINK_GET_TOKEN)
-                .bodyForm(Form.form()
+                .bodyForm(
+                        Form.form()
                                 .add("client_id", IConstant.GOOGLE_CLIENT_ID)
                                 .add("client_secret", IConstant.GOOGLE_CLIENT_SECRET)
                                 .add("redirect_uri", IConstant.GOOGLE_REDIRECT_URI)
