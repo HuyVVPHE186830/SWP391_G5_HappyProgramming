@@ -18,7 +18,6 @@ import java.io.BufferedReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@WebServlet("/ChatBotServlet")
 public class ChatBotServlet extends HttpServlet {
 
     @Override
