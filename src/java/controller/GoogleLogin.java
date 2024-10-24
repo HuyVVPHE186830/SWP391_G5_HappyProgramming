@@ -37,7 +37,7 @@ import service.ImageConverter;
 public class GoogleLogin extends HttpServlet {
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
-
+       
         String response = Request.Post(IConstant.GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(
                         Form.form()
