@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import constant.AIConstant; // Import the AIConstant class
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,9 +18,8 @@ import java.io.BufferedReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@WebServlet("/ChatBotServlet")
 public class ChatBotServlet extends HttpServlet {
-
-    private static final String OPENAI_API_KEY = "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"; // Replace with your OpenAI API key
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,12 +39,11 @@ public class ChatBotServlet extends HttpServlet {
         String apiUrl = "https://api.openai.com/v1/chat/completions";
         URL url = new URL(apiUrl);
         HttpURLConnection connection = null;
-        int responseCode = 0;
 
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer " + OPENAI_API_KEY);
+        connection.setRequestProperty("Authorization", "Bearer " + AIConstant.OPENAI_API_KEY); // Use the constant
         connection.setDoOutput(true);
 
         // Prepare the request body with the user message
@@ -64,7 +63,7 @@ public class ChatBotServlet extends HttpServlet {
         writer.close();
 
         // Get response code
-        responseCode = connection.getResponseCode();
+        int responseCode = connection.getResponseCode();
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // Success: Read the API response
@@ -89,5 +88,4 @@ public class ChatBotServlet extends HttpServlet {
             throw new IOException("Error: Received HTTP response code " + responseCode);
         }
     }
-
 }
