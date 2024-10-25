@@ -215,18 +215,23 @@
                     <div class="comment-actions">
                         <button type="button" class="btn btn-link reply-btn" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
 
-                        <% User u = (User)session.getAttribute("user");
-                           if (commenter.getId() == u.getId()) { %>
                         <div class="dropdown">
                             <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                             </button>
+                            <% User u = (User)session.getAttribute("user");
+                               if (commenter.getId() == u.getId()) { %>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item edit-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
-                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
+                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
                             </ul>
+                            <% } else { %>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item report-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Report</a></li>
+                            </ul>
+                            <% } %>
                         </div>
-                        <% } %>
+
                     </div>
 
                     <!-- Display Replies -->
@@ -245,19 +250,23 @@
                                 <p><small>Posted on: <%= sdf.format(reply.getCommentedAt()) %></small></p>
                                 <div class="comment-actions">
 
-                                    <% if (replier.getId() == u.getId()) { %>
                                     <div class="dropdown">
                                         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                                         </button>
+                                        <% if (replier.getId() == u.getId()) { %>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                             <li><a class="dropdown-item edit-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
-                                            <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
+                                            <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
                                         </ul>
+                                        <% } else { %>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item report-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Report</a></li>
+                                        </ul>
+                                        <% } %>
                                     </div>
-                                    <% } %>
                                 </div>
-                                
+
                                 <div class="edit-comment-form" id="edit-form-<%= reply.getCommentId() %>" style="display: none;">
                                     <form id="editCommentForm" method="POST" action="editBlogComment">
                                         <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
@@ -268,7 +277,7 @@
                                         <button type="submit" class="btn btn-primary btn_submit">Save</button>
                                     </form>
                                 </div>
-                                        
+
                             </div>
                         </div>
                         <%
@@ -315,6 +324,7 @@
                     }
                 });
             });
+
             // Toggle edit comment form
             document.querySelectorAll('.edit-comment').forEach(button => {
                 button.addEventListener('click', function () {
@@ -331,7 +341,7 @@
                 });
             });
 
-// AJAX function to edit a comment
+            // AJAX function to edit a comment
             function editComment(commentId) {
                 const form = document.getElementById('edit-form-' + commentId);
                 const formData = new FormData(form);
@@ -358,6 +368,90 @@
                         });
 
                 return false; // Prevent form submission
+            }
+
+            document.getElementById('commentForm').addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                const commentContent = document.getElementById('commentContent').value;
+                const blogId = document.querySelector('input[name="blogId"]').value;
+
+                fetch('addBlogComment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        blogId: blogId,
+                        commentContent: commentContent
+                    })
+                })
+                        .then(response => response.text())
+                        .then(data => {
+                            // Clear the textarea after submission
+                            document.getElementById('commentContent').value = '';
+
+                            // Refresh the comments section with new comments
+                            fetchComments(blogId);
+                        })
+                        .catch(error => console.error('Error:', error));
+            });
+
+            // Function to fetch and update comments without reloading the page
+            function fetchComments(blogId) {
+                fetch('viewBlogDetail?id=' + blogId)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newCommentsSection = doc.querySelector('#commentSection');
+                            document.getElementById('commentSection').innerHTML = newCommentsSection.innerHTML;
+                        })
+                        .catch(error => console.error('Error fetching comments:', error));
+            }
+
+            document.querySelectorAll('form[id^="replyForm"]').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault(); // Prevent the default form submission
+
+                    const commentContent = form.querySelector('textarea[name="commentContent"]').value;
+                    const blogId = form.querySelector('input[name="blogId"]').value;
+                    const parentId = form.querySelector('input[name="parentId"]').value;
+
+                    fetch('addBlogComment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            blogId: blogId,
+                            commentContent: commentContent,
+                            parentId: parentId // Include the parent ID for replies
+                        })
+                    })
+                            .then(response => response.text())
+                            .then(data => {
+                                // Clear the reply textarea after submission
+                                form.querySelector('textarea[name="commentContent"]').value = '';
+
+                                // Refresh the comments section with new comments
+                                fetchReplies(blogId, parentId);
+                            })
+                            .catch(error => console.error('Error:', error));
+                });
+            });
+
+            // Function to fetch and update comments without reloading the page
+            function fetchReplies(blogId, parentId) {
+                fetch('viewBlogDetail?id=' + blogId)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newCommentsSection = doc.querySelector('#replies-' + parentId);
+                            document.getElementById('replies-' + parentId).innerHTML = newCommentsSection.innerHTML;
+                        })
+                        .catch(error => console.error('Error fetching comments:', error));
             }
         </script>
 
