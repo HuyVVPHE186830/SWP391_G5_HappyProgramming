@@ -72,7 +72,6 @@ public class sendMessage extends HttpServlet {
             return;
         }
 
-        // Kiểm tra và tạo cuộc hội thoại nếu chưa tồn tại
         Conversation conversation = conversationDAO.getConversationBetweenUsers(currentUser.getUsername(), recipient.getUsername());
         if (conversation == null) {
             conversation = new Conversation();
@@ -82,7 +81,6 @@ public class sendMessage extends HttpServlet {
 
         List<Message> messages = messageDAO.getMessagesByConversationId(conversation.getConversationId());
 
-        // Lưu thông tin vào session
         session.setAttribute("currentChatRecipient", recipient);
         session.setAttribute("currentChatMessages", messages);
         session.setAttribute("currentConversationId", conversation.getConversationId());

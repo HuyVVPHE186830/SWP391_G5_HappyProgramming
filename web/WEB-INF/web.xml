@@ -132,6 +132,10 @@
         <servlet-name>requestScreen</servlet-name>
         <servlet-class>controller.requestScreen</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MangeRequest</servlet-name>
+        <servlet-class>admin.MangeRequest</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -254,7 +258,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>editMentorPost</servlet-name>
-        <url-pattern>/editMentorPost</url-pattern>       
+        <url-pattern>/editMentorPost</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>manageMentee</servlet-name>
@@ -263,5 +267,9 @@
     <servlet-mapping>
         <servlet-name>requestScreen</servlet-name>
         <url-pattern>/requestScreen</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MangeRequest</servlet-name>
+        <url-pattern>/MangeRequest</url-pattern>
     </servlet-mapping>
 </web-app>

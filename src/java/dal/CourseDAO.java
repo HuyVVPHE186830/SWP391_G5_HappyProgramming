@@ -1381,4 +1381,30 @@ public class CourseDAO extends DBContext {
             e.printStackTrace();
         }
     }
+
+    public List<String> getMentorByCourse(int courseId, int status) {
+        List<String> usernames = new ArrayList<>();
+
+        String sql = "SELECT username "
+                + "FROM [Participate] "
+                + "WHERE courseId = ? "
+                + "AND participateRole = ? "
+                + "AND statusId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, courseId); 
+            preparedStatement.setInt(2, 2); 
+            preparedStatement.setInt(3, status);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    usernames.add(resultSet.getString("username"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usernames;
+    }
 }

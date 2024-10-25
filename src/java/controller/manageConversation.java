@@ -63,9 +63,7 @@ public class manageConversation extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String conversationIdPr = request.getParameter("conversationId");
-        // get session
         HttpSession session = request.getSession();
-        // get action
         String action = request.getParameter("action") == null
                 ? ""
                 : request.getParameter("action");

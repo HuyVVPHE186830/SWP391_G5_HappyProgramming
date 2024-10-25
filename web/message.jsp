@@ -346,18 +346,17 @@
                 for (let i = 0; i < conversationItems.length; i++) {
                     const username = conversationItems[i].getAttribute('data-username').toLowerCase();
                     if (username.includes(filter)) {
-                        conversationItems[i].style.display = ''; // Show if found
+                        conversationItems[i].style.display = ''; 
                     } else {
-                        conversationItems[i].style.display = 'none'; // Hide if not found
+                        conversationItems[i].style.display = 'none'; 
                     }
                 }
             }
 
             function fetchLatestMessages() {
-                const conversationId = '${currentConversationId}'; // Lấy ID cuộc trò chuyện từ session
-                const recipientUsername = '${currentChatRecipient.username}'; // Lấy username của người nhận
+                const conversationId = '${currentConversationId}'; 
+                const recipientUsername = '${currentChatRecipient.username}';
 
-                // Tạo URL để gọi servlet
                 const url = 'sendMessage?conversationId=' + conversationId + '&username=' + recipientUsername;
 
                 fetch(url)
@@ -365,24 +364,20 @@
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }
-                            return response.text(); // Nhận dữ liệu dưới dạng text
+                            return response.text();
                         })
                         .then(data => {
-                            // Tạo một DOMParser để phân tích dữ liệu HTML
                             const parser = new DOMParser();
                             const doc = parser.parseFromString(data, 'text/html');
 
-                            // Lấy phần tử chứa tin nhắn mới nhất
                             const newMessages = doc.querySelector('.messages').innerHTML;
 
-                            // Cập nhật nội dung của phần tin nhắn
                             const messagesContainer = document.querySelector('.messages');
-                            messagesContainer.innerHTML = newMessages; // Cập nhật nội dung
+                            messagesContainer.innerHTML = newMessages;
                         })
                         .catch(error => console.error('Error fetching messages:', error));
             }
 
-            // Gọi hàm fetchLatestMessages sau mỗi 2 giây
             setInterval(fetchLatestMessages, 2000);
         </script>
 
