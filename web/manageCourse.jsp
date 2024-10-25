@@ -209,6 +209,26 @@
                                                     <fmt:formatDate value="${post.deadline}" pattern="dd/MM/yyyy, HH:mm" />
                                                 </p>
                                             </c:if>
+                                            <c:if test="${not empty sessionScope.postComments[post.postId]}">
+                                                <div class="comments-section">
+                                                    <h5>Comments</h5>
+                                                    <c:forEach var="comment" items="${sessionScope.postComments[post.postId]}">
+                                                        <div class="comment">
+                                                            <p><strong>${comment.commentedBy}</strong>: ${comment.commentContent}</p>
+                                                            <c:if test="${not empty comment.replies}">
+                                                                <div class="replies">
+                                                                    <c:forEach var="reply" items="${comment.replies}">
+                                                                        <p><strong>${reply.commentedBy}</strong>: ${reply.commentContent}</p>
+                                                                    </c:forEach>
+                                                                </div>
+                                                            </c:if>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${empty sessionScope.postComments[post.postId]}">
+                                                <p>No comment yet</p>
+                                            </c:if>      
                                         </div>
                                     </div>
                                 </div>
