@@ -1,10 +1,12 @@
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="CSS/bootstrap.min.css" rel="stylesheet">
+        <link href="CSS/home.css" rel="stylesheet">
         <title>Cửa Hàng Trực Tuyến</title>
         <style>
             body {
@@ -353,7 +355,7 @@
                             <h6>Created at: ${cou.createdAt}</h6>
                             <h6 class = "lv3Text">Mentee in this coursr:${cou.countMentee} </h6>
                             <button>                                                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course" style="color: white; text-decoration: none;">
-View</button>
+                                    View</button>
                         </div>
                     </div>
                 </c:forEach>
