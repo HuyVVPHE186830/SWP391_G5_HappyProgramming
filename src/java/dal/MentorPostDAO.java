@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import model.MentorPost;
 import java.sql.Timestamp;
+import model.MentorPostComment;
 import model.User;
 
 /**
@@ -147,6 +148,54 @@ public class MentorPostDAO extends DBContext {
         }
         return listMentee;
     }
+    
+    public List<MentorPostComment> getAllCommentsByPostId(int postId) {
+        List<MentorPostComment> commentList = new ArrayList<>();
+        String sql = "SELECT * FROM MentorPostComments WHERE postId = ? ORDER BY commentedAt DESC";
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, postId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int commentId = rs.getInt("commentId");
+                String commentedBy = rs.getString("commentedBy");
+                Timestamp commentedAt = rs.getTimestamp("commentedAt");
+                String commentContent = rs.getString("commentContent");
+                Integer parentCommentId = rs.getObject("parentCommentId") != null ? rs.getInt("parentCommentId") : null;
+                MentorPostComment comment = new MentorPostComment(commentId, postId, commentedBy, commentedAt, commentContent, parentCommentId);
+                commentList.add(comment); 
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return commentList; 
+    }
+    
+    public List<MentorPostComment> getRepliesByParentCommentId(int parentCommentId) {
+        List<MentorPostComment> replyList = new ArrayList<>();
+        String sql = "SELECT * FROM MentorPostComments WHERE parentCommentId = ? ORDER BY commentedAt DESC";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, parentCommentId);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                int commentId = rs.getInt("commentId");
+                int postId = rs.getInt("postId");
+                String commentedBy = rs.getString("commentedBy");
+                Timestamp commentedAt = rs.getTimestamp("commentedAt");
+                String commentContent = rs.getString("commentContent");
+                MentorPostComment reply = new MentorPostComment(commentId, postId, commentedBy, commentedAt, commentContent, parentCommentId);
+                replyList.add(reply);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return replyList;
+    }
+    
 
     public static void main(String[] args) {
         MentorPostDAO dao = new MentorPostDAO();
