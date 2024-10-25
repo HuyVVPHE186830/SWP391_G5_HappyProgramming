@@ -74,13 +74,13 @@
                 flex: 1;
                 padding-left: 20px;
             }
-            
+
             .link-2 {
                 color: #000;
                 font-style: italic;
                 font-weight: 400
             }
-            
+
             .link-2:hover {
                 text-decoration: none;
             }
@@ -106,11 +106,16 @@
                         <h3>Course: ${cM.courseName} <a href="allCourse?search=category&categoryId=${cT.categoryId}" class="link-2">(${cT.categoryName})</a></h3>
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
-                        <form action="requestScreen" method="post">
-                            <input type="hidden" name="courseId" value="${cM.courseId}">
-                            <input type="hidden" name="username" value="${sessionScope.user.username}">
-                            <button type="submit" class="button-enroll">Enroll</button>
-                        </form>
+                        <c:if test="${sessionScope.user.username != mD.username}">
+                            <form action="requestScreen" method="post">
+                                <input type="hidden" name="courseId" value="${cM.courseId}">
+                                <input type="hidden" name="username" value="${sessionScope.user.username}">
+                                <button type="submit" class="button-enroll">Enroll</button>
+                            </form>
+                        </c:if>
+                        <c:if test="${sessionScope.user.username == mD.username}">
+                            <a href="userProfile" class="button-enroll">View Your Profile</a>
+                        </c:if>
                     </div>
                 </div>
             </c:if>

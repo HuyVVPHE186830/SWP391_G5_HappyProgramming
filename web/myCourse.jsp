@@ -94,6 +94,27 @@
                 text-align: center;
                 margin: 20px 0;
             }
+            .applyCourse {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 20px;
+                margin-right: 20px;
+            }
+            .applyCourse a {
+                color: white;
+                font-size: 26px;
+                background: #5e3fd3;
+                width: 200px;
+                text-align: center;
+                border-radius: 12px;
+                padding: 5px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+            .applyCourse a:hover {
+                text-decoration: none;
+                background: #541371;
+            }
 
             .product-list {
                 display: flex;
@@ -178,6 +199,13 @@
             </div>
         </header>
 
+        <!-- Enroll Course For Mentor -->
+        <c:if test="${sessionScope.user.roleId == 2}">
+            <div class="applyCourse">
+                <a href="applyCourse?userId=${sessionScope.user.id}">Apply a Course</a>
+            </div>
+        </c:if>
+        
         <!-- Mentoring Section -->
         <c:if test="${sessionScope.user.roleId == 2}">
             <section class="featured-product2">

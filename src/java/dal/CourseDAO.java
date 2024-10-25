@@ -23,8 +23,9 @@ public class CourseDAO extends DBContext {
 //        in.add(1);
 //        in.add(3);
 //        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-        List<Course> list = dao.getSameCourse(1);
-        for (Course course : list) {
+        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
+        List<Course> otherlist = dao.getOtherCourses(list);
+        for (Course course : otherlist) {
             System.out.println(course);
         }
         List<String> string = dao.getMenteeByCourse(1, 1);
@@ -82,6 +83,63 @@ public class CourseDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, excludedCourseId);
             st.setString(2, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("courseId");
+                String name = rs.getString("courseName");
+                String description = rs.getString("courseDescription");
+                Course c = new Course(id, name, description);
+                list.add(c);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
+    public List<Course> getAllCoursesByUsernameOfMentor(String username) {
+        List<Course> list = new ArrayList<>();
+        String sql = "SELECT * FROM Course join Participate on Course.courseId = Participate.courseId\n"
+                + "join [User] on Participate.username = [User].username\n"
+                + "WHERE [User].username = ? and Participate.ParticipateRole = 2";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("courseId");
+                String name = rs.getString("courseName");
+                String description = rs.getString("courseDescription");
+                Course c = new Course(id, name, description);
+                list.add(c);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
+    public List<Course> getOtherCourses(List<Course> courses) {
+        List<Course> list = new ArrayList<>();
+
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < courses.size(); i++) {
+            placeholders.append("?");
+            if (i < courses.size() - 1) {
+                placeholders.append(", ");
+            }
+        }
+
+        String sql = "SELECT courseId, courseName, courseDescription FROM Course "
+                + (courses.size() > 0 ? "WHERE courseId NOT IN (" + placeholders.toString() + ")" : "");
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+
+            // Đặt giá trị courseId cho các placeholder
+            for (int i = 0; i < courses.size(); i++) {
+                st.setInt(i + 1, courses.get(i).getCourseId());
+            }
+
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("courseId");

@@ -247,9 +247,8 @@
                         return;
                     }
 
-                    // Remove data URL scheme if present
                     const base64Data = base64String.replace(/^data:.+;base64,/, '');
-                    const byteCharacters = atob(base64Data); // Decode Base64 string
+                    const byteCharacters = atob(base64Data);
                     const byteNumbers = new Array(byteCharacters.length);
 
                     for (let i = 0; i < byteCharacters.length; i++) {
@@ -260,29 +259,25 @@
                     const blob = new Blob([byteArray], {type: mimeType});
                     const url = URL.createObjectURL(blob);
 
-                    // Create a link element to download the file
                     const link = document.createElement('a');
                     link.href = url;
                     link.download = fileName;
                     link.click();
-
-                    // Cleanup
                     URL.revokeObjectURL(url);
                 }
 
                 document.getElementById('download').addEventListener('click', () => {
                     let base64String = document.getElementById('cvFile').value;
                     console.log(base64String);
-                    const fileName = "CV"; // Default file name without extension
-
-                    base64ToFile(base64String, fileName); // Use .pdf or .jpg based on the mime type
+                    const fileName = "CV";
+                    base64ToFile(base64String, fileName);
                 });
             });
             document.addEventListener('DOMContentLoaded', function () {
                 function selectRole() {
                     const role = document.getElementById('role').value;
                     const userProfile = document.getElementById('userProfileForm');
-                    if (role === "2") { // Chú ý so sánh giá trị dưới dạng chuỗi
+                    if (role === "2") {
                         userProfile.enctype = 'multipart/form-data';
                     } else {
                         userProfile.enctype = '';

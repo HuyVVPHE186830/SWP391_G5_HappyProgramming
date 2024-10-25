@@ -2,51 +2,51 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>register</servlet-name>
-        <servlet-class>controller.register</servlet-class>
+        <servlet-class>controller.Register</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>login</servlet-name>
-        <servlet-class>controller.login</servlet-class>
+        <servlet-class>controller.Login</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>changePass</servlet-name>
-        <servlet-class>controller.changePass</servlet-class>
+        <servlet-class>controller.ChangePass</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>resetPass</servlet-name>
-        <servlet-class>controller.resetPass</servlet-class>
+        <servlet-class>controller.ResetPass</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>verifyServlet</servlet-name>
-        <servlet-class>controller.verifyServlet</servlet-class>
+        <servlet-class>controller.VerifyServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>addcourse</servlet-name>
+        <servlet-name>AddCourse</servlet-name>
         <servlet-class>admin.addcourse</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewAllCourse</servlet-name>
-        <servlet-class>controller.viewAllCourse</servlet-class>
+        <servlet-class>controller.ViewAllCourse</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>home</servlet-name>
-        <servlet-class>controller.home</servlet-class>
+        <servlet-class>controller.Home</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewcourse</servlet-name>
-        <servlet-class>controller.viewcourse</servlet-class>
+        <servlet-class>controller.ViewCourse</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>googlelogin</servlet-name>
-        <servlet-class>controller.googlelogin</servlet-class>
+        <servlet-class>controller.GoogleLogin</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>userProfile</servlet-name>
-        <servlet-class>controller.userProfile</servlet-class>
+        <servlet-class>controller.UserProfile</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>changeAvatar</servlet-name>
-        <servlet-class>controller.changeAvatar</servlet-class>
+        <servlet-class>controller.ChangeAvatar</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddAccountControl</servlet-name>
@@ -70,31 +70,31 @@
     </servlet>
     <servlet>
         <servlet-name>viewMyCourses</servlet-name>
-        <servlet-class>controller.viewMyCourses</servlet-class>
+        <servlet-class>controller.ViewMyCourses</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>verifyEmail</servlet-name>
-        <servlet-class>controller.verifyEmail</servlet-class>
+        <servlet-class>controller.VerifyEmail</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>sendMessage</servlet-name>
-        <servlet-class>controller.sendMessage</servlet-class>
+        <servlet-class>controller.SendMessage</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>viewCourseMentor</servlet-name>
-        <servlet-class>controller.viewCourseMentor</servlet-class>
+        <servlet-name>ViewCourseMentor</servlet-name>
+        <servlet-class>controller.ViewCourseMentor</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewMentor</servlet-name>
-        <servlet-class>controller.viewMentor</servlet-class>
+        <servlet-class>controller.ViewMentor</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>manageCourse</servlet-name>
-        <servlet-class>controller.manageCourse</servlet-class>
+        <servlet-class>controller.ManageCourse</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>addMentorPost</servlet-name>
-        <servlet-class>controller.addMentorPost</servlet-class>
+        <servlet-class>controller.AddMentorPost</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewMentorPost</servlet-name>
@@ -102,15 +102,15 @@
     </servlet>
     <servlet>
         <servlet-name>deleteMentorPost</servlet-name>
-        <servlet-class>controller.deleteMentorPost</servlet-class>
+        <servlet-class>controller.DeleteMentorPost</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>manageConversation</servlet-name>
-        <servlet-class>controller.manageConversation</servlet-class>
+        <servlet-class>controller.ManageConversation</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewBlogServlet</servlet-name>
-        <servlet-class>controller.viewBlogServlet</servlet-class>
+        <servlet-class>controller.ViewBlogServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewBlogDetailServlet</servlet-name>
@@ -122,15 +122,27 @@
     </servlet>
     <servlet>
         <servlet-name>editMentorPost</servlet-name>
-        <servlet-class>controller.editMentorPost</servlet-class>
+        <servlet-class>controller.EditMentorPost</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>manageMentee</servlet-name>
-        <servlet-class>controller.manageMentee</servlet-class>
+        <servlet-class>controller.ManageMentee</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>requestScreen</servlet-name>
-        <servlet-class>controller.requestScreen</servlet-class>
+        <servlet-class>controller.RequestScreen</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>applyCourse</servlet-name>
+        <servlet-class>controller.ApplyCourse</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StatisticsController</servlet-name>
+        <servlet-class>admin.StatisticsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChatBotServlet</servlet-name>
+        <servlet-class>controller.ChatBotServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>MangeRequest</servlet-name>
@@ -165,7 +177,7 @@
         <url-pattern>/verify</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>addcourse</servlet-name>
+        <servlet-name>AddCourse</servlet-name>
         <url-pattern>/addcourse</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -217,7 +229,7 @@
         <url-pattern>/sendMessage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>viewCourseMentor</servlet-name>
+        <servlet-name>ViewCourseMentor</servlet-name>
         <url-pattern>/viewCourseMentor</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -271,5 +283,17 @@
     <servlet-mapping>
         <servlet-name>MangeRequest</servlet-name>
         <url-pattern>/MangeRequest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>applyCourse</servlet-name>
+        <url-pattern>/applyCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StatisticsController</servlet-name>
+        <url-pattern>/StatisticsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatBotServlet</servlet-name>
+        <url-pattern>/ChatBotServlet</url-pattern>
     </servlet-mapping>
 </web-app>
