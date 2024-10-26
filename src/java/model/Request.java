@@ -27,6 +27,10 @@ public class Request {
         this.requestStatus = requestStatus;
         this.requestReason = requestReason;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Request{" + "courseId=" + courseId + ", username=" + username + ", requestTime=" + requestTime + ", requestStatus=" + requestStatus + ", requestReason=" + requestReason + '}';
+    }
     
 }
