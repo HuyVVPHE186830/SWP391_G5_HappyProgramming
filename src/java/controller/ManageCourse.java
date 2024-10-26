@@ -19,9 +19,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.Course;
 import model.MentorPost;
+import model.MentorPostComment;
 import model.User;
 
 /**
@@ -89,6 +92,15 @@ public class ManageCourse extends HttpServlet {
         }
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
         List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());
+        Map<Integer, List<MentorPostComment>> postComments = new HashMap<>();
+         for (MentorPost post : posts) {
+        List<MentorPostComment> comments = mentorPostDAO.getAllCommentsByPostId(post.getPostId());
+        for (MentorPostComment comment : comments) {
+            List<MentorPostComment> replies = mentorPostDAO.getRepliesByParentCommentId(comment.getCommentId());
+            comment.setReplies(replies); 
+        }
+        postComments.put(post.getPostId(), comments);
+    }
         List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1);
         List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0);
         List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1);
@@ -99,6 +111,7 @@ public class ManageCourse extends HttpServlet {
         session.setAttribute("posts", posts);
         session.setAttribute("listMentee", listMentee);
         session.setAttribute("listRequest", listRequest);
+        session.setAttribute("postComments", postComments);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 

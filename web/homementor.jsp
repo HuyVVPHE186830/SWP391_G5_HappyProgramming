@@ -99,32 +99,6 @@
             <!-- SPLIT -->
             <div style="height: 100px; background-color: #edf2fa"></div>
 
-            <!-- MY COURSES SLIDE -->
-            <div class="mycourse-content">
-                <div class="mycourse-content-heading">
-                    <div class="mycourse-heading">YOUR CURRENT COURSES</div>
-                </div>
-                <c:set var="u" value="${sessionScope.user}"/>
-                <div class="row mycourse-cards">
-                    <c:forEach items="${sessionScope.participate}" var="p">
-                        <c:if test="${p.username == u.username}">
-                            <c:forEach items="${sessionScope.course}" var="c">
-                                <c:if test="${c.courseId == p.courseId}">
-                                    <a href="viewcourse?courseId=${c.courseId}" class="col-md-5 mycourse-card">
-                                        <div class="mycourse-body">
-                                            <div class="mycourse-text">
-                                                <div class="course-name">${c.courseName}</div>
-                                                <div class="mycourse-body-text">${fn:substring(c.courseDescription, 0, 120)}<c:if test="${fn:length(c.courseDescription) > 120}">...</c:if></div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                </c:if>
-                            </c:forEach>
-                        </c:if>
-                    </c:forEach>
-                </div>
-            </div>
-
             <!-- FOOTER -->
             <jsp:include page="footer.jsp"/>
     </body>

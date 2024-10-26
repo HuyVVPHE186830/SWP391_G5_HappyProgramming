@@ -144,7 +144,7 @@
 
                 <!-- SEARCH -->
                 <form action="viewCourseMentor" method="post" class="search-bar">
-                    <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                    <input type="text" class="input-submit" placeholder="Search a mentor" name="keyword" id="keyword" oninput="checkInput()">
                     <input type="hidden" name="courseId" value="${cM.courseId}">
                     <input type="submit" class="button-submit" id="submit-btn" disabled value="Search">
                 </form>

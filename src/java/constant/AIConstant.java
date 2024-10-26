@@ -6,9 +6,9 @@ package constant;
 
 /**
  *
+<<<<<<< HEAD
  * @author yeuda
  */
 public class AIConstant {
         public static final String OPENAI_API_KEY = "";
-
 }
