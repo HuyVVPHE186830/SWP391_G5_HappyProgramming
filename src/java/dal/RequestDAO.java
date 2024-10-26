@@ -38,6 +38,27 @@ public class RequestDAO extends DBContext {
         }
         return list;
     }
+    
+    public List<Request> getAllRequestByUsername(String username) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Request] where username = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseId");
+                Date requestTime = rs.getDate("requestTime");
+                int requestStatus = rs.getInt("requestStatus");
+                String requestReason = rs.getString("requestReason");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                list.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
 
     public void addRequest(Request request) {
         String sql = "INSERT INTO [Request] (courseId, username, requestTime, requestStatus, requestReason) VALUES (?, ?, ?, ?, ?)";

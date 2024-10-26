@@ -99,7 +99,7 @@ public class ApplyCourse extends HttpServlet {
         Date date = new Date();
         try {
             int courseId = Integer.parseInt(courseId_str);
-            daoR.addRequest(new Request(courseId, username, date, 1, requestReason));
+            daoR.addRequest(new Request(courseId, username, date, 0, requestReason));
             session.setAttribute("message", "Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
             response.sendRedirect("applyCourse.jsp");
         } catch (Exception e) {
