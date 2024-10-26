@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import model.Course;
 import model.Participate;
+import model.Request;
 
 /**
  *
@@ -60,12 +61,66 @@ public class ParticipateDAO extends DBContext {
         }
         return list;
     }
-    
+
+    public void addParticipate(Participate participate) {
+        String sql = "INSERT INTO [Participate] (courseId, username, ParticipateRole, statusId) VALUES (?, ?, ?, ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, participate.getCourseId());
+            st.setString(2, participate.getUsername());
+            st.setInt(3, participate.getParticipateRole());
+            st.setInt(4, participate.getStatusId());
+            st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public boolean updateParticipate(int oldCourseId, int newCourseId, String username) {
+        boolean f = false;
+        try {
+            String sql = "Update Participate Set courseId = ? Where username = ? and courseId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, newCourseId);
+            ps.setString(2, username);
+            ps.setInt(3, oldCourseId);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+
+    public boolean deleteParticipate(int courseId, String username) {
+        boolean f = false;
+        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, courseId);
+            ps.setString(2, username);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+
     public static void main(String[] args) {
         ParticipateDAO dao = new ParticipateDAO();
+        RequestDAO daoR = new RequestDAO();
         List<Participate> list = dao.getAll();
         for (Participate l : list) {
             System.out.println(l);
         }
+        Request req1 = daoR.getRequestByUsername("anmentor", 1);
+//        dao.addParticipate(new Participate(4, req1.getUsername(), 2, req1.getRequestStatus()));
+//        daoR.updateRequest(4, 1, "anmentor", "hel");
+        dao.deleteParticipate(7, "anmentor");
     }
 }

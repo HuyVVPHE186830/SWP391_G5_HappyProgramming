@@ -50,19 +50,26 @@
                 gap: 15px;
             }
 
+            .input-text {
+                margin: 0 auto;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
             input {
                 padding: 10px;
                 font-size: 0.8rem;
+                width: 70%;
                 border: none;
                 border-radius: 5px;
                 background-color: #eeeded;
-                width: 70%;
                 margin: 0 auto;
             }
 
             select.form-select {
                 padding: 10px;
-                font-size: 0.8rem;
+                font-size: 16px;
                 border: none;
                 border-radius: 5px;
                 background-color: #eeeded;
@@ -110,13 +117,17 @@
                     <h2>Apply Course</h2>
                     <form action="applyCourse" method="post">
                         <input type="hidden" value="${user.username}" name="username">
-                        <input type="text" name="name" value="${user.lastName} ${user.firstName}" readonly>
-                        <select id="id" name="courseId" class="form-select">
-                            <c:forEach items="${requestScope.otherCourse}" var="oC">
-                                <option value="${oC.courseId}">${oC.courseName}</option>
+                        <div class="input-text">
+                            <input type="text" name="name" value="${user.lastName} ${user.firstName}" readonly>
+                        </div>
+                        <select name="courseId" class="form-select">
+                            <c:forEach items="${sessionScope.otherCourse}" var="oC">
+                                <option value="${oC.courseId}" style="font-size: 1rem">${oC.courseName}</option>
                             </c:forEach>
                         </select>
-                        <input type="text" name="requestReason" placeholder="Request reason">
+                        <div class="input-text" style="height: auto">
+                            <textarea name="requestReason" placeholder="Request reason" style="width: 70%; height: 130px; padding: 10px; border: none; border-radius: 5px; background-color: #eeeded; font-size: 16px"></textarea>
+                        </div>
                         <button type="submit" class="button-applyCourse">SUBMIT</button>
                         <c:if test="${not empty sessionScope.message}">
                             <div class="success-message">

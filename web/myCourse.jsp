@@ -115,6 +115,7 @@
             .applyCourse a:hover {
                 text-decoration: none;
                 background: #541371;
+                color: white;
             }
 
             .product-list {

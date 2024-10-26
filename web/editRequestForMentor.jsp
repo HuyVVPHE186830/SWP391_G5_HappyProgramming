@@ -1,6 +1,6 @@
 <%-- 
-    Document   : viewRequestForMentor
-    Created on : Oct 26, 2024, 1:16:17 PM
+    Document   : editRequestForMentor
+    Created on : Oct 26, 2024, 4:33:34 PM
     Author     : Admin
 --%>
 
@@ -54,7 +54,7 @@
                 transition: background-color 0.3s ease;
             }
 
-            .form {
+            form {
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
@@ -74,7 +74,7 @@
                 font-weight: bold;
             }
 
-            input, select.form-select {
+            input {
                 padding: 10px;
                 font-size: 0.9rem;
                 border: none;
@@ -84,6 +84,19 @@
                 margin-left: 10px;
                 margin-right: 10px;
                 height: 42px;
+            }
+
+            select.form-select {
+                padding: 10px;
+                font-size: 0.9rem;
+                border: none;
+                width: 70%;
+                border-radius: 5px;
+                background-color: #eeeded;
+                margin-right: 10px;
+                height: 42px;
+                padding-left: 6px;
+                padding-top: 10px;
             }
 
             .button-applyCourse {
@@ -97,7 +110,7 @@
                 width: 30%;
                 font-weight: bold;
                 transition: all 0.3s ease;
-                margin: 0 auto;
+                font-weight: 400;
             }
 
             .button-applyCourse:hover {
@@ -109,6 +122,12 @@
                 font-weight: bold;
                 text-align: center;
                 font-size: 12px;
+            }
+
+            .button-part {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
             }
         </style>
     </head>
@@ -122,50 +141,50 @@
             <div class="applyCourse-form">
                 <a href="listRequestForMentor?userId=${sessionScope.user.id}">Back</a>
                 <div class="applyCourse-form-left">
-                    <c:if test="${not empty sessionScope.req}">
-                        <c:set var="req" value="${sessionScope.req}"/>
-                        <h2>View Request Detail</h2>
-                        <div class="form">
-                            <div class="input">
-                                <label>Name</label>
-                                <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
-                            </div>
-                            <div class="input">
-                                <label>Course</label>
-                                <c:forEach var="c" items="${sessionScope.courses}">
-                                    <c:if test="${c.courseId == req.courseId}">
-                                        <c:set var="courseName" value="${c.courseName}"/>
-                                    </c:if>
-                                </c:forEach>
-                                <input type="text" name="course" value="${courseName}" disabled>
-                            </div>
-                            <div class="input">
-                                <label>Request Reason</label>
-                                <input type="text" name="requestReason" value="${req.requestReason}" disabled>
-                            </div>
-                            <div class="input">
-                                <label>Request Time</label>
-                                <input type="text" name="requestTime" value="${req.requestTime}" disabled>
-                            </div>
-                            <div class="input">
-                                <label>Status</label>
-                                <c:set var="statusName" value="Unknown"/>
-                                <c:forEach var="s" items="${sessionScope.status}">
-                                    <c:if test="${s.statusId == req.requestStatus}">
-                                        <c:set var="statusName" value="${s.statusName}"/>
-                                    </c:if>
-                                </c:forEach>
-                                <input type="text" name="requestStatus" value="${statusName}" style="text-transform: capitalize" disabled>
-                            </div>
-                            <c:if test="${not empty sessionScope.message}">
-                                <div class="success-message">
-                                    ${sessionScope.message}
-                                </div>
-                            </c:if>
-                            <% session.removeAttribute("message"); %>
-                            <button type="button" class="button-applyCourse" onclick="window.location.href = 'editRequestForMentor.jsp'">EDIT REQUEST</button>
+                    <h2>View Request Detail</h2>
+                    <form action="editRequestForMentor" method="post">
+                        <input type="hidden" value="${user.username}" name="username">
+                        <input type="hidden" value="${req.courseId}" name="oldCourseId">
+                        <input type="hidden" value="${req.requestStatus}" name="requestStatus">
+                        <div class="input">
+                            <label>Name</label>
+                            <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
                         </div>
-                    </c:if>
+                        <div class="input">
+                            <label>Course</label>
+                            <select name="newCourseId" class="form-select">
+                                <c:forEach items="${sessionScope.otherCourse}" var="oC">
+                                    <option value="${oC.courseId}" 
+                                            <c:if test="${oC.courseId == req.courseId}">selected</c:if>
+                                                >
+                                            ${oC.courseName}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="input">
+                            <label>Request Reason</label>
+                            <input type="text" name="requestReason" value="${req.requestReason}">
+                        </div>
+                        <div class="input">
+                            <label>Request Time</label>
+                            <input type="text" name="requestTime" value="${req.requestTime}" disabled>
+                        </div>
+                        <div class="input">
+                            <label>Status</label>
+                            <c:set var="statusName" value="Unknown"/>
+                            <c:forEach var="s" items="${sessionScope.status}">
+                                <c:if test="${s.statusId == req.requestStatus}">
+                                    <c:set var="statusName" value="${s.statusName}"/>
+                                </c:if>
+                            </c:forEach>
+                            <input type="text" name="Status" value="${statusName}" style="text-transform: capitalize" disabled>
+                        </div>
+                        <div class="button-part">
+                            <button type="submit" class="button-applyCourse">SAVE</button>
+                            <button type="button" class="button-applyCourse" onclick="window.location.href = 'viewRequestForMentor.jsp'">CANCEL</button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
