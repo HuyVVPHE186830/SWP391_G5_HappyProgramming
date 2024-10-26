@@ -152,6 +152,14 @@
         <servlet-name>ListRequestForMentor</servlet-name>
         <servlet-class>controller.ListRequestForMentor</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditRequestForMentor</servlet-name>
+        <servlet-class>controller.EditRequestForMentor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteRequestForMentor</servlet-name>
+        <servlet-class>controller.DeleteRequestForMentor</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -303,5 +311,13 @@
     <servlet-mapping>
         <servlet-name>ListRequestForMentor</servlet-name>
         <url-pattern>/listRequestForMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditRequestForMentor</servlet-name>
+        <url-pattern>/editRequestForMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteRequestForMentor</servlet-name>
+        <url-pattern>/deleteRequestForMentor</url-pattern>
     </servlet-mapping>
 </web-app>

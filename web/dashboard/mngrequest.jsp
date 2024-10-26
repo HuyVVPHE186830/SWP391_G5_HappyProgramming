@@ -257,43 +257,45 @@
                                 <th class="text_page_head">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:forEach items="${requestWaitingList}" var="request">
-                                <c:set var="username" value="${request.username}"/>
-                                <c:forEach items="${mentorList}" var="mentor">
-                                    <c:if test="${mentor.username == username}">
-                                        <tr>
-                                            <td>
-                                                <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
-                                            </td>
-                                            <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
-                                            <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
-                                            <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
-                                            <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
-                                            <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
-                                            <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
-                                            <td class="text_page" style="font-weight: 500">
-                                                <c:forEach items="${courseList}" var="course">
-                                                    <c:if test="${course.courseId == request.courseId}">
-                                                        ${course.courseName}
-                                                    </c:if>
-                                                </c:forEach>
-                                            </td>
-                                            <td>
-                                                <form action="ManageRequest?action=Approve" method="post" style="display:inline;">
-                                                    <input type="hidden" name="mentorId" value="${mentor.id}">
-                                                    <input type="submit" class="btn btn-success" value="Approve">
-                                                </form>
-                                                <form action="ManageRequest?action=Reject" method="post" style="display:inline;">
-                                                    <input type="hidden" name="mentorId" value="${mentor.id}">
-                                                    <input type="submit" class="btn btn-danger" value="Reject">
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    </c:if>
-                                </c:forEach>
-                            </c:forEach>
-                        </tbody>
+       <tbody>
+    <c:forEach items="${requestWaitingList}" var="request">
+        <c:set var="username" value="${request.username}"/>
+        <c:forEach items="${mentorList}" var="mentor">
+            <c:if test="${mentor.username == username}">
+                <tr>
+                    <td>
+                        <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
+                    </td>
+                    <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
+                    <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
+                    <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
+                    <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
+                    <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
+                    <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
+                    <td class="text_page" style="font-weight: 500">
+                        <c:forEach items="${courseList}" var="course">
+                            <c:if test="${course.courseId == request.courseId}">
+                                ${course.courseName}
+                            </c:if>
+                        </c:forEach>
+                    </td>
+                    <td>
+                        <form action="ManageRequest?action=Approve" method="post" style="display:inline;">
+                            <input type="hidden" name="mentorId" value="${mentor.username}">
+                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
+                            <input type="submit" class="btn btn-success" value="Approve">
+                        </form>
+                        <form action="ManageRequest?action=Reject" method="post" style="display:inline;">
+                            <input type="hidden" name="mentorId" value="${mentor.id}">
+                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
+                            <input type="submit" class="btn btn-danger" value="Reject">
+                        </form>
+                    </td>
+                </tr>
+            </c:if>
+        </c:forEach>
+    </c:forEach>
+</tbody>
                     </table>   
                 </div>
             </div>

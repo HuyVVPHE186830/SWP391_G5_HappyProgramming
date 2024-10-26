@@ -86,6 +86,11 @@
         </style>
     </head>
     <body>
+        <c:if test="${empty sessionScope.user}">
+            <%
+            response.sendRedirect("login.jsp");
+            %>
+        </c:if>
 
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
@@ -123,19 +128,29 @@
                                             ${s.statusName}
                                         </c:if>
                                     </c:forEach></td>
-                                <td>${req.requestReason}</td>
+                                <td style="word-wrap: break-word; white-space: normal; max-width: 300px;">${req.requestReason}</td>
                                 <td>
-                                    <a href="viewRequest">
-                                        <i class="fas fa-eye" style="color: black;"></i>
-                                    </a>
-                                </td>
-                                <th>
-                                    <a href="deleteRequest" 
-                                       onclick="return confirm('Do you want to delete this request?');">
-                                        <i class="fas fa-trash" style="color: red;"></i>
-                                    </a>
-                                </th>
-                            </tr>
+                                    <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}" 
+                                       <c:if test="${req.requestStatus != 0}">
+                                           style="color: gray; pointer-events: none;" 
+                                       </c:if>>                                  
+                                        <i class="fas fa-eye" 
+                                           style="<c:if test='${req.requestStatus != 0}'>color: gray;</c:if>">
+                                           </i>
+                                        </a>
+                                    </td>
+                                    <th>
+                                        <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" 
+                                       <c:if test="${req.requestStatus != 0}">
+                                           style="color: gray; pointer-events: none;" 
+                                       </c:if>>                                  
+                                        <i class="fas fa-trash" 
+                                           style="<c:if test='${req.requestStatus != 0}'>color: black;</c:if><c:if test='${req.requestStatus == 0}'>color: red;</c:if>">
+                                           </i>
+                                        </a>
+                                        </a>
+                                    </th>
+                                </tr>
                         </c:forEach>
                     </c:if>
                     <c:if test="${empty requestScope.requests}">

@@ -7,7 +7,7 @@ package controller;
 import dal.CourseDAO;
 import dal.ParticipateDAO;
 import dal.RequestDAO;
-import dal.UserDAO;
+import dal.StatusDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,18 +16,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import model.Course;
 import model.Participate;
 import model.Request;
-import model.User;
+import model.Status;
 
 /**
  *
  * @author Admin
  */
-public class ApplyCourse extends HttpServlet {
+public class EditRequestForMentor extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +49,10 @@ public class ApplyCourse extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet applyCourse</title>");
+            out.println("<title>Servlet EditRequestForMentor</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet applyCourse at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditRequestForMentor at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,20 +71,20 @@ public class ApplyCourse extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        UserDAO daoU = new UserDAO();
-        CourseDAO daoC = new CourseDAO();
+        String username = request.getParameter("username");
+        String courseId_str = request.getParameter("courseId");
         RequestDAO daoR = new RequestDAO();
-        String userId_str = request.getParameter("userId");
+        CourseDAO daoC = new CourseDAO();
+        StatusDAO daoS = new StatusDAO();
         try {
-            int userId = Integer.parseInt(userId_str);
-            User user = daoU.getUserById(userId);
-            List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(user.getUsername());
-            List<Request> requests = daoR.getAllRequestByUsername(user.getUsername());
+            int courseId = Integer.parseInt(courseId_str);
+            List<Course> c = daoC.getAllCoursesByUsernameOfMentor(username);
+            List<Request> requests = daoR.getAllRequestByUsername(username);
             List<Course> additionalCourses = new ArrayList<>();
             for (Request r : requests) {
                 boolean found = false;
-                for (Course c : courses) {
-                    if (r.getCourseId() == c.getCourseId()) {
+                for (Course c1 : c) {
+                    if (r.getCourseId() == c1.getCourseId()) {
                         found = true;
                         break;
                     }
@@ -91,12 +94,24 @@ public class ApplyCourse extends HttpServlet {
                     additionalCourses.add(course);
                 }
             }
-            courses.addAll(additionalCourses);
-            List<Course> otherCourses = daoC.getOtherCourses(courses);
-            session.setAttribute("otherCourse", otherCourses);
-            response.sendRedirect("applyCourse.jsp");
+            c.addAll(additionalCourses);
+            Course thisCourse = daoC.getCourseByCourseId(courseId);
+            Request req = daoR.getRequestByUsername(username, courseId);
+            List<Course> courses = daoC.getAll();
+            List<Status> status = daoS.getAll();
+            List<Course> otherCourse = daoC.getOtherCourses(c);
+            otherCourse.add(thisCourse);
+            Map<Integer, Integer> indexMap = IntStream.range(0, courses.size())
+                    .boxed()
+                    .collect(Collectors.toMap(i -> courses.get(i).getCourseId(), i -> i));
+
+            otherCourse.sort(Comparator.comparingInt(course -> indexMap.getOrDefault(course.getCourseId(), Integer.MAX_VALUE)));
+            session.setAttribute("courses", courses);
+            session.setAttribute("status", status);
+            session.setAttribute("req", req);
+            session.setAttribute("otherCourse", otherCourse);
+            response.sendRedirect("viewRequestForMentor.jsp");
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -113,40 +128,24 @@ public class ApplyCourse extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
-        String courseId_str = request.getParameter("courseId");
+        String oldCourseId_str = request.getParameter("oldCourseId");
+        String newCourseId_str = request.getParameter("newCourseId");
         String requestReason = request.getParameter("requestReason");
-        ParticipateDAO daoP = new ParticipateDAO();
         RequestDAO daoR = new RequestDAO();
-        CourseDAO daoC = new CourseDAO();
-        Date date = new Date();
-        try {
+        ParticipateDAO daoP = new ParticipateDAO();
 
-            int courseId = Integer.parseInt(courseId_str);
-            daoP.addParticipate(new Participate(courseId, username, 2, 0));
-            daoR.addRequest(new Request(courseId, username, date, 0, requestReason));
-            List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(username);
-            List<Request> requests = daoR.getAllRequestByUsername(username);
-            List<Course> additionalCourses = new ArrayList<>();
-            for (Request r : requests) {
-                boolean found = false;
-                for (Course c : courses) {
-                    if (r.getCourseId() == c.getCourseId()) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    Course course = daoC.getCourseByCourseId(r.getCourseId());
-                    additionalCourses.add(course);
-                }
-            }
-            courses.addAll(additionalCourses);
-            List<Course> otherCourses = daoC.getOtherCourses(courses);
-            session.setAttribute("otherCourse", otherCourses);
-            session.setAttribute("message", "*Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
-            response.sendRedirect("applyCourse.jsp");
+        try {
+            int oldCourseId = Integer.parseInt(oldCourseId_str);
+            int newCourseId = Integer.parseInt(newCourseId_str);
+            Request req1 = daoR.getRequestByUsername(username, oldCourseId);
+            daoP.addParticipate(new Participate(newCourseId, req1.getUsername(), 2, req1.getRequestStatus()));
+            daoR.updateRequest(oldCourseId, newCourseId, username, requestReason);
+            daoP.deleteParticipate(oldCourseId, username);
+            Request req2 = daoR.getRequestByUsername(username, newCourseId);
+            session.setAttribute("message", "*Update Successfully!");
+            session.setAttribute("req", req2);
+            response.sendRedirect("viewRequestForMentor.jsp");
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package admin;
+package controller;
 
 import dal.CourseDAO;
-import dal.MentorPostDAO;
 import dal.ParticipateDAO;
 import dal.RequestDAO;
+import dal.StatusDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,16 +18,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Course;
-import model.MentorPost;
-import model.User;
-import model.Course;
 import model.Request;
+import model.Status;
 
 /**
  *
- * @author mONESIUU
+ * @author Admin
  */
-public class MangeRequest extends HttpServlet {
+public class DeleteRequestForMentor extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,6 +36,23 @@ public class MangeRequest extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet DeleteRequestForMentor</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet DeleteRequestForMentor at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -47,25 +62,30 @@ public class MangeRequest extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    CourseDAO daoC = new CourseDAO();
-    UserDAO daoU = new UserDAO();
-    ParticipateDAO daoP = new ParticipateDAO();
-    RequestDAO daoR = new RequestDAO();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
-        List<User> mentorList = daoC.getAllMentor();
-        List<Course> courseList = daoC.getAllCourse();
-        List<Request> requestWaitingList = daoR.getRequestByStatus(0);
-
-        session.setAttribute("courseList", courseList);
-        session.setAttribute("mentorList", mentorList);
-        session.setAttribute("requestWaitingList", requestWaitingList);
-
-        request.getRequestDispatcher("dashboard/mngrequest.jsp").forward(request, response);
+        String username = request.getParameter("username");
+        String courseId_str = request.getParameter("courseId");
+        RequestDAO daoR = new RequestDAO();
+        ParticipateDAO daoP = new ParticipateDAO();
+        UserDAO daoU = new UserDAO();
+        CourseDAO daoC = new CourseDAO();
+        StatusDAO daoS = new StatusDAO();
+        try {
+            int courseId = Integer.parseInt(courseId_str);
+            daoR.deleteRequest(courseId, username);
+            daoP.deleteParticipate(courseId, username);
+            List<Request> requests = daoR.getAllRequestByUsername(username);
+            List<Course> courses = daoC.getAll();
+            List<Status> status = daoS.getAll();
+            request.setAttribute("requests", requests);
+            request.setAttribute("courses", courses);
+            request.setAttribute("status", status);
+            request.getRequestDispatcher("listRequestForMentor.jsp").forward(request, response);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -79,22 +99,7 @@ public class MangeRequest extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String action = request.getParameter("action");
-        switch (action) {
-            case "Approve":
-                String menId = request.getParameter("mentorId");
-                int couId = Integer.parseInt(request.getParameter("courseId"));
-
-                daoP.changeParticipate(menId, couId, 1);
-                daoR.changeRequest(menId, couId, 1);
-                break;
-            case "Reject":
-
-                break;
-            default:
-                throw new AssertionError();
-        }
+        processRequest(request, response);
     }
 
     /**
