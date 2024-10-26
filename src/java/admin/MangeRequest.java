@@ -79,19 +79,19 @@ public class MangeRequest extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        String menId = request.getParameter("mentorId");
+        int couId = Integer.parseInt(request.getParameter("courseId"));
         String action = request.getParameter("action");
         switch (action) {
             case "Approve":
-                String menId = request.getParameter("mentorId");
-                int couId = Integer.parseInt(request.getParameter("courseId"));
                 daoP.changeParticipate(menId, couId, 1);
                 daoR.changeRequest(menId, couId, 1);
                 response.sendRedirect("MangeRequest");
-
                 break;
             case "Reject":
-
+                daoR.deleteRequest2(couId, menId);
+                daoP.deleteParticipate2(couId, menId);
+                response.sendRedirect("MangeRequest");
                 break;
             default:
                 throw new AssertionError();

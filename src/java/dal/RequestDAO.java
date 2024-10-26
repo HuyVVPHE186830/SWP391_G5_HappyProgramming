@@ -133,20 +133,21 @@ public class RequestDAO extends DBContext {
 
     public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
-        List<Request> list = dao.getRequestByStatus(0);
-        for (Request l : list) {
-            System.out.println(l);
-        }
-        Date date = new Date();
-        int courseId = 1;
-//        dao.updateRequest(1, 2, "anmentor", "helo");
-        Request r = dao.getRequestByUsername("anmentor", 1);
-        System.out.println(r);
-//        dao.addRequest(new Request(1, "anmentor", date, 0, "1"));
-//        List<Request> list = dao.getAllRequestByUsername("anmentor");
+//        List<Request> list = dao.getRequestByStatus(0);
 //        for (Request l : list) {
 //            System.out.println(l);
 //        }
+//        Date date = new Date();
+//        int courseId = 1;
+////        dao.updateRequest(1, 2, "anmentor", "helo");
+//        Request r = dao.getRequestByUsername("anmentor", 1);
+//        System.out.println(r);
+////        dao.addRequest(new Request(1, "anmentor", date, 0, "1"));
+////        List<Request> list = dao.getAllRequestByUsername("anmentor");
+////        for (Request l : list) {
+////            System.out.println(l);
+////        }
+    dao.deleteRequest2(20, "ducmentor");
     }
 
     public List<Request> getRequestByStatus(int status) {
@@ -185,4 +186,19 @@ public class RequestDAO extends DBContext {
             System.out.println(ex);
         }
     }
+
+    public void deleteRequest2(int courseId, String username) {
+        String sql = "DELETE FROM Request WHERE courseId = ? and username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, courseId);
+            ps.setString(2, username);
+            ps.executeUpdate();
+           
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+ 
 }

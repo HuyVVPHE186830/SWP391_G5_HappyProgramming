@@ -114,14 +114,14 @@ public class ParticipateDAO extends DBContext {
     public static void main(String[] args) {
         ParticipateDAO dao = new ParticipateDAO();
         RequestDAO daoR = new RequestDAO();
-        List<Participate> list = dao.getAll();
-        for (Participate l : list) {
-            System.out.println(l);
-        }
-        Request req1 = daoR.getRequestByUsername("anmentor", 1);
-//        dao.addParticipate(new Participate(4, req1.getUsername(), 2, req1.getRequestStatus()));
-//        daoR.updateRequest(4, 1, "anmentor", "hel");
-        dao.deleteParticipate(7, "anmentor");
+//        List<Participate> list = dao.getAll();
+//        for (Participate l : list) {
+//            System.out.println(l);
+//        }
+//        Request req1 = daoR.getRequestByUsername("anmentor", 1);
+////        dao.addParticipate(new Participate(4, req1.getUsername(), 2, req1.getRequestStatus()));
+////        daoR.updateRequest(4, 1, "anmentor", "hel");
+        dao.deleteParticipate(20, "ducmentor");
     }
 
     public void changeParticipate(String menId, int couId, int i) {
@@ -138,4 +138,18 @@ public class ParticipateDAO extends DBContext {
             System.out.println(ex);
         }
     }
+
+    public void deleteParticipate2(int courseId, String username) {
+        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, courseId);
+            ps.setString(2, username);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+  
 }

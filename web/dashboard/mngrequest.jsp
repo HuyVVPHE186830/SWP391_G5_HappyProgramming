@@ -285,8 +285,8 @@
                             <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
                             <input type="submit" class="btn btn-success" value="Approve">
                         </form>
-                        <form action="ManageRequest?action=Reject" method="post" style="display:inline;">
-                            <input type="hidden" name="mentorId" value="${mentor.id}">
+                        <form action="MangeRequest?action=Reject" method="post" style="display:inline;">
+                            <input type="hidden" name="mentorId" value="${mentor.username}">
                             <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
                             <input type="submit" class="btn btn-danger" value="Reject">
                         </form>
