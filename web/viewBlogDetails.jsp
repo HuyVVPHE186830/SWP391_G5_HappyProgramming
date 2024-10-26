@@ -234,6 +234,18 @@
 
                     </div>
 
+                    <!-- Reply form -->
+                    <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none; margin-bottom: 5px">
+                        <form id="replyForm" action="addBlogComment" method="POST">
+                            <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
+                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                            <div class="mb-3">
+                                <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn_submit">Reply</button>
+                        </form>
+                    </div>
+
                     <!-- Display Replies -->
                     <div class="replies" id="replies-<%= comment.getCommentId() %>">
                         <%
@@ -284,18 +296,6 @@
                             }
                         %>
                     </div>
-
-                    <!-- Reply form -->
-                    <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none;">
-                        <form id="replyForm" action="addBlogComment" method="POST">
-                            <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
-                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                            <div class="mb-3">
-                                <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn_submit">Reply</button>
-                        </form>
-                    </div>
                 </div>
             </div>
             <hr>
@@ -309,8 +309,8 @@
             %>
         </div>
 
-        <!-- JavaScript to handle reply form display -->
         <script>
+            // Toggle reply form
             document.querySelectorAll('.reply-btn').forEach(button => {
                 button.addEventListener('click', function () {
                     const commentId = this.getAttribute('data-comment-id');
@@ -341,34 +341,25 @@
                 });
             });
 
-            // AJAX function to edit a comment
-            function editComment(commentId) {
-                const form = document.getElementById('edit-form-' + commentId);
-                const formData = new FormData(form);
+            // Edit comment submit using fetch
+            document.querySelectorAll('form[id="editCommentForm"]').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
 
-                fetch('editBlogComment', {
-                    method: 'POST',
-                    body: formData
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Update the comment content on the page
-                                const commentContent = document.querySelector('.comment-body[data-comment-id="' + commentId + '"]');
-                                commentContent.querySelector('p').innerText = data.updatedContent;
-
-                                // Hide the edit form
-                                form.style.display = 'none';
-                            } else {
-                                alert('Failed to edit the comment.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-
-                return false; // Prevent form submission
-            }
+                    fetch('editBlogComment', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    })
+                            .then(response => response.text())
+                            .then(() => {
+                                // Hide the edit form and refresh comments
+                                const blogId = form.querySelector('input[name="blogId"]').value;
+                                fetchComments(blogId);
+                            })
+                            .catch(error => console.error('Error:', error));
+                });
+            });
 
             document.getElementById('commentForm').addEventListener('submit', function (e) {
                 e.preventDefault(); // Prevent the default form submission
@@ -406,8 +397,91 @@
                             const doc = parser.parseFromString(html, 'text/html');
                             const newCommentsSection = doc.querySelector('#commentSection');
                             document.getElementById('commentSection').innerHTML = newCommentsSection.innerHTML;
+
+                            attachReplyButtonListeners();
+
+                            attachEditButtonListeners()
                         })
                         .catch(error => console.error('Error fetching comments:', error));
+            }
+
+            function attachReplyButtonListeners() {
+                document.querySelectorAll('.reply-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const commentId = this.getAttribute('data-comment-id');
+                        const replyForm = document.getElementById('reply-form-' + commentId);
+
+                        // Toggle reply form visibility
+                        replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+
+                        // Attach submit listener for the reply form if not already attached
+                        const replyFormElement = replyForm.querySelector('form');
+                        if (replyFormElement && !replyFormElement.dataset.listenerAttached) {
+                            replyFormElement.dataset.listenerAttached = 'true'; // Mark this form as having a listener
+                            replyFormElement.addEventListener('submit', function (e) {
+                                e.preventDefault(); // Prevent the default form submission
+
+                                const commentContent = replyFormElement.querySelector('textarea[name="commentContent"]').value;
+                                const blogId = replyFormElement.querySelector('input[name="blogId"]').value;
+                                const parentId = replyFormElement.querySelector('input[name="parentId"]').value;
+
+                                fetch('addBlogComment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: new URLSearchParams({
+                                        blogId: blogId,
+                                        commentContent: commentContent,
+                                        parentId: parentId // Include the parent ID for replies
+                                    })
+                                })
+                                        .then(response => response.text())
+                                        .then(data => {
+                                            // Clear the reply textarea after submission
+                                            replyFormElement.querySelector('textarea[name="commentContent"]').value = '';
+
+                                            // Refresh the replies for this comment
+                                            fetchReplies(blogId, parentId);
+                                            replyForm.style.display = 'none';
+                                        })
+                                        .catch(error => console.error('Error:', error));
+                            });
+                        }
+                    });
+                });
+            }
+
+            function attachEditButtonListeners() {
+                document.querySelectorAll('.edit-comment').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const commentId = this.getAttribute('data-comment-id');
+                        const editForm = document.getElementById('edit-form-' + commentId);
+                        const commentContent = document.querySelector('.comment-body[data-comment-id="' + commentId + '"]');
+
+                        // Toggle edit form visibility
+                        editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+
+                        document.querySelectorAll('form[id="editCommentForm"]').forEach(form => {
+                            form.addEventListener('submit', function (e) {
+                                e.preventDefault();
+                                const formData = new FormData(form);
+
+                                fetch('editBlogComment', {
+                                    method: 'POST',
+                                    body: new URLSearchParams(formData)
+                                })
+                                        .then(response => response.text())
+                                        .then(() => {
+                                            // Hide the edit form and refresh comments
+                                            const blogId = form.querySelector('input[name="blogId"]').value;
+                                            fetchComments(blogId);
+                                        })
+                                        .catch(error => console.error('Error:', error));
+                            });
+                        });
+                    });
+                });
             }
 
             document.querySelectorAll('form[id^="replyForm"]').forEach(form => {
@@ -417,6 +491,7 @@
                     const commentContent = form.querySelector('textarea[name="commentContent"]').value;
                     const blogId = form.querySelector('input[name="blogId"]').value;
                     const parentId = form.querySelector('input[name="parentId"]').value;
+                    const replyForm = document.getElementById('reply-form-' + parentId);
 
                     fetch('addBlogComment', {
                         method: 'POST',
@@ -436,6 +511,7 @@
 
                                 // Refresh the comments section with new comments
                                 fetchReplies(blogId, parentId);
+                                replyForm.style.display = 'none';
                             })
                             .catch(error => console.error('Error:', error));
                 });
@@ -450,6 +526,8 @@
                             const doc = parser.parseFromString(html, 'text/html');
                             const newCommentsSection = doc.querySelector('#replies-' + parentId);
                             document.getElementById('replies-' + parentId).innerHTML = newCommentsSection.innerHTML;
+
+                            attachEditButtonListeners()
                         })
                         .catch(error => console.error('Error fetching comments:', error));
             }
