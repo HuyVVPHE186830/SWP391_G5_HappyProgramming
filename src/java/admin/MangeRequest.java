@@ -6,6 +6,7 @@ package admin;
 
 import dal.CourseDAO;
 import dal.MentorPostDAO;
+import dal.RequestDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +19,8 @@ import java.util.List;
 import model.Course;
 import model.MentorPost;
 import model.User;
+import model.Course;
+import model.Request;
 
 /**
  *
@@ -49,11 +52,15 @@ public class MangeRequest extends HttpServlet {
         HttpSession session = request.getSession();
         CourseDAO daoC = new CourseDAO();
         UserDAO daoU = new UserDAO();
-       
-       
-        List<User> mentorList = daoC.getAllMentor();
+        RequestDAO daoR = new RequestDAO();
 
+        List<User> mentorList = daoC.getAllMentor();
+        List<Course> courseList = daoC.getAllCourse();
+        List<Request> requestWaitingList = daoR.getRequestByStatus(0);
+
+        session.setAttribute("courseList", courseList);
         session.setAttribute("mentorList", mentorList);
+        session.setAttribute("requestWaitingList", requestWaitingList);
 
         request.getRequestDispatcher("dashboard/mngrequest.jsp").forward(request, response);
     }
@@ -69,6 +76,18 @@ public class MangeRequest extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String action = request.getParameter("action");
+        switch (action) {
+            case "Approve":
+                
+                break;
+            case "Reject":
+                
+                break;
+            default:
+                throw new AssertionError();
+        }
     }
 
     /**

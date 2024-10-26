@@ -190,12 +190,23 @@
                                             <th class="text_page_head">CV</th>
                                             <th class="text_page_head">Action</th>
                                             <th>
-                                                <div class="icon-container">
-                                                    <a style="margin-left: 5px; background-color: #5e3fd3; color: white; border-radius: 5px; padding: 8px 12px; text-decoration: none;" href="#mentorListModal" class="btn" data-toggle="modal">
-                                                        <i class="fa-solid fa-list"></i>
-                                                        <span class="badge">${fn:length(mentorList)}</span>
-                                                    </a>
-                                                </div>
+<c:set var="specificMentor" value="${mentorList[0]}" /> <!-- Giả sử bạn muốn đếm cho mentor đầu tiên -->
+<c:set var="totalRequestCount" value="0" />
+
+<c:forEach items="${requestWaitingList}" var="request">
+    <c:if test="${request.username == specificMentor.username}">
+        <c:set var="totalRequestCount" value="${totalRequestCount + 1}" />
+    </c:if>
+</c:forEach>
+
+<div class="icon-container">
+    <a style="margin-left: 5px; background-color: #5e3fd3; color: white; border-radius: 5px; padding: 8px 12px; text-decoration: none;" href="#mentorListModal" class="btn" data-toggle="modal">
+        <i class="fa-solid fa-list"></i>
+        <span class="badge">${totalRequestCount}</span>
+    </a>
+</div>
+
+   
                                             </th>
                                         </tr>
                                     </thead>
@@ -222,55 +233,76 @@
                 <!--Section: Quan Ly tai Khoan-->
             </div>
         </main>
-  <!-- Modal Danh Sách Mentor -->
-    <div id="mentorListModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Mentor's Request List</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th class="text_page_head">Avatar</th>
-                                    <th class="text_page_head">Name</th>
-                                    <th class="text_page_head">Email</th>
-                                    <th class="text_page_head">Date of Birth</th>
-                                    <th class="text_page_head">CV</th>
-                                    <th class="text_page_head">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+        <!-- Modal Danh Sách Mentor's Request -->
+       <div id="mentorListModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Mentor's Request List</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="text_page_head">Avatar</th>
+                                <th class="text_page_head">Name</th>
+                                <th class="text_page_head">Email</th>
+                                <th class="text_page_head">Date of Birth</th>
+                                <th class="text_page_head">CV</th>
+                                <th class="text_page_head">Request Time</th>
+                                <th class="text_page_head">Request Reason</th>
+                                <th class="text_page_head">Course</th>
+                                <th class="text_page_head">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${requestWaitingList}" var="request">
+                                <c:set var="username" value="${request.username}"/>
                                 <c:forEach items="${mentorList}" var="mentor">
-                                    <tr>
-                                        <td>
-                                            <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
-                                        </td>
-                                        <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
-                                        <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
-                                        <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
-                                        <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
-                                        <td>
-                                            <form action="<%= request.getContextPath() %>/approveMentor" method="post">
-                                                <input type="hidden" name="mentorId" value="${mentor.id}">
-                                                <input type="submit" class="btn btn-success" value="Approve">
-                                            </form>
-                                        </td>
-                                    </tr>
+                                    <c:if test="${mentor.username == username}">
+                                        <tr>
+                                            <td>
+                                                <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
+                                            </td>
+                                            <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
+                                            <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
+                                            <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
+                                            <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
+                                            <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
+                                            <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
+                                            <td class="text_page" style="font-weight: 500">
+                                                <c:forEach items="${courseList}" var="course">
+                                                    <c:if test="${course.courseId == request.courseId}">
+                                                        ${course.courseName}
+                                                    </c:if>
+                                                </c:forEach>
+                                            </td>
+                                            <td>
+                                                <form action="ManageRequest?action=Approve" method="post" style="display:inline;">
+                                                    <input type="hidden" name="mentorId" value="${mentor.id}">
+                                                    <input type="submit" class="btn btn-success" value="Approve">
+                                                </form>
+                                                <form action="ManageRequest?action=Reject" method="post" style="display:inline;">
+                                                    <input type="hidden" name="mentorId" value="${mentor.id}">
+                                                    <input type="submit" class="btn btn-danger" value="Reject">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </c:if>
                                 </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
+                            </c:forEach>
+                        </tbody>
+                    </table>   
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
 
         <script>

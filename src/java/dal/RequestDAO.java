@@ -38,7 +38,7 @@ public class RequestDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Request> getAllRequestByUsername(String username) {
         List<Request> list = new ArrayList<>();
         String sql = "SELECT * FROM [Request] where username = ?";
@@ -77,9 +77,30 @@ public class RequestDAO extends DBContext {
 
     public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
-        List<Request> list = dao.getAll();
+        List<Request> list = dao.getRequestByStatus(0);
         for (Request l : list) {
             System.out.println(l);
         }
+    }
+
+    public List<Request> getRequestByStatus(int status) {
+        String sql = "SELECT * FROM [Request] WHERE requestStatus = " + status;
+        List<Request> list = new ArrayList<>();
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int courseId = rs.getInt("courseId");
+                Date requestTime = rs.getDate("requestTime");
+                String requestReason = rs.getString("requestReason");
+                Request r = new Request(courseId, username, requestTime, status, requestReason);
+                list.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return list;
     }
 }
