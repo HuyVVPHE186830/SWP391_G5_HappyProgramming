@@ -23,7 +23,7 @@ import model.User;
  *
  * @author mONESIUU
  */
-public class ManageRequest extends HttpServlet {
+public class MangeRequest extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
