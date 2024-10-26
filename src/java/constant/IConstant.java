@@ -6,11 +6,7 @@ public class IConstant {
 
     public static final String GOOGLE_CLIENT_SECRET = "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";
 
-<<<<<<< HEAD
     public static final String GOOGLE_REDIRECT_URI = "http://localhost:8080/HappyProgramming/login";
-=======
-    public static final String GOOGLE_REDIRECT_URI = "http://localhost:9999/HappyProgramming/login";
->>>>>>> ecd77f6f80f08ac9b7b7559681fe26345c65fc2c
 
     public static final String GOOGLE_GRANT_TYPE = "authorization_code";
 
@@ -20,12 +16,7 @@ public class IConstant {
 
     public static final String SESSION_PRODUCT = "listProducts";
 
-<<<<<<< HEAD
     public static final String GOOGLE_REDIRECT_RESET = "http://localhost:8080/HappyProgramming/verify";
 
 }
-=======
-    public static final String GOOGLE_REDIRECT_RESET = "http://localhost:9999/HappyProgramming/verify";
 
-}
->>>>>>> ecd77f6f80f08ac9b7b7559681fe26345c65fc2c
