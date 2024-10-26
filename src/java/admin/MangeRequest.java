@@ -87,6 +87,8 @@ public class MangeRequest extends HttpServlet {
                 int couId = Integer.parseInt(request.getParameter("courseId"));
                 daoP.changeParticipate(menId, couId, 1);
                 daoR.changeRequest(menId, couId, 1);
+                response.sendRedirect("MangeRequest");
+
                 break;
             case "Reject":
 

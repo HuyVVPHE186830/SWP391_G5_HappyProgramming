@@ -280,7 +280,7 @@
                         </c:forEach>
                     </td>
                     <td>
-                        <form action="ManageRequest?action=Approve" method="post" style="display:inline;">
+                        <form action="MangeRequest?action=Approve" method="post" style="display:inline;">
                             <input type="hidden" name="mentorId" value="${mentor.username}">
                             <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
                             <input type="submit" class="btn btn-success" value="Approve">
