@@ -85,7 +85,6 @@ public class MangeRequest extends HttpServlet {
             case "Approve":
                 String menId = request.getParameter("mentorId");
                 int couId = Integer.parseInt(request.getParameter("courseId"));
-
                 daoP.changeParticipate(menId, couId, 1);
                 daoR.changeRequest(menId, couId, 1);
                 break;
