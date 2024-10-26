@@ -104,12 +104,13 @@
                 color: white;
                 font-size: 26px;
                 background: #5e3fd3;
-                width: 200px;
+                width: 100px;
                 text-align: center;
-                border-radius: 12px;
+                border-radius: 15px;
                 padding: 5px;
                 font-weight: 500;
                 transition: all 0.3s ease;
+                margin: 0 5px;
             }
             .applyCourse a:hover {
                 text-decoration: none;
@@ -199,13 +200,18 @@
             </div>
         </header>
 
-        <!-- Enroll Course For Mentor -->
+        <!-- Enroll/List Course Request For Mentor -->
         <c:if test="${sessionScope.user.roleId == 2}">
             <div class="applyCourse">
-                <a href="applyCourse?userId=${sessionScope.user.id}">Apply a Course</a>
+                <a href="listRequestForMentor?userId=${sessionScope.user.id}">
+                    <i class="fa fa-list"></i>
+                </a>
+                <a href="applyCourse?userId=${sessionScope.user.id}">
+                    <i class="fa fa-book-medical"></i>
+                </a>
             </div>
         </c:if>
-        
+
         <!-- Mentoring Section -->
         <c:if test="${sessionScope.user.roleId == 2}">
             <section class="featured-product2">

@@ -1,6 +1,6 @@
 <%-- 
-    Document   : applyCourse
-    Created on : Oct 18, 2024, 9:26:09 PM
+    Document   : viewRequestForMentor
+    Created on : Oct 26, 2024, 1:16:17 PM
     Author     : Admin
 --%>
 
@@ -26,11 +26,13 @@
                 background-color: #fff;
                 border-radius: 25px;
                 display: flex;
-                width: 500px;
+                width: 700px;
                 box-shadow: 0 0 10px #888;
                 justify-content: space-between;
                 overflow: hidden;
-                height: 60vh;
+                height: 70vh;
+                text-align: center;
+                padding: 0 10px;
             }
 
             .applyCourse-form-left {
@@ -49,26 +51,29 @@
                 flex-direction: column;
                 gap: 15px;
             }
-
-            input {
-                padding: 10px;
-                font-size: 0.8rem;
-                border: none;
-                border-radius: 5px;
-                background-color: #eeeded;
-                width: 70%;
-                margin: 0 auto;
+            .input {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 3%;
+            }
+            
+            label {
+                display: flex;
+                align-items: center;
+                font-size: 1rem;
+                font-weight: bold;
             }
 
-            select.form-select {
+            input, select.form-select {
                 padding: 10px;
                 font-size: 0.8rem;
                 border: none;
                 border-radius: 5px;
                 background-color: #eeeded;
                 width: 70%;
-                margin: 0 auto;
-                display: block;
+                margin-left: 10px;
             }
 
             .button-applyCourse {
@@ -98,37 +103,45 @@
         </style>
     </head>
     <body>
-        <c:if test="${empty user}">
-            <c:redirect url="login.jsp"/>
-        </c:if>
-        <!-- HEADER -->
-        <jsp:include page="header.jsp"/>
-
         <div class="middle">
             <div class="applyCourse-form">
                 <div class="applyCourse-form-left">
-                    <h2>Apply Course</h2>
-                    <form action="applyCourse" method="post">
+                    <h2>View Request Detail</h2>
+                    <form action="#">
                         <input type="hidden" value="${user.username}" name="username">
-                        <input type="text" name="name" value="${user.lastName} ${user.firstName}" readonly>
-                        <select id="id" name="courseId" class="form-select">
-                            <c:forEach items="${requestScope.otherCourse}" var="oC">
-                                <option value="${oC.courseId}">${oC.courseName}</option>
-                            </c:forEach>
-                        </select>
-                        <input type="text" name="requestReason" placeholder="Request reason">
-                        <button type="submit" class="button-applyCourse">SUBMIT</button>
-                        <c:if test="${not empty sessionScope.message}">
-                            <div class="success-message">
-                                ${sessionScope.message}
-                            </div>
-                        </c:if>
-                        <% session.removeAttribute("message"); %>
+                        <div class="input">
+                            <label>Name</label>
+                            <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
+                        </div>
+                        <div class="input">
+                            <label>Course</label>
+                            <select id="id" name="courseId" class="form-select" disabled>
+                                <c:forEach items="${requestScope.otherCourse}" var="oC">
+                                    <option value="${oC.courseId}">${oC.courseName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="input">
+                            <label>Request Reason</label>
+                            <input type="text" name="requestReason" value="" disabled>
+                        </div>
+                        <div class="input">
+                            <label>Request Time</label>
+                            <input type="text" name="requestTime" value="" disabled>
+                        </div>
+                        <div class="input"> 
+                            <label>Status</label>
+                            <input type="text" name="requestStatus" value="<c:forEach var="s" items="${requestScope.status}">
+                                       <c:if test="${s.statusId == req.requestStatus}">
+                                           ${s.statusName}
+                                       </c:if>
+                                   </c:forEach>" disabled>
+                        </div>
+                        <button type="submit" class="button-applyCourse" onclick="window.location.href = 'editRequestForMentor.jsp'">EDIT REQUEST</button>
                     </form>
                 </div>
 
             </div>
         </div>
-
     </body>
 </html>

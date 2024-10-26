@@ -215,18 +215,35 @@
                     <div class="comment-actions">
                         <button type="button" class="btn btn-link reply-btn" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
 
-                        <% User u = (User)session.getAttribute("user");
-                           if (commenter.getId() == u.getId()) { %>
                         <div class="dropdown">
                             <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                             </button>
+                            <% User u = (User)session.getAttribute("user");
+                               if (commenter.getId() == u.getId()) { %>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item edit-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
-                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
+                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
                             </ul>
+                            <% } else { %>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item report-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Report</a></li>
+                            </ul>
+                            <% } %>
                         </div>
-                        <% } %>
+
+                    </div>
+
+                    <!-- Reply form -->
+                    <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none; margin-bottom: 5px">
+                        <form id="replyForm" action="addBlogComment" method="POST">
+                            <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
+                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                            <div class="mb-3">
+                                <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn_submit">Reply</button>
+                        </form>
                     </div>
 
                     <!-- Display Replies -->
@@ -245,19 +262,23 @@
                                 <p><small>Posted on: <%= sdf.format(reply.getCommentedAt()) %></small></p>
                                 <div class="comment-actions">
 
-                                    <% if (replier.getId() == u.getId()) { %>
                                     <div class="dropdown">
                                         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                                         </button>
+                                        <% if (replier.getId() == u.getId()) { %>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                             <li><a class="dropdown-item edit-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
-                                            <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Delete</a></li>
+                                            <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
                                         </ul>
+                                        <% } else { %>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item report-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Report</a></li>
+                                        </ul>
+                                        <% } %>
                                     </div>
-                                    <% } %>
                                 </div>
-                                
+
                                 <div class="edit-comment-form" id="edit-form-<%= reply.getCommentId() %>" style="display: none;">
                                     <form id="editCommentForm" method="POST" action="editBlogComment">
                                         <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
@@ -268,24 +289,12 @@
                                         <button type="submit" class="btn btn-primary btn_submit">Save</button>
                                     </form>
                                 </div>
-                                        
+
                             </div>
                         </div>
                         <%
                             }
                         %>
-                    </div>
-
-                    <!-- Reply form -->
-                    <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none;">
-                        <form id="replyForm" action="addBlogComment" method="POST">
-                            <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
-                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                            <div class="mb-3">
-                                <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn_submit">Reply</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -300,8 +309,8 @@
             %>
         </div>
 
-        <!-- JavaScript to handle reply form display -->
         <script>
+            // Toggle reply form
             document.querySelectorAll('.reply-btn').forEach(button => {
                 button.addEventListener('click', function () {
                     const commentId = this.getAttribute('data-comment-id');
@@ -315,6 +324,7 @@
                     }
                 });
             });
+
             // Toggle edit comment form
             document.querySelectorAll('.edit-comment').forEach(button => {
                 button.addEventListener('click', function () {
@@ -331,33 +341,195 @@
                 });
             });
 
-// AJAX function to edit a comment
-            function editComment(commentId) {
-                const form = document.getElementById('edit-form-' + commentId);
-                const formData = new FormData(form);
+            // Edit comment submit using fetch
+            document.querySelectorAll('form[id="editCommentForm"]').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
 
-                fetch('editBlogComment', {
+                    fetch('editBlogComment', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    })
+                            .then(response => response.text())
+                            .then(() => {
+                                // Hide the edit form and refresh comments
+                                const blogId = form.querySelector('input[name="blogId"]').value;
+                                fetchComments(blogId);
+                            })
+                            .catch(error => console.error('Error:', error));
+                });
+            });
+
+            document.getElementById('commentForm').addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                const commentContent = document.getElementById('commentContent').value;
+                const blogId = document.querySelector('input[name="blogId"]').value;
+
+                fetch('addBlogComment', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        blogId: blogId,
+                        commentContent: commentContent
+                    })
                 })
-                        .then(response => response.json())
+                        .then(response => response.text())
                         .then(data => {
-                            if (data.success) {
-                                // Update the comment content on the page
-                                const commentContent = document.querySelector('.comment-body[data-comment-id="' + commentId + '"]');
-                                commentContent.querySelector('p').innerText = data.updatedContent;
+                            // Clear the textarea after submission
+                            document.getElementById('commentContent').value = '';
 
-                                // Hide the edit form
-                                form.style.display = 'none';
-                            } else {
-                                alert('Failed to edit the comment.');
-                            }
+                            // Refresh the comments section with new comments
+                            fetchComments(blogId);
                         })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+                        .catch(error => console.error('Error:', error));
+            });
 
-                return false; // Prevent form submission
+            // Function to fetch and update comments without reloading the page
+            function fetchComments(blogId) {
+                fetch('viewBlogDetail?id=' + blogId)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newCommentsSection = doc.querySelector('#commentSection');
+                            document.getElementById('commentSection').innerHTML = newCommentsSection.innerHTML;
+
+                            attachReplyButtonListeners();
+
+                            attachEditButtonListeners()
+                        })
+                        .catch(error => console.error('Error fetching comments:', error));
+            }
+
+            function attachReplyButtonListeners() {
+                document.querySelectorAll('.reply-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const commentId = this.getAttribute('data-comment-id');
+                        const replyForm = document.getElementById('reply-form-' + commentId);
+
+                        // Toggle reply form visibility
+                        replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+
+                        // Attach submit listener for the reply form if not already attached
+                        const replyFormElement = replyForm.querySelector('form');
+                        if (replyFormElement && !replyFormElement.dataset.listenerAttached) {
+                            replyFormElement.dataset.listenerAttached = 'true'; // Mark this form as having a listener
+                            replyFormElement.addEventListener('submit', function (e) {
+                                e.preventDefault(); // Prevent the default form submission
+
+                                const commentContent = replyFormElement.querySelector('textarea[name="commentContent"]').value;
+                                const blogId = replyFormElement.querySelector('input[name="blogId"]').value;
+                                const parentId = replyFormElement.querySelector('input[name="parentId"]').value;
+
+                                fetch('addBlogComment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: new URLSearchParams({
+                                        blogId: blogId,
+                                        commentContent: commentContent,
+                                        parentId: parentId // Include the parent ID for replies
+                                    })
+                                })
+                                        .then(response => response.text())
+                                        .then(data => {
+                                            // Clear the reply textarea after submission
+                                            replyFormElement.querySelector('textarea[name="commentContent"]').value = '';
+
+                                            // Refresh the replies for this comment
+                                            fetchReplies(blogId, parentId);
+                                            replyForm.style.display = 'none';
+                                        })
+                                        .catch(error => console.error('Error:', error));
+                            });
+                        }
+                    });
+                });
+            }
+
+            function attachEditButtonListeners() {
+                document.querySelectorAll('.edit-comment').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const commentId = this.getAttribute('data-comment-id');
+                        const editForm = document.getElementById('edit-form-' + commentId);
+                        const commentContent = document.querySelector('.comment-body[data-comment-id="' + commentId + '"]');
+
+                        // Toggle edit form visibility
+                        editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+
+                        document.querySelectorAll('form[id="editCommentForm"]').forEach(form => {
+                            form.addEventListener('submit', function (e) {
+                                e.preventDefault();
+                                const formData = new FormData(form);
+
+                                fetch('editBlogComment', {
+                                    method: 'POST',
+                                    body: new URLSearchParams(formData)
+                                })
+                                        .then(response => response.text())
+                                        .then(() => {
+                                            // Hide the edit form and refresh comments
+                                            const blogId = form.querySelector('input[name="blogId"]').value;
+                                            fetchComments(blogId);
+                                        })
+                                        .catch(error => console.error('Error:', error));
+                            });
+                        });
+                    });
+                });
+            }
+
+            document.querySelectorAll('form[id^="replyForm"]').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault(); // Prevent the default form submission
+
+                    const commentContent = form.querySelector('textarea[name="commentContent"]').value;
+                    const blogId = form.querySelector('input[name="blogId"]').value;
+                    const parentId = form.querySelector('input[name="parentId"]').value;
+                    const replyForm = document.getElementById('reply-form-' + parentId);
+
+                    fetch('addBlogComment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            blogId: blogId,
+                            commentContent: commentContent,
+                            parentId: parentId // Include the parent ID for replies
+                        })
+                    })
+                            .then(response => response.text())
+                            .then(data => {
+                                // Clear the reply textarea after submission
+                                form.querySelector('textarea[name="commentContent"]').value = '';
+
+                                // Refresh the comments section with new comments
+                                fetchReplies(blogId, parentId);
+                                replyForm.style.display = 'none';
+                            })
+                            .catch(error => console.error('Error:', error));
+                });
+            });
+
+            // Function to fetch and update comments without reloading the page
+            function fetchReplies(blogId, parentId) {
+                fetch('viewBlogDetail?id=' + blogId)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newCommentsSection = doc.querySelector('#replies-' + parentId);
+                            document.getElementById('replies-' + parentId).innerHTML = newCommentsSection.innerHTML;
+
+                            attachEditButtonListeners()
+                        })
+                        .catch(error => console.error('Error fetching comments:', error));
             }
         </script>
 

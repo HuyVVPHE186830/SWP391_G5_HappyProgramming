@@ -6,6 +6,7 @@ package controller;
 
 import dal.CourseDAO;
 import dal.RequestDAO;
+import dal.StatusDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,13 +19,14 @@ import java.util.Date;
 import java.util.List;
 import model.Course;
 import model.Request;
+import model.Status;
 import model.User;
 
 /**
  *
  * @author Admin
  */
-public class ApplyCourse extends HttpServlet {
+public class ListRequestForMentor extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +45,10 @@ public class ApplyCourse extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet applyCourse</title>");
+            out.println("<title>Servlet ListRequestForMentor</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet applyCourse at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ListRequestForMentor at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,19 +66,23 @@ public class ApplyCourse extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String userId_str = request.getParameter("userId");
+        RequestDAO daoR = new RequestDAO();
         UserDAO daoU = new UserDAO();
         CourseDAO daoC = new CourseDAO();
-        String userId_str = request.getParameter("userId");
+        StatusDAO daoS = new StatusDAO();
         try {
             int userId = Integer.parseInt(userId_str);
             User user = daoU.getUserById(userId);
-
-            List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(user.getUsername());
-            List<Course> otherCourses = daoC.getOtherCourses(courses);
-            request.setAttribute("otherCourse", otherCourses);
-            request.getRequestDispatcher("applyCourse.jsp").forward(request, response);
+            List<Request> requests = daoR.getAllRequestByUsername(user.getUsername());
+            List<Course> courses = daoC.getAll();
+            List<Status> status = daoS.getAll();
+            request.setAttribute("requests", requests);
+            request.setAttribute("courses", courses);
+            request.setAttribute("status", status);
+            request.getRequestDispatcher("listRequestForMentor.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -91,20 +97,7 @@ public class ApplyCourse extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String username = request.getParameter("username");
-        String courseId_str = request.getParameter("courseId");
-        String requestReason = request.getParameter("requestReason");
-        RequestDAO daoR = new RequestDAO();
-        Date date = new Date();
-        try {
-            int courseId = Integer.parseInt(courseId_str);
-            daoR.addRequest(new Request(courseId, username, date, 0, requestReason));
-            session.setAttribute("message", "Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
-            response.sendRedirect("applyCourse.jsp");
-        } catch (Exception e) {
 
-        }
     }
 
     /**
