@@ -5,6 +5,7 @@
 package controller;
 
 import dal.CourseDAO;
+import dal.RequestDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,8 +13,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import model.Course;
+import model.Request;
 import model.User;
 
 /**
@@ -66,7 +70,7 @@ public class ApplyCourse extends HttpServlet {
         try {
             int userId = Integer.parseInt(userId_str);
             User user = daoU.getUserById(userId);
-            
+
             List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(user.getUsername());
             List<Course> otherCourses = daoC.getOtherCourses(courses);
             request.setAttribute("otherCourse", otherCourses);
@@ -87,7 +91,20 @@ public class ApplyCourse extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        String username = request.getParameter("username");
+        String courseId_str = request.getParameter("courseId");
+        String requestReason = request.getParameter("requestReason");
+        RequestDAO daoR = new RequestDAO();
+        Date date = new Date();
+        try {
+            int courseId = Integer.parseInt(courseId_str);
+            daoR.addRequest(new Request(courseId, username, date, 1, requestReason));
+            session.setAttribute("message", "Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
+            response.sendRedirect("applyCourse.jsp");
+        } catch (Exception e) {
+
+        }
     }
 
     /**

@@ -5,12 +5,15 @@
 
 package controller;
 
+import dal.RequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Date;
+import model.Request;
 
 /**
  *
@@ -66,15 +69,7 @@ public class ListRequestForMentor extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String courseId_str = request.getParameter("courseId");
-        String requestReason = request.getParameter("requestReason");
-        try {
-            int courseId = Integer.parseInt(courseId_str);
-            
-        } catch (Exception e) {
-            
-        }
+        
     }
 
     /** 
