@@ -2,6 +2,7 @@
 package controller;
 
 import dal.BlogCommentDAO;
+import dal.ReportDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -49,6 +50,9 @@ public class DeleteBlogComment extends HttpServlet {
         if (!replies.isEmpty()) {
             dao.deleteReplies(commentId);
         }
+        
+        ReportDAO reportDAO = new ReportDAO();
+        reportDAO.deleteReportByCommentId(commentId);
         
         boolean f = dao.deleteComment(commentId);
         if (f) {

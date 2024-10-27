@@ -73,4 +73,16 @@ public class ReportDAO extends DBContext {
             return false;
         }
     }
+    
+    public boolean deleteReportByCommentId(int commentId) {
+        String sql = "DELETE FROM Report WHERE commentId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, commentId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return false;
+        }
+    }
 }
