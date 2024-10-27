@@ -2,6 +2,7 @@ package controller;
 
 import dal.BlogCommentDAO;
 import dal.BlogDAO;
+import dal.ReportDAO;
 import model.Blog;
 
 import jakarta.servlet.ServletException;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import model.BlogComment;
+import model.ReportType;
 
 public class ViewBlogDetailServlet extends HttpServlet {
 
@@ -27,9 +29,13 @@ public class ViewBlogDetailServlet extends HttpServlet {
         BlogCommentDAO blogCommentDAO = new BlogCommentDAO();
         List<BlogComment> comments = blogCommentDAO.getCommentsForBlog(blogId);
         
+        ReportDAO reportDAO = new ReportDAO();
+        List<ReportType> reportTypes = reportDAO.getAllReportTypes();
+        
         // Set the blog as an attribute in the request
         request.setAttribute("blog", blog);
         request.setAttribute("comments", comments);
+        request.setAttribute("reportTypes", reportTypes);
 
         // Forward to the JSP page
         request.getRequestDispatcher("viewBlogDetails.jsp").forward(request, response);

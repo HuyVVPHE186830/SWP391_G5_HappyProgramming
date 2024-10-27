@@ -50,7 +50,13 @@ public class DeleteBlogComment extends HttpServlet {
             dao.deleteReplies(commentId);
         }
         
-        dao.deleteComment(commentId);
+        boolean f = dao.deleteComment(commentId);
+        if (f) {
+            request.getSession().setAttribute("succMsg", "Delete comment successfully!");
+        } else {
+            request.getSession().setAttribute("failedMsg", "Something wrong on server...");
+        }
+        
         response.sendRedirect("viewBlogDetail?id=" + blogId);
     } 
 
