@@ -109,29 +109,6 @@
                 overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
             }
         </style>
-        <script>
-            function validateNoSpacesOnly(formId) {
-                const form = document.getElementById(formId);
-                const inputs = form.querySelectorAll('input[type="text"], textarea');
-                let valid = true;
-
-                inputs.forEach(input => {
-                    const trimmedValue = input.value.trim();
-                    if (trimmedValue === "") {
-                        valid = false;
-                        input.value = "";
-                    } else {
-                        input.value = trimmedValue;
-                    }
-                });
-
-                if (!valid) {
-                    alert("Fields cannot be empty or contain only spaces.");
-                }
-
-                return valid;
-            }
-        </script>
     </head>
     <body>
 
@@ -190,42 +167,79 @@
                                             <th class="text_page_head">CV</th>
                                             <th class="text_page_head">Action</th>
                                             <th>
-<c:set var="specificMentor" value="${mentorList[0]}" /> <!-- Giả sử bạn muốn đếm cho mentor đầu tiên -->
-<c:set var="totalRequestCount" value="0" />
+                                                <c:set var="specificMentor" value="${mentorList[0]}" /> <!-- Giả sử bạn muốn đếm cho mentor đầu tiên -->
+                                                <c:set var="totalRequestCount" value="0" />
 
-<c:forEach items="${requestWaitingList}" var="request">
-    <c:if test="${request.username == specificMentor.username}">
-        <c:set var="totalRequestCount" value="${totalRequestCount + 1}" />
-    </c:if>
-</c:forEach>
+                                                <c:forEach items="${requestWaitingList}" var="request">
+                                                    <c:if test="${request.username == specificMentor.username}">
+                                                        <c:set var="totalRequestCount" value="${totalRequestCount + 1}" />
+                                                    </c:if>
+                                                </c:forEach>
 
-<div class="icon-container">
-    <a style="margin-left: 5px; background-color: #5e3fd3; color: white; border-radius: 5px; padding: 8px 12px; text-decoration: none;" href="#mentorListModal" class="btn" data-toggle="modal">
-        <i class="fa-solid fa-list"></i>
-        <span class="badge">${totalRequestCount}</span>
-    </a>
-</div>
+                                                <div class="icon-container">
+                                                    <a style="margin-left: 5px; background-color: #5e3fd3; color: white; border-radius: 5px; padding: 8px 12px; text-decoration: none;" href="#mentorListModal" class="btn" data-toggle="modal">
+                                                        <i class="fa-solid fa-list"></i>
+                                                        <span class="badge">${totalRequestCount}</span>
+                                                    </a>
+                                                </div>
 
-   
+
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <c:forEach items="${mentorList}" var="t">
+                                    <c:forEach items="${mentorList}" var="t">
+                                        <c:set var="username" value="${t.username}"/>
+                                        <tbody>
                                             <tr>
                                                 <td>
-                                                    <img src="data:image/jpeg;base64,${t.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
+                                                    <img src="data:image/jpeg;base64,${t.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                 </td>
                                                 <td class="text_page" style="font-weight: 500">${t.lastName}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.mail}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.dob}</td>
                                                 <td class="text_page" style="font-weight: 500">${tCVPath}</td>
-                                                <td class="text_page" style="font-weight: 500"></td>
-
+                                                <td>
+                                                    <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn btn-info">View</a>
+                                                </td>
                                             </tr>
-                                        </c:forEach>
-                                    </tbody>
+
+                                            <!-- Modal to Display Mentor's Courses -->
+                                        <div id="mentorCoursesModal_${username}" class="modal fade">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Courses for Mentor: ${t.lastName}</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <c:forEach items="${participateListByStatus}" var="p">
+                                                            <c:if test="${p.username == username}">
+                                                                <c:forEach items="${courseList}" var="c">
+                                                                    <c:if test="${c.courseId == p.courseId}">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                            <div>
+                                                                                Course ID: ${p.courseId} - ${c.courseName}
+                                                                            </div>
+                                                                            <a href="MangeRequest?action=RemoveMentor&courseId=${p.courseId}&mentorUsername=${username}" class="btn btn-danger btn-sm" title="Ban Mentor">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </tbody>
+                                    </c:forEach>
+
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -233,85 +247,80 @@
                 <!--Section: Quan Ly tai Khoan-->
             </div>
         </main>
+
         <!-- Modal Danh Sách Mentor's Request -->
-       <div id="mentorListModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Mentor's Request List</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                            <tr>
-                                <th class="text_page_head">Avatar</th>
-                                <th class="text_page_head">Name</th>
-                                <th class="text_page_head">Email</th>
-                                <th class="text_page_head">Date of Birth</th>
-                                <th class="text_page_head">CV</th>
-                                <th class="text_page_head">Request Time</th>
-                                <th class="text_page_head">Request Reason</th>
-                                <th class="text_page_head">Course</th>
-                                <th class="text_page_head">Action</th>
-                            </tr>
-                        </thead>
-       <tbody>
-    <c:forEach items="${requestWaitingList}" var="request">
-        <c:set var="username" value="${request.username}"/>
-        <c:forEach items="${mentorList}" var="mentor">
-            <c:if test="${mentor.username == username}">
-                <tr>
-                    <td>
-                        <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
-                    </td>
-                    <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
-                    <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
-                    <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
-                    <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
-                    <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
-                    <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
-                    <td class="text_page" style="font-weight: 500">
-                        <c:forEach items="${courseList}" var="course">
-                            <c:if test="${course.courseId == request.courseId}">
-                                ${course.courseName}
-                            </c:if>
-                        </c:forEach>
-                    </td>
-                    <td>
-                        <form action="MangeRequest?action=Approve" method="post" style="display:inline;">
-                            <input type="hidden" name="mentorId" value="${mentor.username}">
-                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
-                            <input type="submit" class="btn btn-success" value="Approve">
-                        </form>
-                        <form action="MangeRequest?action=Reject" method="post" style="display:inline;">
-                            <input type="hidden" name="mentorId" value="${mentor.username}">
-                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
-                            <input type="submit" class="btn btn-danger" value="Reject">
-                        </form>
-                    </td>
-                </tr>
-            </c:if>
-        </c:forEach>
-    </c:forEach>
-</tbody>
-                    </table>   
+        <div id="mentorListModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Mentor's Request List</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="text_page_head">Avatar</th>
+                                        <th class="text_page_head">Name</th>
+                                        <th class="text_page_head">Email</th>
+                                        <th class="text_page_head">Date of Birth</th>
+                                        <th class="text_page_head">CV</th>
+                                        <th class="text_page_head">Request Time</th>
+                                        <th class="text_page_head">Request Reason</th>
+                                        <th class="text_page_head">Course</th>
+                                        <th class="text_page_head">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${requestWaitingList}" var="request">
+                                        <c:set var="username" value="${request.username}"/>
+                                        <c:forEach items="${mentorList}" var="mentor">
+                                            <c:if test="${mentor.username == username}">
+                                                <tr>
+                                                    <td>
+                                                        <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
+                                                    </td>
+                                                    <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
+                                                    <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
+                                                    <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
+                                                    <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
+                                                    <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
+                                                    <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
+                                                    <td class="text_page" style="font-weight: 500">
+                                                        <c:forEach items="${courseList}" var="course">
+                                                            <c:if test="${course.courseId == request.courseId}">
+                                                                ${course.courseName}
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </td>
+                                                    <td>
+                                                        <form action="MangeRequest?action=Approve" method="post" style="display:inline;">
+                                                            <input type="hidden" name="mentorId" value="${mentor.username}">
+                                                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
+                                                            <input type="submit" class="btn btn-success" value="Approve">
+                                                        </form>
+                                                        <form action="MangeRequest?action=Reject" method="post" style="display:inline;">
+                                                            <input type="hidden" name="mentorId" value="${mentor.username}">
+                                                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
+                                                            <input type="submit" class="btn btn-danger" value="Reject">
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:forEach>
+                                </tbody>
+                            </table>   
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
         </div>
-    </div>
-</div>
 
-
-        <script>
-            function resetForm() {
-                document.getElementById("addCourseForm").reset();
-            }
-        </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>   

@@ -22,6 +22,7 @@ import model.MentorPost;
 import model.User;
 import model.Course;
 import model.Request;
+import model.Participate;
 
 /**
  *
@@ -57,10 +58,23 @@ public class MangeRequest extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
+        String action = request.getParameter("action");
+        if ("RemoveMentor".equals(action)) {
+            String menId = request.getParameter("mentorUsername");
+            int couId = Integer.parseInt(request.getParameter("courseId"));
+            removeMentor(couId, menId);
+            response.sendRedirect("MangeRequest");
+            return;
+        }
+
+        List<Participate> participateListByStatus = daoP.getParticipateByStatus(1);
+        List<Participate> participateList = daoP.getAll();
         List<User> mentorList = daoC.getAllMentor();
         List<Course> courseList = daoC.getAllCourse();
         List<Request> requestWaitingList = daoR.getRequestByStatus(0);
 
+        session.setAttribute("participateListByStatus", participateListByStatus);
+        session.setAttribute("participateList", participateList);
         session.setAttribute("courseList", courseList);
         session.setAttribute("mentorList", mentorList);
         session.setAttribute("requestWaitingList", requestWaitingList);
@@ -89,13 +103,17 @@ public class MangeRequest extends HttpServlet {
                 response.sendRedirect("MangeRequest");
                 break;
             case "Reject":
-                daoR.deleteRequest2(couId, menId);
-                daoP.deleteParticipate2(couId, menId);
+                removeMentor(couId, menId);
                 response.sendRedirect("MangeRequest");
                 break;
             default:
                 throw new AssertionError();
         }
+    }
+
+    private void removeMentor(int couId, String menId) {
+        daoR.deleteRequest2(couId, menId);
+        daoP.deleteParticipate2(couId, menId);
     }
 
     /**

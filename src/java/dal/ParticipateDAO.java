@@ -130,7 +130,7 @@ public class ParticipateDAO extends DBContext {
                 + " WHERE username =? and courseId = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1,i);
+            st.setInt(1, i);
             st.setString(2, menId);
             st.setInt(3, couId);
             st.executeUpdate();
@@ -151,5 +151,25 @@ public class ParticipateDAO extends DBContext {
         }
     }
 
-  
+    public List<Participate> getParticipateByStatus(int i) {
+        List<Participate> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Participate] where statusId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, i);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int courseId = rs.getInt("courseId");
+                int participateRole = rs.getInt("participateRole");
+                int statusId = rs.getInt("statusId");
+                Participate p = new Participate(courseId, username, participateRole, statusId);
+                list.add(p);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
 }
