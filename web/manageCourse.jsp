@@ -153,24 +153,22 @@
                     event.preventDefault();
                     var formData = $(this).serialize();
                     var form = $(this);
-                    var postId = $(this).find('input[name="postId"]').val();
+                    var commentsSection = form.closest('.add-comment').siblings('.comments-section');
                     $.ajax({
                         type: 'POST',
                         url: 'manageCourseComment',
                         data: formData,
                         success: function (response) {
-                            $('#commentsSection' + postId).prepend(response);
+                            commentsSection.prepend(response);
+                            commentsSection.find('p:contains("No comment yet")').remove();
                             form.find('input[name="commentContent"]').val('');
                         },
                         error: function () {
-                            alert('Error');
+                            alert('Error.');
                         }
                     });
                 });
             });
-
-
-
         </script>
         <jsp:include page="header.jsp"/>
         <div class="container mt-5">

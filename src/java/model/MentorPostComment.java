@@ -18,18 +18,16 @@ public class MentorPostComment {
     private Timestamp commentedAt;
     private String commentContent;
     private Integer parentCommentId;
-    private List<MentorPostComment> replies;
 
     public MentorPostComment() {
     }
 
-    public MentorPostComment(int commentId, int postId, String commentedBy, Timestamp commentedAt, String commentContent, Integer parentCommentId) {
+    public MentorPostComment(int commentId, int postId, String commentedBy, Timestamp commentedAt, String commentContent) {
         this.commentId = commentId;
         this.postId = postId;
         this.commentedBy = commentedBy;
         this.commentedAt = commentedAt;
         this.commentContent = commentContent;
-        this.parentCommentId = parentCommentId;
     }
 
     public int getCommentId() {
@@ -79,14 +77,6 @@ public class MentorPostComment {
     public void setParentCommentId(Integer parentCommentId) {
         this.parentCommentId = parentCommentId;
     }
-    
-    public void setReplies(List<MentorPostComment> replies) {
-        this.replies = replies;
-    }
-
-    public List<MentorPostComment> getReplies() {
-        return replies;
-    }
 
     @Override
     public String toString() {
@@ -96,7 +86,6 @@ public class MentorPostComment {
                 ", commentedBy='" + commentedBy + '\'' +
                 ", commentedAt=" + commentedAt +
                 ", commentContent='" + commentContent + '\'' +
-                ", parentCommentId=" + parentCommentId +
                 '}';
     }
 }
