@@ -125,14 +125,26 @@
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                // Append the bot's response to the chat window
                 const botMessageDiv = document.createElement("div");
                 botMessageDiv.classList.add("message", "bot");
-                botMessageDiv.textContent = xhr.responseText;
                 chatMessages.appendChild(botMessageDiv);
 
-                // Scroll to the bottom of the chat container
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                // Typing effect for bot response
+                const botResponse = xhr.responseText;
+                let i = 0;
+
+                function typeWriter() {
+                    if (i < botResponse.length) {
+                        botMessageDiv.textContent += botResponse.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50); // Adjust typing speed here
+                    } else {
+                        // Scroll to the bottom of the chat container when typing is complete
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+
+                typeWriter(); // Start typing animation
             }
         };
 
