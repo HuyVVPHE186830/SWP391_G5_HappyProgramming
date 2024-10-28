@@ -240,8 +240,10 @@
                                                     <input type="hidden" name="username" value="${user.username}">
                                                     <input type="hidden" name="courseId" value="${course.courseId}">
                                                     <div class="input-group">
-                                                        <input type="text" name="commentContent" class="form-control" placeholder="Add a comment..." required>
-                                                        <button type="submit" class="btn btn-primary">Post</button>
+                                                        <input style="margin-right: 10px;" type="text" name="commentContent" class="form-control" placeholder="Add a comment..." required>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fas fa-paper-plane"></i>
+                                                        </button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -250,18 +252,18 @@
                                                 <c:if test="${not empty sessionScope.postComments[post.postId]}">
                                                     <c:forEach var="comment" items="${sessionScope.postComments[post.postId]}">
                                                         <c:set var="user" value="${sessionScope.userMap[comment.commentedBy]}" />
-                                                        <div class="comment d-flex align-items-start mb-3">
+                                                        <div class="comment d-flex align-items-start mb-3" style="margin-bottom: 5px !important;">
                                                             <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                             <div class="comment-body" style="background-color: #f1f1f1; margin-left:10px; padding: 10px; border-radius: 5px;">
                                                                 <div class="comment-author-info d-flex justify-content-between align-items-center">
                                                                     <p class="comment-author fw-bold mb-1" style="font-weight: bold; margin-bottom: 0;">${user.lastName} ${user.firstName}</p>
-                                                                    <p style="font-size: 0.9em; color: gray; margin: 0 10px;">
-                                                                        <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" />
-                                                                    </p>
                                                                 </div>
                                                                 <p class="comment-text" style="margin-bottom: 0">${comment.commentContent}</p>
                                                             </div>
                                                         </div>
+                                                        <p style="font-size: 0.8em; color: gray; margin: 0 50px 10px;">
+                                                            <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" />
+                                                        </p>
                                                     </c:forEach>
                                                 </c:if>
                                                 <c:if test="${empty sessionScope.postComments[post.postId]}">
