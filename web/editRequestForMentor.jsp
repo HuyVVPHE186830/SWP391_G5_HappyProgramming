@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -65,6 +66,7 @@
                 justify-content: space-between;
                 width: 100%;
                 margin-bottom: 3%;
+                padding-right: 10px;
             }
 
             label {
@@ -88,12 +90,11 @@
 
             select.form-select {
                 padding: 10px;
-                font-size: 0.9rem;
+                font-size: 16px;
                 border: none;
                 width: 70%;
                 border-radius: 5px;
                 background-color: #eeeded;
-                margin-right: 10px;
                 height: 42px;
                 padding-left: 6px;
                 padding-top: 10px;
@@ -137,6 +138,11 @@
             response.sendRedirect("login.jsp");
             %>
         </c:if>
+
+        <!-- HEADER -->
+        <jsp:include page="header.jsp"/>
+
+        <!-- CONTENT MIDDLE -->
         <div class="middle">
             <div class="applyCourse-form">
                 <a href="listRequestForMentor?userId=${sessionScope.user.id}">Back</a>
@@ -168,7 +174,7 @@
                         </div>
                         <div class="input">
                             <label>Request Time</label>
-                            <input type="text" name="requestTime" value="${req.requestTime}" disabled>
+                            <input type="text" name="requestTime" value="<fmt:formatDate value="${req.requestTime}" pattern="dd-MM-yyyy" />" disabled>
                         </div>
                         <div class="input">
                             <label>Status</label>
