@@ -76,6 +76,7 @@ public class ManageCourse extends HttpServlet {
         UserDAO daoU = new UserDAO();
         String courseIdString = request.getParameter("courseId");
         int courseId = Integer.parseInt(courseIdString);
+        String mentorName = request.getParameter("mentorName");
         List<Course> courses = daoC.getAll();
         Course course = null;
         for (Course c : courses) {
@@ -83,25 +84,25 @@ public class ManageCourse extends HttpServlet {
                 course = c;
             }
         }
-        int member = daoC.getTotalParticipants(course.getCourseId(), 1);
-        int rmember = daoC.getTotalParticipants(course.getCourseId(), 0);
+        int member = daoC.getTotalParticipants(course.getCourseId(), 1, mentorName);
+        int rmember = daoC.getTotalParticipants(course.getCourseId(), 0, mentorName);
         User user = (User) session.getAttribute("user");
         if (user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), user.getUsername());
+        List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), mentorName);
         Map<Integer, List<MentorPostComment>> postComments = new HashMap<>();
         for (MentorPost post : posts) {
             List<MentorPostComment> comments = mentorPostDAO.getAllCommentsByPostId(post.getPostId());
             postComments.put(post.getPostId(), comments);
         }
-        List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1);
-        List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0);
-        List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1);
-        List<User> listRequest = mentorPostDAO.getMenteeList(courseId, 0);
-        List<User> listUser = mentorPostDAO.getUserList(courseId, 1);
+        List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1, mentorName);
+        List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0, mentorName);
+        List<User> listMentee = mentorPostDAO.getMenteeList(courseId, 1, mentorName);
+        List<User> listRequest = mentorPostDAO.getMenteeList(courseId, 0, mentorName);
+        List<User> listUser = mentorPostDAO.getUserList(courseId, 1, mentorName);
         Map<String, User> userMap = new HashMap<>();
         for (User u : listUser) {
             userMap.put(u.getUsername(), u);

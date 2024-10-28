@@ -23,15 +23,17 @@ public class CourseDAO extends DBContext {
 //        in.add(1);
 //        in.add(3);
 //        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
-        List<Course> otherlist = dao.getOtherCourses(list);
-        for (Course course : otherlist) {
-            System.out.println(course);
-        }
-        List<String> string = dao.getUserByCourse(1, 1);
+//        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
+//        List<Course> otherlist = dao.getOtherCourses(list);
+//        for (Course course : otherlist) {
+//            System.out.println(course);
+//        }
+        List<String> string = dao.getUserByCourse(1, 1, "huyenmentor");
         for (String string1 : string) {
             System.out.println(string1);
         }
+        int num = dao.getTotalParticipants(1, 1, "huyenmentor");
+        System.out.println(num);
 //        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
 //        System.out.println(totalRecord);
     }
@@ -1319,19 +1321,21 @@ public class CourseDAO extends DBContext {
         return courses;
     }
 
-    public int getTotalParticipants(int courseId, int status) {
+    public int getTotalParticipants(int courseId, int status, String mentorName) {
         int totalParticipants = 0;
         String sql = "SELECT COUNT(*) AS TotalParticipants "
                 + "FROM [Participate] "
                 + "WHERE participateRole = ? "
                 + "AND statusId = ? "
-                + "AND courseId = ?";
+                + "AND courseId = ? "
+                + "AND mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Set parameters
             preparedStatement.setInt(1, 3);
             preparedStatement.setInt(2, status);
             preparedStatement.setInt(3, courseId);
+            preparedStatement.setString(4, mentorName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -1399,19 +1403,21 @@ public class CourseDAO extends DBContext {
         return f;
     }
 
-    public List<String> getMenteeByCourse(int courseId, int status) {
+    public List<String> getMenteeByCourse(int courseId, int status, String mentorName) {
         List<String> usernames = new ArrayList<>();
 
         String sql = "SELECT username "
                 + "FROM [Participate] "
                 + "WHERE courseId = ? "
                 + "AND participateRole = ? "
-                + "AND statusId = ?";
+                + "AND statusId = ? "
+                + "AND mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, courseId); // courseId
             preparedStatement.setInt(2, 3); // participateRole
             preparedStatement.setInt(3, status); // statusId
+            preparedStatement.setString(4, mentorName); // statusId
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1425,17 +1431,19 @@ public class CourseDAO extends DBContext {
         return usernames;
     }
     
-    public List<String> getUserByCourse(int courseId, int status) {
+    public List<String> getUserByCourse(int courseId, int status, String mentorName) {
         List<String> usernames = new ArrayList<>();
 
         String sql = "SELECT username "
                 + "FROM [Participate] "
                 + "WHERE courseId = ? "
-                + "AND statusId = ?";
+                + "AND statusId = ? "
+                + "AND mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, courseId); // courseId
-            preparedStatement.setInt(2, status); // statusId
+            preparedStatement.setInt(2, status);
+            preparedStatement.setString(3, mentorName);// statusId
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {

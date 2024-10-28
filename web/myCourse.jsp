@@ -221,7 +221,7 @@
                     <c:if test="${not empty listCoursesMentoring}">
                         <c:forEach items="${listCoursesMentoring}" var="cou">
                             <div class="product-item">
-                                <a href="manageCourse?courseId=${cou.courseId}" class="mentor-course">
+                                <a href="manageCourse?courseId=${cou.courseId}&mentorName=${cou.mentorName}" class="mentor-course">
                                     <h3>${cou.courseName}</h3>
                                 </a>
                                 <p>Categories: 
@@ -260,7 +260,7 @@
                 <c:if test="${not empty listCoursesStudying}">
                     <c:forEach items="${listCoursesStudying}" var="cou">
                         <div class="product-item">
-                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course">
+                            <a href="manageCourse?courseId=${cou.courseId}&mentorName=${cou.mentorName}" class="mentor-course">
                                 <h3>${cou.courseName}</h3>
                             </a>
                             <p>Mentor: ${cou.mentorName}</p>
