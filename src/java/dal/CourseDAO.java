@@ -28,7 +28,7 @@ public class CourseDAO extends DBContext {
         for (Course course : otherlist) {
             System.out.println(course);
         }
-        List<String> string = dao.getMenteeByCourse(1, 1);
+        List<String> string = dao.getUserByCourse(1, 1);
         for (String string1 : string) {
             System.out.println(string1);
         }
@@ -1411,6 +1411,30 @@ public class CourseDAO extends DBContext {
             preparedStatement.setInt(1, courseId); // courseId
             preparedStatement.setInt(2, 3); // participateRole
             preparedStatement.setInt(3, status); // statusId
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    usernames.add(resultSet.getString("username"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usernames;
+    }
+    
+    public List<String> getUserByCourse(int courseId, int status) {
+        List<String> usernames = new ArrayList<>();
+
+        String sql = "SELECT username "
+                + "FROM [Participate] "
+                + "WHERE courseId = ? "
+                + "AND statusId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, courseId); // courseId
+            preparedStatement.setInt(2, status); // statusId
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
