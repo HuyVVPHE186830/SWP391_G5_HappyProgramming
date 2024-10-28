@@ -178,8 +178,7 @@ public class MentorPostDAO extends DBContext {
                 String commentedBy = rs.getString("commentedBy");
                 Timestamp commentedAt = rs.getTimestamp("commentedAt");
                 String commentContent = rs.getString("commentContent");
-                Integer parentCommentId = rs.getObject("parentCommentId") != null ? rs.getInt("parentCommentId") : null;
-                MentorPostComment comment = new MentorPostComment(commentId, postId, commentedBy, commentedAt, commentContent, parentCommentId);
+                MentorPostComment comment = new MentorPostComment(commentId, postId, commentedBy, commentedAt, commentContent);
                 commentList.add(comment);
             }
         } catch (SQLException ex) {
@@ -190,20 +189,14 @@ public class MentorPostDAO extends DBContext {
 
 
     public void addComment(MentorPostComment comment) {
-        String sql = "INSERT INTO MentorPostComments (postId, commentedBy, commentedAt, commentContent, parentCommentId) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MentorPostComments (postId, commentedBy, commentedAt, commentContent) "
+                + "VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, comment.getPostId());
             st.setString(2, comment.getCommentedBy());
             st.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
             st.setString(4, comment.getCommentContent());
-            if (comment.getParentCommentId() != null) {
-                st.setInt(5, comment.getParentCommentId());
-            } else {
-                st.setNull(5, java.sql.Types.INTEGER);
-            }
-
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error inserting comment: " + ex.getMessage());

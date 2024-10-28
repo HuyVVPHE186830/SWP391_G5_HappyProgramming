@@ -97,7 +97,6 @@ public class ManageCourseComment extends HttpServlet {
                 MentorPostDAO mentorPostDAO = new MentorPostDAO();
                 mentorPostDAO.addComment(comment);
 
-                // Trả về HTML cho bình luận mới
                 StringBuilder commentHtml = new StringBuilder();
                 commentHtml.append("<div class='comment d-flex align-items-start mb-3'>")
                         .append("<img src='data:image/jpeg;base64,") // Bạn cần thay thế bằng cách lấy ảnh người dùng
