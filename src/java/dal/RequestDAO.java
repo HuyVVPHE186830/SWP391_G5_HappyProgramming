@@ -147,11 +147,15 @@ public class RequestDAO extends DBContext {
 ////        for (Request l : list) {
 ////            System.out.println(l);
 ////        }
-    dao.deleteRequest2(20, "ducmentor");
+        dao.deleteRequest2(20, "ducmentor");
     }
 
     public List<Request> getRequestByStatus(int status) {
-        String sql = "SELECT * FROM [Request] WHERE requestStatus = " + status;
+        String sql = "	SELECT * \n"
+                + "FROM [Request] r \n"
+                + "JOIN [Participate] p ON r.courseId = p.courseId \n"
+                + "JOIN [User] u ON u.username = p.username \n"
+                + "WHERE r.requestStatus = " + status + " and p.statusId  =" + status + " and p.username  = r.username and u.roleId = 2;";/// Fix this after, status must be 0 in both Request and Participate(fix count request in mentor list screen)
         List<Request> list = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -180,7 +184,7 @@ public class RequestDAO extends DBContext {
             st.setInt(1, i);
             st.setString(2, menId);
             st.setInt(3, couId);
-           
+
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -194,11 +198,10 @@ public class RequestDAO extends DBContext {
             ps.setInt(1, courseId);
             ps.setString(2, username);
             ps.executeUpdate();
-           
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
- 
 }

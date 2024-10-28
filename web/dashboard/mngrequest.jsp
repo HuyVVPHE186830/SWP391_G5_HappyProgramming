@@ -167,19 +167,12 @@
                                             <th class="text_page_head">CV</th>
                                             <th class="text_page_head">Action</th>
                                             <th>
-                                                <c:set var="specificMentor" value="${mentorList[0]}" /> <!-- Giả sử bạn muốn đếm cho mentor đầu tiên -->
-                                                <c:set var="totalRequestCount" value="0" />
-
-                                                <c:forEach items="${requestWaitingList}" var="request">
-                                                    <c:if test="${request.username == specificMentor.username}">
-                                                        <c:set var="totalRequestCount" value="${totalRequestCount + 1}" />
-                                                    </c:if>
-                                                </c:forEach>
+                                                <c:set var="waitingListSize" value="${fn:length(sessionScope.requestWaitingList)}" />
 
                                                 <div class="icon-container">
                                                     <a style="margin-left: 5px; background-color: #5e3fd3; color: white; border-radius: 5px; padding: 8px 12px; text-decoration: none;" href="#mentorListModal" class="btn" data-toggle="modal">
                                                         <i class="fa-solid fa-list"></i>
-                                                        <span class="badge">${totalRequestCount}</span>
+                                                        <span class="badge">${waitingListSize}</span>
                                                     </a>
                                                 </div>
 
@@ -187,7 +180,7 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <c:forEach items="${mentorList}" var="t">
+                                    <c:forEach items="${sessionScope.mentorList}" var="t">
                                         <c:set var="username" value="${t.username}"/>
                                         <tbody>
                                             <tr>
@@ -199,7 +192,7 @@
                                                 <td class="text_page" style="font-weight: 500">${t.dob}</td>
                                                 <td class="text_page" style="font-weight: 500">${tCVPath}</td>
                                                 <td>
-                                                    <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn btn-info">View</a>
+                                                    <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;">View</a>
                                                 </td>
                                             </tr>
 
@@ -212,15 +205,15 @@
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <c:forEach items="${participateListByStatus}" var="p">
+                                                        <c:forEach items="${sessionScope.participateListByStatus}" var="p">
                                                             <c:if test="${p.username == username}">
-                                                                <c:forEach items="${courseList}" var="c">
+                                                                <c:forEach items="${sessionScope.courseList}" var="c">
                                                                     <c:if test="${c.courseId == p.courseId}">
                                                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                                                             <div>
                                                                                 Course ID: ${p.courseId} - ${c.courseName}
                                                                             </div>
-                                                                            <a href="MangeRequest?action=RemoveMentor&courseId=${p.courseId}&mentorUsername=${username}" class="btn btn-danger btn-sm" title="Ban Mentor">
+                                                                            <a href="MangeRequest?action=RemoveMentor&courseId=${p.courseId}&mentorUsername=${username}" class="btn" style="background-color: #5e3fd3; color: white;" title="Ban Mentor">
                                                                                 <i class="fas fa-trash"></i>
                                                                             </a>
                                                                         </div>
@@ -273,7 +266,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${requestWaitingList}" var="request">
+                                    <c:forEach items="${sessionScope.requestWaitingList}" var="request">
                                         <c:set var="username" value="${request.username}"/>
                                         <c:forEach items="${mentorList}" var="mentor">
                                             <c:if test="${mentor.username == username}">
