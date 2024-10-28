@@ -263,6 +263,7 @@
                             <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course">
                                 <h3>${cou.courseName}</h3>
                             </a>
+                            <p>Mentor: ${cou.mentorName}</p>
                             <p>Categories: 
                                 <c:forEach items="${cou.categories}" var="cat" varStatus="status">
                                     ${cat.categoryName}<c:if test="${not status.last}">, </c:if>

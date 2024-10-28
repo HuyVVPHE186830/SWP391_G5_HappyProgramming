@@ -1140,6 +1140,7 @@ public class CourseDAO extends DBContext {
         course.setCourseName(rs.getString("courseName"));
         course.setCourseDescription(rs.getString("courseDescription"));
         course.setCreatedAt(rs.getDate("createdAt"));
+        course.setMentorName(rs.getString("mentorUsername"));
         List<Category> categories = getCategoriesByCourseId(rs.getInt("courseId"));
         course.setCategories(categories);
         return course;
