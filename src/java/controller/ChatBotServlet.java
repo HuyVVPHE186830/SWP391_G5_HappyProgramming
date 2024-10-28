@@ -28,21 +28,22 @@ public class ChatBotServlet extends HttpServlet {
         // Call OpenAI API and get the chatbot response
         String botResponse = callOpenAIAPI(userMessage);
 
-        // Set the response back to the JSP page
-        request.setAttribute("userMessage", userMessage);
-        request.setAttribute("botResponse", botResponse);
-        request.getRequestDispatcher("chat.jsp").forward(request, response);
+        // Set response type to plain text for AJAX
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+
+        // Send the bot's response directly to AJAX
+        response.getWriter().write(botResponse);
     }
 
     private String callOpenAIAPI(String userMessage) throws IOException {
         String apiUrl = "https://api.openai.com/v1/chat/completions";
         URL url = new URL(apiUrl);
-        HttpURLConnection connection = null;
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer " + AIConstant.OPENAI_API_KEY); // Use the constant
+        connection.setRequestProperty("Authorization", "Bearer " + AIConstant.OPENAI_API_KEY);
         connection.setDoOutput(true);
 
         // Prepare the request body with the user message
@@ -61,9 +62,7 @@ public class ChatBotServlet extends HttpServlet {
         writer.flush();
         writer.close();
 
-        // Get response code
         int responseCode = connection.getResponseCode();
-
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // Success: Read the API response
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -78,13 +77,14 @@ public class ChatBotServlet extends HttpServlet {
             JsonParser parser = new JsonParser();
             JsonElement responseElement = parser.parse(response.toString());
             JsonObject responseObject = responseElement.getAsJsonObject();
-            return responseObject.getAsJsonArray("choices").get(0).getAsJsonObject().getAsJsonObject("message").get("content").getAsString();
+            return responseObject.getAsJsonArray("choices").get(0).getAsJsonObject()
+                    .getAsJsonObject("message").get("content").getAsString();
         } else if (responseCode == 403) {
-            throw new IOException("Forbidden: Check your API key and model access.");
+            return "Forbidden: Check your API key and model access.";
         } else if (responseCode == 429) {
-            throw new IOException("Rate limit exceeded. Try again later.");
+            return "Rate limit exceeded. Try again later.";
         } else {
-            throw new IOException("Error: Received HTTP response code " + responseCode);
+            return "Error: Received HTTP response code " + responseCode;
         }
     }
 }
