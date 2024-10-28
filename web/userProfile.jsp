@@ -303,8 +303,6 @@
                 }
                 return true;
             }
-            
-            
         </script>
         <div class="profile-form">
             <div class="profile-container">
@@ -378,7 +376,7 @@
                         </c:if>
                         <% session.removeAttribute("note"); %>
                         <div class="button-container">
-                            <button type="button" class="button-save" id="editButton" onclick="window.location.href='editUser.jsp'">Edit Profile</button>
+                            <button type="button" class="button-save" id="editButton" onclick="window.location.href = 'editUser.jsp'">Edit Profile</button>
                         </div>
                     </form>
                 </div>

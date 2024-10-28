@@ -3,6 +3,7 @@
 <%@page import="java.util.*"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -127,6 +128,20 @@
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
 
+        <c:if test="${not empty succMsg}">
+            <div style="margin-top: 50px" class="alert alert-success" role="alert">
+                ${succMsg}
+            </div>
+            <c:remove var="succMsg" scope="session"/>
+        </c:if>
+    
+        <c:if test="${not empty failedMsg}">
+            <div style="margin-top: 50px" class="alert alert-danger" role="alert">
+                ${failedMsg}
+            </div>
+        <c:remove var="failedMsg" scope="session"/>
+        </c:if>
+            
         <div class="container mt-5"> <!-- Keep container for responsiveness -->
             <div class="blog-detail">
                 <%
@@ -219,7 +234,7 @@
                             <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
                             </button>
-                            <% User u = (User)session.getAttribute("user");
+                            <% User u = (User) session.getAttribute("user");
                                if (commenter.getId() == u.getId()) { %>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item edit-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
@@ -295,6 +310,45 @@
                         <%
                             }
                         %>
+                    </div>
+
+                    <!-- Report Modal -->
+                    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form id="reportForm" action="reportComment" method="POST">
+                                    <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                                    <input type="hidden" id="commentId" name="commentId">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="reportType" class="form-label">Reason for Reporting</label>
+                                            <select id="reportType" name="reportTypeId" class="form-select" onchange="displayReportDescription()">
+                                                <%
+                                                    List<ReportType> reportTypes = (List<ReportType>) request.getAttribute("reportTypes");
+                                                    for (ReportType reportType : reportTypes) {
+                                                %>
+                                                <option value="<%= reportType.getReportTypeId() %>" data-description="<%= reportType.getReportDescription() %>">
+                                                    <%= reportType.getReportName() %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        <div id="reportDescription" class="mb-3 text-muted"></div>
+                                        <div class="mb-3">
+                                            <label for="reportContent" class="form-label">Additional Details (Optional)</label>
+                                            <textarea id="reportContent" name="reportContent" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Report</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -400,7 +454,7 @@
 
                             attachReplyButtonListeners();
 
-                            attachEditButtonListeners()
+                            attachEditButtonListeners();
                         })
                         .catch(error => console.error('Error fetching comments:', error));
             }
@@ -527,10 +581,28 @@
                             const newCommentsSection = doc.querySelector('#replies-' + parentId);
                             document.getElementById('replies-' + parentId).innerHTML = newCommentsSection.innerHTML;
 
-                            attachEditButtonListeners()
+                            attachEditButtonListeners();
                         })
                         .catch(error => console.error('Error fetching comments:', error));
             }
+            
+            function displayReportDescription() {
+                const reportTypeSelect = document.getElementById("reportType");
+                const selectedOption = reportTypeSelect.options[reportTypeSelect.selectedIndex];
+                const description = selectedOption.getAttribute("data-description");
+                document.getElementById("reportDescription").textContent = description;
+            }
+            
+            window.onload = displayReportDescription;
+            
+            document.querySelectorAll('.report-comment').forEach(item => {
+                item.addEventListener('click', event => {
+                    event.preventDefault();
+                    const commentId = event.target.getAttribute('data-comment-id');
+                    document.getElementById('commentId').value = commentId;
+                    new bootstrap.Modal(document.getElementById('reportModal')).show();
+                });
+            });        
         </script>
 
         <!-- Image Modal -->
