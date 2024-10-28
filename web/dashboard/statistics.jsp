@@ -39,6 +39,12 @@
         .card {
             margin: 20px 0;
         }
+        /* Adjust chart size */
+        .chart-container {
+            width: 100%;
+            max-width: 500px; /* Limit maximum width */
+            margin: auto; /* Center the chart */
+        }
     </style>
 </head>
 <body>
@@ -59,7 +65,9 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="text_page_head">User Roles Breakdown</h4>
-                                    <canvas id="userRolesChart"></canvas> <!-- Chart Container -->
+                                    <div class="chart-container">
+                                        <canvas id="userRolesChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -67,7 +75,9 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="text_page_head">Courses and Participants</h4>
-                                    <canvas id="coursesChart"></canvas> <!-- Chart Container -->
+                                    <div class="chart-container">
+                                        <canvas id="coursesChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -75,7 +85,9 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="text_page_head">Blog Posts by User</h4>
-                                    <canvas id="blogPostsChart"></canvas> <!-- Chart Container -->
+                                    <div class="chart-container">
+                                        <canvas id="blogPostsChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -83,7 +95,9 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="text_page_head">Messages in Conversations</h4>
-                                    <canvas id="messagesChart"></canvas> <!-- Chart Container -->
+                                    <div class="chart-container">
+                                        <canvas id="messagesChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -117,6 +131,10 @@
                     ],
                     backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
                 }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true
             }
         });
 
@@ -141,6 +159,8 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
                 scales: {
                     y: { beginAtZero: true }
                 }
@@ -168,6 +188,8 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
                 scales: {
                     y: { beginAtZero: true }
                 }
@@ -195,6 +217,8 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
                 scales: {
                     y: { beginAtZero: true }
                 }
