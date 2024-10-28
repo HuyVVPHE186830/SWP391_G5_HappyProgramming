@@ -149,10 +149,26 @@ public class MentorPostDAO extends DBContext {
         return listMentee;
     }
     
+    public List<User> getUserList(int courseId, int status) {
+        CourseDAO daoC = new CourseDAO();
+        UserDAO daoU = new UserDAO();
+        List<String> username = daoC.getUserByCourse(courseId, status);
+        List<User> listMentee = new ArrayList<>();
+        for (String string : username) {
+            User user1 = daoU.getUserByUsernameM(string);
+            if (user1 != null) {
+                listMentee.add(user1);
+            } else {
+                System.out.println("User not found for username: " + string);
+            }
+        }
+        return listMentee;
+    }
+
     public List<MentorPostComment> getAllCommentsByPostId(int postId) {
         List<MentorPostComment> commentList = new ArrayList<>();
         String sql = "SELECT * FROM MentorPostComments WHERE postId = ? ORDER BY commentedAt DESC";
-        
+
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, postId);
@@ -164,44 +180,41 @@ public class MentorPostDAO extends DBContext {
                 String commentContent = rs.getString("commentContent");
                 Integer parentCommentId = rs.getObject("parentCommentId") != null ? rs.getInt("parentCommentId") : null;
                 MentorPostComment comment = new MentorPostComment(commentId, postId, commentedBy, commentedAt, commentContent, parentCommentId);
-                commentList.add(comment); 
+                commentList.add(comment);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return commentList; 
+        return commentList;
     }
-    
-    public List<MentorPostComment> getRepliesByParentCommentId(int parentCommentId) {
-        List<MentorPostComment> replyList = new ArrayList<>();
-        String sql = "SELECT * FROM MentorPostComments WHERE parentCommentId = ? ORDER BY commentedAt DESC";
 
+
+    public void addComment(MentorPostComment comment) {
+        String sql = "INSERT INTO MentorPostComments (postId, commentedBy, commentedAt, commentContent, parentCommentId) "
+                + "VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, parentCommentId);
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next()) {
-                int commentId = rs.getInt("commentId");
-                int postId = rs.getInt("postId");
-                String commentedBy = rs.getString("commentedBy");
-                Timestamp commentedAt = rs.getTimestamp("commentedAt");
-                String commentContent = rs.getString("commentContent");
-                MentorPostComment reply = new MentorPostComment(commentId, postId, commentedBy, commentedAt, commentContent, parentCommentId);
-                replyList.add(reply);
+            st.setInt(1, comment.getPostId());
+            st.setString(2, comment.getCommentedBy());
+            st.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            st.setString(4, comment.getCommentContent());
+            if (comment.getParentCommentId() != null) {
+                st.setInt(5, comment.getParentCommentId());
+            } else {
+                st.setNull(5, java.sql.Types.INTEGER);
             }
+
+            st.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex);
+            System.out.println("Error inserting comment: " + ex.getMessage());
         }
-        return replyList;
     }
-    
 
     public static void main(String[] args) {
         MentorPostDAO dao = new MentorPostDAO();
-        List<MentorPost> posts = dao.getAllPost(1, "huyenmentor");
-        for (MentorPost post : posts) {
-            System.out.println(post.toString());
+        List<User> string = dao.getUserList(1, 1);
+        for (User string1 : string) {
+            System.out.println(string1.toString());
         }
     }
 
