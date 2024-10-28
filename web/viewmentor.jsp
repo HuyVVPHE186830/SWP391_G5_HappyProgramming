@@ -156,6 +156,9 @@
             </c:if>
         </div>
 
+        <!-- CHAT -->
+        <jsp:include page="chat.jsp"/>
+
         <!-- FOOTERS -->
         <jsp:include page="footer.jsp"/>
     </body>

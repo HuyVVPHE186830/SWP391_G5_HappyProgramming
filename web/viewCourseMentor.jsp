@@ -186,7 +186,7 @@
 
             </c:if>
 
-                <c:if test="${not empty requestScope.keyword}">
+            <c:if test="${not empty requestScope.keyword}">
                 <c:if test="${empty requestScope.mentorThisCourse}">
                     <!-- SORT -->
                     <form id="orderbyForm" action="viewCourseMentor">
@@ -245,6 +245,9 @@
                 </div>
             </c:if>
         </div>
+
+        <!-- CHAT -->
+        <jsp:include page="chat.jsp"/>
 
         <!-- FOOTER -->
         <jsp:include page="footer.jsp"/>

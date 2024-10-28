@@ -24,12 +24,12 @@
                 color: white;
                 text-decoration: none;
                 border-radius: 5px;
-                margin-top: 10px; 
+                margin-top: 10px;
                 transition: all 1s ease;
             }
 
             .chat-button:hover {
-                background-color: #0056b3; 
+                background-color: #0056b3;
                 color: white;
                 text-decoration: none;
             }
@@ -159,6 +159,9 @@
                 <h4>This Course Does Not Have Mentor Yet!</h4>
             </c:if>
         </div>
+
+        <!-- CHAT -->
+        <jsp:include page="chat.jsp"/>
 
         <!-- FOOTER -->
         <jsp:include page="footer.jsp"/>

@@ -106,7 +106,7 @@
                         <th>Status</th>
                         <th>Request Reason</th>
                         <th>View</th>
-                        <th>Delete</th>
+                        <th>Cancel</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,7 +140,7 @@
                                         </a>
                                     </td>
                                     <th>
-                                        <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" 
+                                        <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" onclick="confirm('Are you sure to cancel this request!')"
                                        <c:if test="${req.requestStatus != 0}">
                                            style="color: gray; pointer-events: none;" 
                                        </c:if>>                                  
@@ -161,5 +161,8 @@
                 </tbody>
             </table>
         </div>
+            
+        <!-- CHAT -->
+        <jsp:include page="chat.jsp"/>
     </body>
 </html>
