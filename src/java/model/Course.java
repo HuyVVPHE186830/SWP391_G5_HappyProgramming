@@ -12,6 +12,26 @@ public class Course {
     private Date createdAt;
     private int countMentee;
     private int countMentor;
+    private String mentorName;
+
+    public Course(int courseId, String courseName, String courseDescription, Date createdAt, int countMentee, int countMentor, String mentorName, List<Category> categories) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.courseDescription = courseDescription;
+        this.createdAt = createdAt;
+        this.countMentee = countMentee;
+        this.countMentor = countMentor;
+        this.mentorName = mentorName;
+        this.categories = categories;
+    }
+
+    public String getMentorName() {
+        return mentorName;
+    }
+
+    public void setMentorName(String mentorName) {
+        this.mentorName = mentorName;
+    }
 
     public Course(int courseId, String courseName, String courseDescription, Date createdAt, int countMentee, int countMentor, List<Category> categories) {
         this.courseId = courseId;

@@ -91,17 +91,12 @@
     </head>
     <body>
         <%
-            User user = (User) session.getAttribute("user");
-            if (user == null) {
-               response.sendRedirect("login.jsp");
-               return;
-            } else {
                 Course course = (Course) session.getAttribute("course");
                 int member = (int) session.getAttribute("member");
                 int rmember = (int) session.getAttribute("rmember");
+                String mentorName = (String) session.getAttribute("mentorName");
                 List<User> listMentee = (List<User>) session.getAttribute("listMentee");
                 List<User> listRequest = (List<User>) session.getAttribute("listRequest");
-            }
         %>
         <c:set var="activePostId" value="${param.postId}" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -170,6 +165,7 @@
                 });
             });
         </script>
+        <c:set var="user" value="${sessionScope.user}"/>
         <jsp:include page="header.jsp"/>
         <div class="container mt-5">
             <div class="course-banner text-center">
@@ -208,6 +204,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <strong><h3 class="modal-title">${post.postTitle}</h3></strong>
+                                            <c:if test="${user.username == mentorName}">
                                             <div class="dropdown">
                                                 <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v"></i>
@@ -217,6 +214,7 @@
                                                     <a href="javascript:void(0);" class="dropdown-item delete" onclick="confirmDelete('${post.postId}', '${course.courseId}')">Delete</a>
                                                 </ul>
                                             </div>
+                                            </c:if>
                                         </div>
                                         <div class="modal-body">
                                             <p>${post.postContent}</p>
@@ -251,12 +249,12 @@
                                             <div id="commentsSection${post.postId}" class="comments-section" style="max-height: 250px; overflow-y: auto;">
                                                 <c:if test="${not empty sessionScope.postComments[post.postId]}">
                                                     <c:forEach var="comment" items="${sessionScope.postComments[post.postId]}">
-                                                        <c:set var="user" value="${sessionScope.userMap[comment.commentedBy]}" />
+                                                        <c:set var="commentUser" value="${sessionScope.userMap[comment.commentedBy]}" />
                                                         <div class="comment d-flex align-items-start mb-3" style="margin-bottom: 5px !important;">
-                                                            <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
+                                                            <img src="data:image/jpeg;base64,${commentUser.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                             <div class="comment-body" style="background-color: #f1f1f1; margin-left:10px; padding: 10px; border-radius: 5px;">
                                                                 <div class="comment-author-info d-flex justify-content-between align-items-center">
-                                                                    <p class="comment-author fw-bold mb-1" style="font-weight: bold; margin-bottom: 0;">${user.lastName} ${user.firstName}</p>
+                                                                    <p class="comment-author fw-bold mb-1" style="font-weight: bold; margin-bottom: 0;">${commentUser.lastName} ${commentUser.firstName}</p>
                                                                 </div>
                                                                 <p class="comment-text" style="margin-bottom: 0">${comment.commentContent}</p>
                                                             </div>
@@ -335,17 +333,21 @@
                                 <i class="fas fa-users icon"></i>&nbsp; 
                                 <strong>${member}</strong>
                             </a>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
-                                <i class="fas fa-bell icon"></i>
-                                <strong>${rmember}</strong>
-                            </a>
+                            <c:if test="${user.username == mentorName}">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
+                                    <i class="fas fa-bell icon"></i>
+                                    <strong>${rmember}</strong>
+                                </a>
+                            </c:if>
 
                         </div>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
-                            <i class="fas fa-plus"></i>
-                            New Post
-                        </button>
-
+                        <c:if test="${user.username == mentorName}">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                                <i class="fas fa-plus"></i>
+                                New Post
+                            </button>
+                        </c:if>
+                            <p>${user.username}</p>
                     </div>
                 </div>
             </div>
@@ -360,6 +362,7 @@
                         <div class="modal-body">
                             <form id="mentorPostForm" action="addMentorPost" method="POST">
                                 <input type="hidden" name="courseId" value="${course.courseId}">
+                                <input type="hidden" name="mentorName" value="${mentorName}">
                                 <input type="hidden" name="username" value="${user.username}">
                                 <div class="form-group">
                                     <label for="postTitle">Title</label>
@@ -408,8 +411,10 @@
                                         <th>Avatar</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <c:if test="${user.username == mentorName}">
                                         <th>Date of Birth</th>
                                         <th>Action</th> <!-- Nút Ban -->
+                                        </c:if>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -421,6 +426,7 @@
                                                 </td>
                                                 <td>${user.lastName} ${user.firstName}</td>
                                                 <td>${user.mail}</td>
+                                                <c:if test="${user.username == mentorName}">
                                                 <td>${user.dob}</td>
                                                 <td>
                                                     <form action="manageMentee" method="post">
@@ -429,6 +435,7 @@
                                                         <button type="submit" class="btn btn-danger btn-sm">Ban</button>
                                                     </form>
                                                 </td>
+                                                </c:if>
                                             </tr>
                                         </c:forEach>
                                     </c:if>

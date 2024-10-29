@@ -161,6 +161,10 @@
         <servlet-class>controller.DeleteRequestForMentor</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RatingController</servlet-name>
+        <servlet-class>controller.RatingController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>manageCourseComment</servlet-name>
         <servlet-class>controller.ManageCourseComment</servlet-class>
     </servlet>
@@ -323,6 +327,10 @@
     <servlet-mapping>
         <servlet-name>DeleteRequestForMentor</servlet-name>
         <url-pattern>/deleteRequestForMentor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RatingController</servlet-name>
+        <url-pattern>/Rating</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>manageCourseComment</servlet-name>

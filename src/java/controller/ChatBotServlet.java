@@ -22,15 +22,16 @@ public class ChatBotServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Ensure UTF-8 encoding for request and response
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         // Get user message from the request
         String userMessage = request.getParameter("message");
 
         // Call OpenAI API and get the chatbot response
         String botResponse = callOpenAIAPI(userMessage);
-
-        // Set response type to plain text for AJAX
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
 
         // Send the bot's response directly to AJAX
         response.getWriter().write(botResponse);
@@ -42,7 +43,7 @@ public class ChatBotServlet extends HttpServlet {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         connection.setRequestProperty("Authorization", "Bearer " + AIConstant.OPENAI_API_KEY);
         connection.setDoOutput(true);
 
@@ -56,8 +57,8 @@ public class ChatBotServlet extends HttpServlet {
         messages.add(userMessageObj);
         requestBody.add("messages", messages);
 
-        // Write the request body
-        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+        // Write the request body with UTF-8 encoding
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
         writer.write(requestBody.toString());
         writer.flush();
         writer.close();
@@ -65,7 +66,7 @@ public class ChatBotServlet extends HttpServlet {
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // Success: Read the API response
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             StringBuilder response = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {

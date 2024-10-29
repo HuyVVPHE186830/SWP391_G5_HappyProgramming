@@ -262,7 +262,7 @@
         </div>
         <div class="chat-area">
             <div class="recipient-header">
-                <h3>${currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</h3>
+                <h3>${currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName} </h3>
             </div>
             <div class="messages">
                 <c:forEach items="${currentChatMessages}" var="message">
@@ -298,7 +298,7 @@
             </div>
         </div>
         <div class="user-info">
-            <h3>Conversation manage</h3>
+            <h3>Conversation Manage</h3>
             <div class="user-details">
                 <img src="data:image/jpeg;base64,${sessionScope.currentChatRecipient.avatarPath}" alt="Avatar" class="avatar-image">
                 <p>Name: ${sessionScope.currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</p>
@@ -309,6 +309,12 @@
                     ${sessionScope.currentChatRecipient.roleId == 1 ? 'Mentee' : 
                       (sessionScope.currentChatRecipient.roleId == 2 ? 'Mentor' : 'Unknown Role')}
                 </p>    
+                <p>
+                    <c:if test="${currentChatRecipient.roleId == 2}">
+                        <a href="#miniProfileModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;">View</a>
+                    </c:if>
+                    <button class="btn" style="background-color: #5e3fd3; color: white;" data-toggle="modal" data-target="#ratingModal">Rate</button>
+                </p> 
 
                 <div class="action-icons">
                     <input type="checkbox" id="editToggle" style="display:none;">
@@ -318,8 +324,7 @@
                         <button type="submit" onclick="return confirm('Are you sure you want to delete this conversation?');">🗑️</button>
                     </form>
                 </div>
-                </br>
-                </br>
+                <br><br>
                 <div class="edit-form" style="display: none;">
                     <form action="manageConversation?action=edit-conversation" method="post">
                         <input type="hidden" name="conversationId" value="${currentConversationId}">
@@ -331,11 +336,71 @@
                 </div>
             </div>
         </div>
+
+        <!-- Rating Modal -->
+            <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ratingModalLabel">Feedback about  ${currentChatRecipient.username}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="manageConversation?action=rate-recipient" method="post">
+                                <input type="hidden" name="recipientUsername" value="${sessionScope.currentChatRecipient.username}">
+                                <input type="hidden" name="currentUser" value="${user.username}">
+                                <input type="hidden" name="conversationId" value="${currentConversationId}">
+                                <div class="mb-3">
+                                    <label for="courseId" class="form-label">Select Course:</label>
+                                    <select name="courseId" id="courseId" class="form-select" required>
+                                        <option value="">--Choose course--</option>
+                                        <c:forEach items ="${listUser4}" var = "u">
+                                            <c:if test = "${u.username == currentChatRecipient.username}">
+                                                <c:forEach items ="${listParticipate4}" var = "p">
+                                                    <c:if test = "${p.username == u.username}">
+                                                        <c:forEach items ="${listCourse4}" var = "c">
+                                                            <c:if test = "${c.courseId == p.courseId}">
+                                                                <option value = "${c.courseId}">${c.courseName}</option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rating" class="form-label">Select Rating:</label>
+                                    <select name="rating" id="rating" class="form-select" required>
+                                        <option value="">--Choose a rating--</option>
+                                        <option value="1">1 Star</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="5">5 Stars</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comments" class="form-label">Comments:</label>
+                                    <textarea name="comments" id="comments" class="form-control" rows="3"></textarea>
+                                </div>
+                                <button type="submit" style="background-color: #5e3fd3; color: white;" class="btn btn-primary">Submit Rating</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Include Bootstrap CSS and JS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script>
-            document.getElementById('editToggle').addEventListener('change', function () {
-                const editForm = document.querySelector('.edit-form');
-                editForm.style.display = this.checked ? 'block' : 'none';
-            });
+                            document.getElementById('editToggle').addEventListener('change', function () {
+                                const editForm = document.querySelector('.edit-form');
+                                editForm.style.display = this.checked ? 'block' : 'none';
+                            });
         </script>
         <script>
             function searchConversations() {
@@ -346,15 +411,15 @@
                 for (let i = 0; i < conversationItems.length; i++) {
                     const username = conversationItems[i].getAttribute('data-username').toLowerCase();
                     if (username.includes(filter)) {
-                        conversationItems[i].style.display = ''; 
+                        conversationItems[i].style.display = '';
                     } else {
-                        conversationItems[i].style.display = 'none'; 
+                        conversationItems[i].style.display = 'none';
                     }
                 }
             }
 
             function fetchLatestMessages() {
-                const conversationId = '${currentConversationId}'; 
+                const conversationId = '${currentConversationId}';
                 const recipientUsername = '${currentChatRecipient.username}';
 
                 const url = 'sendMessage?conversationId=' + conversationId + '&username=' + recipientUsername;

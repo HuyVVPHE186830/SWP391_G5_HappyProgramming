@@ -133,10 +133,10 @@ public class MentorPostDAO extends DBContext {
         }
     }
 
-    public List<User> getMenteeList(int courseId, int status) {
+    public List<User> getMenteeList(int courseId, int status, String mentorName) {
         CourseDAO daoC = new CourseDAO();
         UserDAO daoU = new UserDAO();
-        List<String> username = daoC.getMenteeByCourse(courseId, status);
+        List<String> username = daoC.getMenteeByCourse(courseId, status, mentorName);
         List<User> listMentee = new ArrayList<>();
         for (String string : username) {
             User user1 = daoU.getUserByUsernameM(string);
@@ -149,10 +149,10 @@ public class MentorPostDAO extends DBContext {
         return listMentee;
     }
     
-    public List<User> getUserList(int courseId, int status) {
+    public List<User> getUserList(int courseId, int status, String mentorName) {
         CourseDAO daoC = new CourseDAO();
         UserDAO daoU = new UserDAO();
-        List<String> username = daoC.getUserByCourse(courseId, status);
+        List<String> username = daoC.getUserByCourse(courseId, status, mentorName);
         List<User> listMentee = new ArrayList<>();
         for (String string : username) {
             User user1 = daoU.getUserByUsernameM(string);
@@ -205,7 +205,7 @@ public class MentorPostDAO extends DBContext {
 
     public static void main(String[] args) {
         MentorPostDAO dao = new MentorPostDAO();
-        List<User> string = dao.getUserList(1, 1);
+        List<User> string = dao.getMenteeList(1, 1, "huyenmentor");
         for (User string1 : string) {
             System.out.println(string1.toString());
         }

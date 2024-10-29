@@ -60,4 +60,9 @@ public class Report {
     public void setReportContent(String reportContent) {
         this.reportContent = reportContent;
     }
+
+    @Override
+    public String toString() {
+        return "Report{" + "comment=" + comment.getCommentId() + ", user=" + user.getUsername() + ", reportTime=" + reportTime + ", reportType=" + reportType + ", reportContent=" + reportContent + '}';
+    }
 }

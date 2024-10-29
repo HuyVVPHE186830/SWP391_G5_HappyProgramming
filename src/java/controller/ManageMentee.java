@@ -108,22 +108,4 @@ public class ManageMentee extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    public static void main(String[] args) {
-        CourseDAO daoC = new CourseDAO();
-        UserDAO daoU = new UserDAO();
-        List<String> menteeUsername = daoC.getMenteeByCourse(1, 1);
-        List<User> listU = new ArrayList<User>();
-        for (String string : menteeUsername) {
-            User user = daoU.getUserByUsernameM(string);
-            if (user != null) {
-                listU.add(user);
-            } else {
-                System.out.println("User not found for username: " + string);
-            }
-        }
-        for (User user : listU) {
-            System.out.println(user.toString());
-        }
-    }
 }

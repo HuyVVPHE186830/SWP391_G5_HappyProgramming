@@ -6,7 +6,9 @@
 package controller;
 
 import dal.ConversationDAO;
+import dal.CourseDAO;
 import dal.MessageDAO;
+import dal.RatingDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.util.List;
+import model.Course;
 
 /**
  *
@@ -24,7 +28,9 @@ import java.io.File;
 public class ManageConversation extends HttpServlet {
 
     ConversationDAO conversationDAO = new ConversationDAO();
+    CourseDAO courseDAO = new CourseDAO();
     MessageDAO messageDAO = new MessageDAO();
+    RatingDAO rateDao = new RatingDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,6 +53,9 @@ public class ManageConversation extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String RatedUser = request.getParameter("recipientUsername");
+        List<Course> listCourse4 = courseDAO.getAll();
+        request.getSession().setAttribute("listCourse4", listCourse4);
     }
 
     /**
@@ -80,6 +89,12 @@ public class ManageConversation extends HttpServlet {
                 break;
             case "edit-message":
                 editMessage(request);
+                break;
+            case "rate-recipient":
+                rateRecipient(request);
+                break;
+            case "rate-recipient2":
+                rateRecipient2(request, response);
                 break;
 
             default:
@@ -137,6 +152,36 @@ public class ManageConversation extends HttpServlet {
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void rateRecipient(HttpServletRequest request) {
+        String RatedUser = request.getParameter("recipientUsername");
+        String CurrentUser = request.getParameter("currentUser");
+        int Star = Integer.parseInt(request.getParameter("rating"));
+        int CourseID = Integer.parseInt(request.getParameter("courseId"));
+
+        String RatedContent = request.getParameter("comments");
+
+        rateDao.addFeedback(CurrentUser, RatedUser, Star, CourseID, RatedContent);
+
+    }
+
+    private void rateRecipient2(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String RatedUser = request.getParameter("recipientUsername");
+        String CurrentUser = request.getParameter("currentUser");
+        int Star = Integer.parseInt(request.getParameter("rating"));
+        int CourseID = Integer.parseInt(request.getParameter("courseId"));
+        String RatedContent = request.getParameter("comments");
+
+        // Tạo một chuỗi để hiển thị
+        String olalla = "Test: " + CurrentUser + ", " + RatedUser + ", " + Star + ", " + CourseID + ", " + RatedContent;
+        System.out.println(olalla);
+
+        // Thiết lập thuộc tính để chuyển đến JSP
+        request.setAttribute("olalla", olalla);
+
+        // Chuyển hướng đến một trang JSP để hiển thị kết quả
+        request.getRequestDispatcher("result.jsp").forward(request, response);
     }
 
 }

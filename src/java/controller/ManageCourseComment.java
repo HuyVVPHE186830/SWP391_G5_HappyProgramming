@@ -79,6 +79,7 @@ public class ManageCourseComment extends HttpServlet {
         String courseIdString = request.getParameter("courseId");
         int courseId = Integer.parseInt(courseIdString);
         String username = request.getParameter("username");
+        String mentorName = request.getParameter("mentorName");
         String commentContent = request.getParameter("commentContent");
         UserDAO daoU = new UserDAO();
 
@@ -121,7 +122,7 @@ public class ManageCourseComment extends HttpServlet {
                 response.sendRedirect("error.jsp");
             }
         } else {
-            response.sendRedirect("manageCourse?courseId=" + courseId);
+            response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
         }
     }
 
