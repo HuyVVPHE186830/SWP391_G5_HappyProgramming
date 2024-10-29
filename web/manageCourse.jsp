@@ -137,9 +137,9 @@
 
             });
 
-            function confirmDelete(postId, courseId) {
+            function confirmDelete(postId, courseId, mentorName) {
                 if (confirm("Do you want to delete this post?")) {
-                    window.location.href = "deleteMentorPost?postId=" + postId + "&courseId=" + courseId;
+                    window.location.href = "deleteMentorPost?postId=" + postId + "&courseId=" + courseId + "&mentorName=" + mentorName;
                 }
             }
 
@@ -204,16 +204,16 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <strong><h3 class="modal-title">${post.postTitle}</h3></strong>
-                                            <c:if test="${user.username == mentorName}">
-                                            <div class="dropdown">
-                                                <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editPostModal_${post.postId}">Edit</a>
-                                                    <a href="javascript:void(0);" class="dropdown-item delete" onclick="confirmDelete('${post.postId}', '${course.courseId}')">Delete</a>
-                                                </ul>
-                                            </div>
+                                                <c:if test="${user.username == mentorName}">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editPostModal_${post.postId}">Edit</a>
+                                                        <a href="javascript:void(0);" class="dropdown-item delete" onclick="confirmDelete('${post.postId}', '${course.courseId}', '${mentorName}')">Delete</a>
+                                                    </ul>
+                                                </div>
                                             </c:if>
                                         </div>
                                         <div class="modal-body">
@@ -230,6 +230,18 @@
                                                 <p><strong>Deadline:</strong> 
                                                     <fmt:formatDate value="${post.deadline}" pattern="dd/MM/yyyy, HH:mm" />
                                                 </p>
+                                                <c:choose>
+                                                    <c:when test="${user.username == mentorName}">
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewSubmit_${post.postId}">
+                                                            View Submit
+                                                        </button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submitFormModal_${post.postId}">
+                                                            Submit
+                                                        </button>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:if>
                                             <hr class="mt-3 mb-2">
                                             <div id="commentForm" class="add-comment mt-3" style="margin-bottom: 20px">
@@ -269,6 +281,75 @@
                                                 </c:if>
                                             </div>
 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="viewSubmit_${post.postId}" tabindex="-1" aria-labelledby="viewSubmit_${post.postId}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="viewSubmitModalLabel_${post.postId}">Submission</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avatar</th>
+                                                        <th>Name</th>
+                                                        <th>Email</th>
+                                                        <th>Date of Birth</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <c:forEach var="mentee" items="${listMentee}">
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
+                                                                </td>
+                                                                <td>${mentee.lastName} ${user.firstName}</td>
+                                                                <td>${mentee.mail}</td> <!-- Thêm Email -->
+                                                                <td>${mentee.dob}</td> <!-- Thêm Ngày sinh -->
+                                                            </tr>
+                                                        </c:forEach>
+                                                    <c:if test="${empty listMentee}">
+                                                        <tr>
+                                                            <td colspan="5" class="text-center">No mentee found.</td>
+                                                        </tr>
+                                                    </c:if>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="submitFormModal_${post.postId}" tabindex="-1" aria-labelledby="submitFormModalLabel_${post.postId}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="submitFormModalLabel_${post.postId}">Submit</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="submitAdditionalForm_${post.postId}" action="Submit" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="postId" value="${post.postId}">
+                                                <input type="hidden" name="deadline" value="${post.deadline}">
+                                                <input type="hidden" name="courseId" value="${course.courseId}">
+                                                <input type="hidden" name="username" value="${user.username}">
+                                                <input type="hidden" name="mentorName" value="${mentorName}">
+                                                <div class="form-group">
+                                                    <label for="additionalInfo">Additional Information</label>
+                                                    <input type="file" class="form-control" id="additionalInfo_${post.postId}" name="file"required></input>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
+                                                        <i class="fas fa-arrow-left"></i>
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -347,7 +428,6 @@
                                 New Post
                             </button>
                         </c:if>
-                            <p>${user.username}</p>
                     </div>
                 </div>
             </div>
@@ -395,7 +475,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="modal fade" id="memberListModal" tabindex="-1" aria-labelledby="memberListModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> <!-- Giới hạn chiều rộng tối đa -->
                     <div class="modal-content">
@@ -411,10 +490,10 @@
                                         <th>Avatar</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <c:if test="${user.username == mentorName}">
-                                        <th>Date of Birth</th>
-                                        <th>Action</th> <!-- Nút Ban -->
-                                        </c:if>
+                                            <c:if test="${user.username == mentorName}">
+                                            <th>Date of Birth</th>
+                                            <th>Action</th> <!-- Nút Ban -->
+                                            </c:if>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -427,14 +506,14 @@
                                                 <td>${user.lastName} ${user.firstName}</td>
                                                 <td>${user.mail}</td>
                                                 <c:if test="${user.username == mentorName}">
-                                                <td>${user.dob}</td>
-                                                <td>
-                                                    <form action="manageMentee" method="post">
-                                                        <input type="hidden" name="courseId" value="${course.courseId}">
-                                                        <input type="hidden" name="username" value="${user.username}">
-                                                        <button type="submit" class="btn btn-danger btn-sm">Ban</button>
-                                                    </form>
-                                                </td>
+                                                    <td>${user.dob}</td>
+                                                    <td>
+                                                        <form action="manageMentee" method="post">
+                                                            <input type="hidden" name="courseId" value="${course.courseId}">
+                                                            <input type="hidden" name="username" value="${user.username}">
+                                                            <button type="submit" class="btn btn-danger btn-sm">Ban</button>
+                                                        </form>
+                                                    </td>
                                                 </c:if>
                                             </tr>
                                         </c:forEach>
