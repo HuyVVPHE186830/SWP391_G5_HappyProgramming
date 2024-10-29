@@ -91,20 +91,17 @@
     </head>
     <body>
         <%
-            User user = (User) session.getAttribute("user");
-            if (user == null) {
-               response.sendRedirect("login.jsp");
-               return;
-            } else {
                 Course course = (Course) session.getAttribute("course");
                 int member = (int) session.getAttribute("member");
                 int rmember = (int) session.getAttribute("rmember");
+                String mentorName = (String) session.getAttribute("mentorName");
                 List<User> listMentee = (List<User>) session.getAttribute("listMentee");
                 List<User> listRequest = (List<User>) session.getAttribute("listRequest");
-            }
         %>
-
+        <c:set var="activePostId" value="${param.postId}" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('addType').addEventListener('change', function () {
@@ -145,7 +142,30 @@
                     window.location.href = "deleteMentorPost?postId=" + postId + "&courseId=" + courseId;
                 }
             }
+
+            $(document).ready(function () {
+                $('[id^=ajaxCommentForm]').on('submit', function (event) {
+                    event.preventDefault();
+                    var formData = $(this).serialize();
+                    var form = $(this);
+                    var commentsSection = form.closest('.add-comment').siblings('.comments-section');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'manageCourseComment',
+                        data: formData,
+                        success: function (response) {
+                            commentsSection.prepend(response);
+                            commentsSection.find('p:contains("No comment yet")').remove();
+                            form.find('input[name="commentContent"]').val('');
+                        },
+                        error: function () {
+                            alert('Error.');
+                        }
+                    });
+                });
+            });
         </script>
+        <c:set var="user" value="${sessionScope.user}"/>
         <jsp:include page="header.jsp"/>
         <div class="container mt-5">
             <div class="course-banner text-center">
@@ -180,10 +200,11 @@
                                 </c:choose>
                             </div>
                             <div class="modal fade" id="postDetailModal_${post.postId}" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <strong><h3 class="modal-title">${post.postTitle}</h3></strong>
+                                            <c:if test="${user.username == mentorName}">
                                             <div class="dropdown">
                                                 <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v"></i>
@@ -193,6 +214,7 @@
                                                     <a href="javascript:void(0);" class="dropdown-item delete" onclick="confirmDelete('${post.postId}', '${course.courseId}')">Delete</a>
                                                 </ul>
                                             </div>
+                                            </c:if>
                                         </div>
                                         <div class="modal-body">
                                             <p>${post.postContent}</p>
@@ -209,26 +231,44 @@
                                                     <fmt:formatDate value="${post.deadline}" pattern="dd/MM/yyyy, HH:mm" />
                                                 </p>
                                             </c:if>
-                                            <c:if test="${not empty sessionScope.postComments[post.postId]}">
-                                                <div class="comments-section">
-                                                    <h5>Comments</h5>
+                                            <hr class="mt-3 mb-2">
+                                            <div id="commentForm" class="add-comment mt-3" style="margin-bottom: 20px">
+                                                <form id="ajaxCommentForm${post.postId}">
+                                                    <input type="hidden" name="postId" value="${post.postId}">
+                                                    <input type="hidden" name="username" value="${user.username}">
+                                                    <input type="hidden" name="courseId" value="${course.courseId}">
+                                                    <div class="input-group">
+                                                        <input style="margin-right: 10px;" type="text" name="commentContent" class="form-control" placeholder="Add a comment..." required>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fas fa-paper-plane"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <div id="commentsSection${post.postId}" class="comments-section" style="max-height: 250px; overflow-y: auto;">
+                                                <c:if test="${not empty sessionScope.postComments[post.postId]}">
                                                     <c:forEach var="comment" items="${sessionScope.postComments[post.postId]}">
-                                                        <div class="comment">
-                                                            <p><strong>${comment.commentedBy}</strong>: ${comment.commentContent}</p>
-                                                            <c:if test="${not empty comment.replies}">
-                                                                <div class="replies">
-                                                                    <c:forEach var="reply" items="${comment.replies}">
-                                                                        <p><strong>${reply.commentedBy}</strong>: ${reply.commentContent}</p>
-                                                                    </c:forEach>
+                                                        <c:set var="commentUser" value="${sessionScope.userMap[comment.commentedBy]}" />
+                                                        <div class="comment d-flex align-items-start mb-3" style="margin-bottom: 5px !important;">
+                                                            <img src="data:image/jpeg;base64,${commentUser.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
+                                                            <div class="comment-body" style="background-color: #f1f1f1; margin-left:10px; padding: 10px; border-radius: 5px;">
+                                                                <div class="comment-author-info d-flex justify-content-between align-items-center">
+                                                                    <p class="comment-author fw-bold mb-1" style="font-weight: bold; margin-bottom: 0;">${commentUser.lastName} ${commentUser.firstName}</p>
                                                                 </div>
-                                                            </c:if>
+                                                                <p class="comment-text" style="margin-bottom: 0">${comment.commentContent}</p>
+                                                            </div>
                                                         </div>
+                                                        <p style="font-size: 0.8em; color: gray; margin: 0 50px 10px;">
+                                                            <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" />
+                                                        </p>
                                                     </c:forEach>
-                                                </div>
-                                            </c:if>
-                                            <c:if test="${empty sessionScope.postComments[post.postId]}">
-                                                <p>No comment yet</p>
-                                            </c:if>      
+                                                </c:if>
+                                                <c:if test="${empty sessionScope.postComments[post.postId]}">
+                                                    <p>No comment yet</p>
+                                                </c:if>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -293,17 +333,21 @@
                                 <i class="fas fa-users icon"></i>&nbsp; 
                                 <strong>${member}</strong>
                             </a>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
-                                <i class="fas fa-bell icon"></i>
-                                <strong>${rmember}</strong>
-                            </a>
+                            <c:if test="${user.username == mentorName}">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
+                                    <i class="fas fa-bell icon"></i>
+                                    <strong>${rmember}</strong>
+                                </a>
+                            </c:if>
 
                         </div>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
-                            <i class="fas fa-plus"></i>
-                            New Post
-                        </button>
-
+                        <c:if test="${user.username == mentorName}">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                                <i class="fas fa-plus"></i>
+                                New Post
+                            </button>
+                        </c:if>
+                            <p>${user.username}</p>
                     </div>
                 </div>
             </div>
@@ -318,6 +362,7 @@
                         <div class="modal-body">
                             <form id="mentorPostForm" action="addMentorPost" method="POST">
                                 <input type="hidden" name="courseId" value="${course.courseId}">
+                                <input type="hidden" name="mentorName" value="${mentorName}">
                                 <input type="hidden" name="username" value="${user.username}">
                                 <div class="form-group">
                                     <label for="postTitle">Title</label>
@@ -366,8 +411,10 @@
                                         <th>Avatar</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <c:if test="${user.username == mentorName}">
                                         <th>Date of Birth</th>
                                         <th>Action</th> <!-- Nút Ban -->
+                                        </c:if>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -379,6 +426,7 @@
                                                 </td>
                                                 <td>${user.lastName} ${user.firstName}</td>
                                                 <td>${user.mail}</td>
+                                                <c:if test="${user.username == mentorName}">
                                                 <td>${user.dob}</td>
                                                 <td>
                                                     <form action="manageMentee" method="post">
@@ -387,6 +435,7 @@
                                                         <button type="submit" class="btn btn-danger btn-sm">Ban</button>
                                                     </form>
                                                 </td>
+                                                </c:if>
                                             </tr>
                                         </c:forEach>
                                     </c:if>

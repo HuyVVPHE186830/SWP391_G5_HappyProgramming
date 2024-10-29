@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import model.Course;
 
-public class AddCourse extends HttpServlet {
+public class Addcourse extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

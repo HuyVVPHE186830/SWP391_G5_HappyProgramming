@@ -181,7 +181,10 @@
                 </div>
                 <a href="allCourse" class="more-course-button">View All Courses</a>
             </div>
-            
+
+            <!-- CHAT -->
+            <jsp:include page="chat.jsp"/>
+
             <!-- FOOTER -->
             <jsp:include page="footer.jsp"/>
     </body>

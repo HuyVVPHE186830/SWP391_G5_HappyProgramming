@@ -201,7 +201,7 @@
         <div class="comment-section" id="commentSection">
             <%
                 List<BlogComment> comments = (List<BlogComment>) request.getAttribute("comments");
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy, HH:mm");
                 if (comments != null && !comments.isEmpty()) {
                     for (BlogComment comment : comments) {
                         User commenter = comment.getUser(); // Assuming each comment has a User object linked

@@ -98,6 +98,9 @@
 
             <!-- SPLIT -->
             <div style="height: 100px; background-color: #edf2fa"></div>
+            
+            <!-- CHAT -->
+            <jsp:include page="chat.jsp"/>
 
             <!-- FOOTER -->
             <jsp:include page="footer.jsp"/>

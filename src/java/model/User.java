@@ -169,7 +169,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", mail=" + mail + ", createdDate=" + createdDate + ", avatarPath=" + avatarPath + ", cvPath=" + cvPath + ", activeStatus=" + activeStatus + ", isVerified=" + isVerified + ", verificationCode=" + verificationCode + ", roleId=" + roleId + '}';
+        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", mail=" + mail + ", createdDate=" + createdDate + ", activeStatus=" + activeStatus + ", isVerified=" + isVerified + ", verificationCode=" + verificationCode + ", roleId=" + roleId + '}';
     }
     
 }

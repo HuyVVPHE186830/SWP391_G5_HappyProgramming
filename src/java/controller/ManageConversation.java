@@ -159,7 +159,7 @@ public class ManageConversation extends HttpServlet {
 
         String RatedContent = request.getParameter("comments");
 
-        rateDao.addFeedback(RatedUser, CurrentUser, Star, RatedContent);
+        rateDao.addFeedback(RatedUser, CurrentUser, Star, RatedContent, CourseID);
 
     }
 

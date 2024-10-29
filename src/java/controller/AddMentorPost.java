@@ -85,6 +85,7 @@ public class AddMentorPost extends HttpServlet {
         
         String deadlineStr = request.getParameter("deadline");
         String courseIdStr = request.getParameter("courseId");
+        String mentorName = request.getParameter("mentorName");
         int courseId = Integer.parseInt(courseIdStr);
         String createdBy = request.getParameter("username");
 
@@ -112,7 +113,7 @@ public class AddMentorPost extends HttpServlet {
         mentorPost.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Đặt createdAt là thời gian hiện tại
         mentorPostDAO.addMentorPost(mentorPost);
 
-        response.sendRedirect("manageCourse?courseId=" + courseId);
+        response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }
 
     /**

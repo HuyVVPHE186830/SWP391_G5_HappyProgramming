@@ -372,6 +372,9 @@
             </div>
         </section>
 
+        <!-- CHAT -->
+        <jsp:include page="chat.jsp"/>
+
         <jsp:include page="footer.jsp"/>
 
         <script>
