@@ -1,8 +1,9 @@
-
 package controller;
 
 import dal.ConversationDAO;
+import dal.CourseDAO;
 import dal.MessageDAO;
+import dal.ParticipateDAO;
 import dal.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,19 +16,30 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.sql.SQLException;
 import model.Conversation;
+import model.Course;
 import model.Message;
+import model.Participate;
 import model.User;
 
 public class SendMessage extends HttpServlet {
 
     private MessageDAO messageDAO = new MessageDAO();
+    UserDAO uDAO = new  UserDAO();
+    
     private ConversationDAO conversationDAO = new ConversationDAO();
+    CourseDAO courseDAO = new CourseDAO();
+    ParticipateDAO pDAO = new ParticipateDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String conversationIdParam = request.getParameter("conversationId");
-
+        List<Course> listCourse4 = courseDAO.getAll();
+        List<User> listUser4= uDAO.getAllUserByRoleId(2);
+        List<Participate> listParticipate4= pDAO.getAll();
+        request.getSession().setAttribute("listUser4", listUser4);
+        request.getSession().setAttribute("listParticipate4", listParticipate4);
+        request.getSession().setAttribute("listCourse4", listCourse4);
         User currentUser = (User) session.getAttribute("user");
 
         if (currentUser == null || (username == null && conversationIdParam == null)) {

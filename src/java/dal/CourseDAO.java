@@ -23,15 +23,15 @@ public class CourseDAO extends DBContext {
 //        in.add(1);
 //        in.add(3);
 //        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
+        List<Course> list = dao.getAll();
         List<Course> otherlist = dao.getOtherCourses(list);
-        for (Course course : otherlist) {
+        for (Course course : list) {
             System.out.println(course);
         }
-        List<String> string = dao.getMenteeByCourse(1, 1);
-        for (String string1 : string) {
-            System.out.println(string1);
-        }
+//        List<String> string = dao.getMenteeByCourse(1, 1);
+//        for (String string1 : string) {
+//            System.out.println(string1);
+//        }
 //        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
 //        System.out.println(totalRecord);
     }
