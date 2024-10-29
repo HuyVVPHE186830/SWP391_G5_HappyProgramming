@@ -72,7 +72,7 @@ public class CheckReport extends HttpServlet {
         ReportDAO reportDAO = new ReportDAO();
         boolean f = reportDAO.deleteReport(commentId, user);
         if (f) {
-            request.getSession().setAttribute("succMsg", "Report rejected!");
+            request.getSession().setAttribute("rejectMsg", "Report rejected!");
         } else {
             request.getSession().setAttribute("failedMsg", "Something wrong on server...");
         }

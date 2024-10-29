@@ -138,8 +138,14 @@
                             </div>
                             <c:remove var="succMsg" scope="session"/>
                         </c:if>
-                        <c:if test="${not empty failedMsg}">
+                        <c:if test="${not empty rejectMsg}">
                             <div style="margin-top: 20px" class="alert alert-danger" role="alert">
+                                ${rejectMsg}
+                            </div>
+                            <c:remove var="rejectMsg" scope="session"/>
+                        </c:if>
+                        <c:if test="${not empty failedMsg}">
+                            <div style="margin-top: 20px" class="alert alert-warning" role="alert">
                                 ${failedMsg}
                             </div>
                             <c:remove var="failedMsg" scope="session"/>
@@ -162,7 +168,7 @@
                                                 <td class="text_page" style="font-weight: 500; max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${t.comment.commentContent}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.user.username}</td>
                                                 <td class="text_page" style="font-weight: 500">
-                                                    <fmt:formatDate value="${t.reportTime}" pattern="dd-MM-yyyy HH:mm"/>
+                                                    <fmt:formatDate value="${t.reportTime}" pattern="dd-MM-yyyy, HH:mm"/>
                                                 </td>
                                                 <td class="text_page" style="font-weight: 500">${t.reportType.reportName}</td>
                                                 <td class="text_page" style="font-weight: 500; max-width: 200px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${t.reportContent}</td>
