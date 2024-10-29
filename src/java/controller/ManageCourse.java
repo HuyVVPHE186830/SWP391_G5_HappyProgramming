@@ -108,6 +108,7 @@ public class ManageCourse extends HttpServlet {
             userMap.put(u.getUsername(), u);
         }
         session.setAttribute("userMap", userMap);
+        session.setAttribute("user", user);
         session.setAttribute("member", member);
         session.setAttribute("rmember", rmember);
         session.setAttribute("course", course);
@@ -116,6 +117,7 @@ public class ManageCourse extends HttpServlet {
         session.setAttribute("listRequest", listRequest);
         session.setAttribute("listUser", listUser);
         session.setAttribute("postComments", postComments);
+        session.setAttribute("mentorName", mentorName);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 

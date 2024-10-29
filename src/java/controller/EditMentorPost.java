@@ -80,6 +80,7 @@ public class EditMentorPost extends HttpServlet {
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
         String courseIdStr = request.getParameter("courseId");
         int courseId = Integer.parseInt(courseIdStr);
+        String mentorName = request.getParameter("mentorName");
         String postIdStr = request.getParameter("postId");
         int postId = Integer.parseInt(postIdStr);
         String title = request.getParameter("editTitle");
@@ -99,7 +100,7 @@ public class EditMentorPost extends HttpServlet {
         Timestamp time = new Timestamp(System.currentTimeMillis());
         MentorPost mp = new MentorPost(title, content, postTypeId, deadline, time);
         mentorPostDAO.updateMentorPost(mp, postId);
-        response.sendRedirect("manageCourse?courseId=" + courseId);
+        response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }
 
     /**
