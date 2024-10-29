@@ -13,6 +13,7 @@ import java.util.List;
 import model.MentorPost;
 import java.sql.Timestamp;
 import model.MentorPostComment;
+import model.Submission;
 import model.User;
 
 /**
@@ -200,6 +201,22 @@ public class MentorPostDAO extends DBContext {
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error inserting comment: " + ex.getMessage());
+        }
+    }
+    
+    public void addSubmission(Submission submission) {
+        String sql = "INSERT INTO Submissions (postId, submittedBy, submittedAt, submissionContent, isLate, status) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, submission.getPostId());
+            st.setString(2, submission.getSubmittedBy());
+            st.setTimestamp(3, submission.getSubmittedAt());
+            st.setString(4, submission.getSubmissionContent());
+            st.setBoolean(5, submission.isLate());
+            st.setBoolean(6, submission.getStatus());
+            st.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error adding submission: " + ex.getMessage());
         }
     }
 
