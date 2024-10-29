@@ -1,9 +1,3 @@
-<%-- 
-    Document   : viewmentor
-    Created on : Oct 8, 2024, 9:43:29 PM
-    Author     : ThuanNV
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -78,11 +72,46 @@
             .link-2 {
                 color: #000;
                 font-style: italic;
-                font-weight: 400
+                font-weight: 400;
             }
 
             .link-2:hover {
                 text-decoration: none;
+            }
+
+            .rating-container {
+                background-color: #f9f9f9; /* Light background */
+                border: 1px solid #ccc; /* Gray border */
+                border-radius: 8px; /* Rounded corners */
+                padding: 10px; /* Inner spacing */
+                margin-bottom: 10px; /* Space below the rating */
+                max-width: 250px; /* Maximum width */
+                text-align: center; /* Centered text */
+                text-decoration: none; /* Remove underline for links */
+                color: inherit; /* Inherit color */
+            }
+         
+
+            .rating-container:hover {
+                background-color: #e0e0e0; /* Change background on hover */
+            }
+
+            .star {
+                color: gold; /* Yellow star color */
+                font-size: 20px; /* Star size */
+                margin-left: 5px; /* Space between number and star */
+            }
+
+            .rating-display {
+                display: flex; /* Flex layout */
+                justify-content: center; /* Center items horizontally */
+                align-items: center; /* Center items vertically */
+            }
+
+            /* Style for links to prevent underline and color change */
+            a {
+                text-decoration: none; /* No underline */
+                color: inherit; /* Inherit color from parent */
             }
         </style>
     </head>
@@ -97,48 +126,31 @@
                 <c:set var="cM" value="${requestScope.courseOfMentor}"/>
                 <c:set var="cT" value="${requestScope.thisCate}"/>
 
-
-
-                <h6><a href="home" class="link">Home</a> <span>></span> <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> <a href="viewCourseMentor?courseId=${cM.courseId}" class="link">List Mentors of ${cM.courseName}</a> <span>></span> Mentor ${mD.lastName} ${mD.firstName}</h6>
+                <h6>
+                    <a href="home" class="link">Home</a> <span>></span> 
+                    <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> 
+                    <a href="viewCourseMentor?courseId=${cM.courseId}" class="link">List Mentors of ${cM.courseName}</a> <span>></span> 
+                    Mentor ${mD.lastName} ${mD.firstName}
+                </h6>
                 <div class="content-middle">
                     <div class="content-left">
                         <img class="mentor-image-icon1" alt="" src="data:image/jpeg;base64, ${mD.avatarPath}">
                     </div>
                     <div class="content-right">
                         <h2>${mD.lastName} ${mD.firstName}</h2>
-                        <h3>Course: ${cM.courseName} <a href="allCourse?search=category&categoryId=${cT.categoryId}" class="link-2">(${cT.categoryName})</a></h3>
-                        <style>
-                            .rating-container {
-                                background-color: #f9f9f9; /* Nền màu sáng */
-                                border: 1px solid #ccc; /* Viền màu xám */
-                                border-radius: 8px; /* Bo viền */
-                                padding: 10px; /* Khoảng cách bên trong */
-                                margin-bottom: 10px; /* Khoảng cách giữa các đánh giá */
-                                max-width: 250px; /* Giới hạn chiều rộng */
-                                text-align: center; /* Căn giữa chữ */
-                            }
-
-                            .star {
-                                color: gold; /* Màu vàng cho sao */
-                                font-size: 20px; /* Kích thước sao */
-                                margin-left: 5px; /* Khoảng cách giữa số và sao */
-                            }
-
-                            .rating-display {
-                                display: flex; /* Sử dụng flexbox để căn hàng */
-                                justify-content: center; /* Căn giữa nội dung */
-                                align-items: center; /* Căn giữa theo chiều dọc */
-                            }
-                        </style>
+                        <h3>Course: ${cM.courseName} <a href="Rating" class="link-2">(${cT.categoryName})</a></h3>
 
                         <h3>Đánh giá của Mentor:</h3>
-                        <div class="rating-container">
-                            <div class="rating-display">
-                                <span>${requestScope.rateListByUsernameCID}</span> 
-                                <span>${requestScope.averageRating}</span> 
-                                <span class="star">★</span> 
+                        <a href="Rating"> <!-- Replace with the actual link -->
+                            <div class="rating-container">
+                                <div class="rating-display">
+                                    <span>${requestScope.rateListByUsernameCID}</span> 
+                                    <span class="avg">${requestScope.averageRating}</span> 
+                                    <span class="star">★</span> 
+                                </div>
                             </div>
-                        </div>
+                        </a>
+
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
                         <c:if test="${sessionScope.user.username != mD.username}">
