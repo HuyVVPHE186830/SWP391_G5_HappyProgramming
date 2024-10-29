@@ -5,8 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="CSS/bootstrap.min.css" rel="stylesheet">
-        <link href="CSS/home.css" rel="stylesheet">
+     
         <title>Cửa Hàng Trực Tuyến</title>
         <style>
             body {

@@ -7,6 +7,7 @@ package controller;
 
 import dal.CategoryDAO;
 import dal.CourseDAO;
+import dal.RatingDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Category;
 import model.Course;
+import model.Rating;
 import model.User;
 
 /**
@@ -66,26 +68,36 @@ public class ViewMentor extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDAO daoU = new UserDAO();
+        RatingDAO rateDAO = new RatingDAO();
         CourseDAO daoC = new CourseDAO();
         CategoryDAO daoCt = new CategoryDAO();
+
         String userId_str = request.getParameter("userId");
         if (request.getParameter("courseId") == null) {
 
         }
         String courseId_str = request.getParameter("courseId");
+        int courseID = Integer.parseInt(request.getParameter("courseId"));
+        float ratedToUser = Float.parseFloat(request.getParameter("userId"));
         try {
             int courseId = Integer.parseInt(courseId_str);
             int userId = Integer.parseInt(userId_str);
             Course course = daoC.getCourseByCourseId(courseId);
+
             User mentor = daoU.getUserById(userId);
             Category cate = daoCt.getCategoryByCourseId(courseId);
             List<User> othermentor = daoU.getAllMentorByCourseIdExceptOne(courseId, mentor.getUsername());
             List<Course> othercourse = daoC.getAllCoursesOfMentorExceptOne(courseId, mentor.getUsername());
+            List<Rating> rateList = rateDAO.getAll();
+            int rateListByUsernameCID = rateDAO.getByUsnIdAndCId(ratedToUser, courseID);
+            request.setAttribute("rateListByUsernameCID", rateListByUsernameCID);
+            request.setAttribute("rateList", rateList);
             request.setAttribute("otherCourseMentor", othercourse);
             request.setAttribute("mentorDetail", mentor);
             request.setAttribute("thisCate", cate);
             request.setAttribute("otherMentor", othermentor);
             request.setAttribute("courseOfMentor", course);
+
             request.getRequestDispatcher("viewmentor.jsp").forward(request, response);
         } catch (Exception e) {
         }

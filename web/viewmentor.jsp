@@ -96,6 +96,9 @@
                 <c:set var="mD" value="${requestScope.mentorDetail}"/>
                 <c:set var="cM" value="${requestScope.courseOfMentor}"/>
                 <c:set var="cT" value="${requestScope.thisCate}"/>
+
+
+
                 <h6><a href="home" class="link">Home</a> <span>></span> <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> <a href="viewCourseMentor?courseId=${cM.courseId}" class="link">List Mentors of ${cM.courseName}</a> <span>></span> Mentor ${mD.lastName} ${mD.firstName}</h6>
                 <div class="content-middle">
                     <div class="content-left">
@@ -104,6 +107,38 @@
                     <div class="content-right">
                         <h2>${mD.lastName} ${mD.firstName}</h2>
                         <h3>Course: ${cM.courseName} <a href="allCourse?search=category&categoryId=${cT.categoryId}" class="link-2">(${cT.categoryName})</a></h3>
+                        <style>
+                            .rating-container {
+                                background-color: #f9f9f9; /* Nền màu sáng */
+                                border: 1px solid #ccc; /* Viền màu xám */
+                                border-radius: 8px; /* Bo viền */
+                                padding: 10px; /* Khoảng cách bên trong */
+                                margin-bottom: 10px; /* Khoảng cách giữa các đánh giá */
+                                max-width: 250px; /* Giới hạn chiều rộng */
+                                text-align: center; /* Căn giữa chữ */
+                            }
+
+                            .star {
+                                color: gold; /* Màu vàng cho sao */
+                                font-size: 20px; /* Kích thước sao */
+                                margin-left: 5px; /* Khoảng cách giữa số và sao */
+                            }
+
+                            .rating-display {
+                                display: flex; /* Sử dụng flexbox để căn hàng */
+                                justify-content: center; /* Căn giữa nội dung */
+                                align-items: center; /* Căn giữa theo chiều dọc */
+                            }
+                        </style>
+
+                        <h3>Đánh giá của Mentor:</h3>
+                        <div class="rating-container">
+                            <div class="rating-display">
+                                <span>${requestScope.rateListByUsernameCID}</span> 
+                                <span>${requestScope.averageRating}</span> 
+                                <span class="star">★</span> 
+                            </div>
+                        </div>
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
                         <c:if test="${sessionScope.user.username != mD.username}">

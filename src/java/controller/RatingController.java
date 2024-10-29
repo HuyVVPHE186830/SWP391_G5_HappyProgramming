@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class RatingController extends HttpServlet {
    
-    RatingDAO rDAO = new RatingDAO();
+    RatingDAO rateDAO = new RatingDAO();
 
    
     @Override

@@ -10,14 +10,14 @@ package model;
  */
 public class Rating {
     private String ratedFromUser, ratedToUser;
-    private int noStar;
+    private float noStar;
     private int courseId;
     private String ratingComment;
 
     public Rating() {
     }
 
-    public Rating(String ratedFromUser, String ratedToUser, int noStar, int courseId, String ratingComment) {
+    public Rating(String ratedFromUser, String ratedToUser, float noStar, int courseId, String ratingComment) {
         this.ratedFromUser = ratedFromUser;
         this.ratedToUser = ratedToUser;
         this.noStar = noStar;
@@ -41,7 +41,7 @@ public class Rating {
         this.ratedToUser = ratedToUser;
     }
 
-    public int getNoStar() {
+    public float getNoStar() {
         return noStar;
     }
 
