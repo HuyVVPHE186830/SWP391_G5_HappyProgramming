@@ -93,6 +93,9 @@ public class ManageConversation extends HttpServlet {
             case "rate-recipient":
                 rateRecipient(request);
                 break;
+            case "rate-recipient2":
+                rateRecipient2(request, response);
+                break;
 
             default:
 
@@ -159,8 +162,26 @@ public class ManageConversation extends HttpServlet {
 
         String RatedContent = request.getParameter("comments");
 
-        rateDao.addFeedback(RatedUser, CurrentUser, Star, RatedContent, CourseID);
+        rateDao.addFeedback(CurrentUser, RatedUser, Star, CourseID, RatedContent);
 
+    }
+
+    private void rateRecipient2(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String RatedUser = request.getParameter("recipientUsername");
+        String CurrentUser = request.getParameter("currentUser");
+        int Star = Integer.parseInt(request.getParameter("rating"));
+        int CourseID = Integer.parseInt(request.getParameter("courseId"));
+        String RatedContent = request.getParameter("comments");
+
+        // Tạo một chuỗi để hiển thị
+        String olalla = "Test: " + CurrentUser + ", " + RatedUser + ", " + Star + ", " + CourseID + ", " + RatedContent;
+        System.out.println(olalla);
+
+        // Thiết lập thuộc tính để chuyển đến JSP
+        request.setAttribute("olalla", olalla);
+
+        // Chuyển hướng đến một trang JSP để hiển thị kết quả
+        request.getRequestDispatcher("result.jsp").forward(request, response);
     }
 
 }

@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public class RatingDAO extends DBContext {
 
-    public void addFeedback(String RatedUser, String CurrentUser, int Star, String RatedContent, int CourseID) {
+    public void addFeedback(String CurrentUser, String RatedUser, int Star, int CourseID, String RatedContent) {
 
         String sql = "INSERT INTO [dbo].[Rating]\n"
                 + "           ([ratedFromUser]\n"
@@ -37,6 +37,11 @@ public class RatingDAO extends DBContext {
             e.printStackTrace();
         }
 
+    }
+
+    public static void main(String[] args) {
+        RatingDAO dao = new RatingDAO();
+        dao.addFeedback("ducmentor", "anmentor", 4, 1, "non2");
     }
 
 }
