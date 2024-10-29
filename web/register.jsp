@@ -176,7 +176,7 @@
                 border-top-left-radius: 70px;
             }
             .signup-form-right h2 {
-                font-size: 2rem;
+                font-size: 1.6rem;
                 margin-bottom: 0px;
             }
             .signup-form-right p {
