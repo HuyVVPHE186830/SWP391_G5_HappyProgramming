@@ -152,10 +152,18 @@
                 <p class="author-info"><strong>By:</strong> <%= blog.getCreatedBy() %></p>
                 <p><%= blog.getContent() %></p>
 
-                <!-- Edit Button for Author Only -->
-                <c:if test="${sessionScope.user.getUsername() == blog.getCreatedBy()}">
-                    <a href="editBlog?id=<%= blog.getBlogId() %>" class="btn btn-warning edit-button">Edit</a>
-                </c:if>
+                <!-- Edit and Delete Buttons for Author Only -->
+                <div class="mb-3">
+                    <c:if test="${sessionScope.user.getUsername() == blog.getCreatedBy()}">
+                        <a href="editBlog?id=<%= blog.getBlogId() %>" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="deleteBlog?id=<%= blog.getBlogId() %>" class="btn btn-danger" 
+                           onclick="return confirm('Are you sure you want to delete this blog?');">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </c:if>
+                </div>
 
                 <h3>Images:</h3>
                 <div class="image-container">

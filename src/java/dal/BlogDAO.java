@@ -449,4 +449,43 @@ public class BlogDAO extends DBContext {
         return tagId;
     }
 
+    public void deleteBlog(int blogId) {
+        String deleteBlogSQL = "DELETE FROM Blogs WHERE blog_id = ?";
+        String deleteTagsSQL = "DELETE FROM blog_tags WHERE blog_id = ?";
+        String deleteImagesSQL = "DELETE FROM blog_images WHERE blog_id = ?";
+
+        try {
+            connection.setAutoCommit(false); // Start transaction
+
+            // Delete tags associated with the blog
+            PreparedStatement deleteTagsStmt = connection.prepareStatement(deleteTagsSQL);
+            deleteTagsStmt.setInt(1, blogId);
+            deleteTagsStmt.executeUpdate();
+
+            // Delete images associated with the blog
+            PreparedStatement deleteImagesStmt = connection.prepareStatement(deleteImagesSQL);
+            deleteImagesStmt.setInt(1, blogId);
+            deleteImagesStmt.executeUpdate();
+
+            // Delete the blog entry itself
+            PreparedStatement deleteBlogStmt = connection.prepareStatement(deleteBlogSQL);
+            deleteBlogStmt.setInt(1, blogId);
+            deleteBlogStmt.executeUpdate();
+
+            connection.commit(); // Commit transaction
+        } catch (SQLException ex) {
+            try {
+                connection.rollback(); // Rollback on error
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            System.out.println(ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Reset to default
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
