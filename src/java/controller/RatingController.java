@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dal.CourseDAO;
 import dal.RatingDAO;
 import dal.UserDAO;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import model.Course;
 import model.Rating;
 import model.User;
 
@@ -25,6 +27,7 @@ public class RatingController extends HttpServlet {
 
     RatingDAO rateDAO = new RatingDAO();
     UserDAO userDAO = new UserDAO();
+    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,8 +39,25 @@ public class RatingController extends HttpServlet {
         User userById = userDAO.getUserById(userID);
         float userRatedStar  = rateDAO.getAverageStar(userID);
         int rankStar = rateDAO.getRankMentor(userID);
+        List<User> listRatedFrom = userDAO.getAll();
         List<Integer> listDis = rateDAO.getDistinctNoStars();
+        List<Course> listCourseOfRated = rateDAO.getCourseOfRated(userID);
         List<Rating> listFeedBack = findRatingDoGet(request);
+        int turnStar = rateDAO.getTurnStarOverallByUserId(userID);
+        int turnStar1 = rateDAO.getTurnStar(1,userID);
+        int turnStar2 = rateDAO.getTurnStar(2,userID);
+        int turnStar3 = rateDAO.getTurnStar(3,userID);
+        int turnStar4 = rateDAO.getTurnStar(4,userID);
+        int turnStar5 = rateDAO.getTurnStar(5,userID);
+        session.setAttribute("turnStar", turnStar);
+        session.setAttribute("turnStar1", turnStar1);
+        session.setAttribute("turnStar2", turnStar2);
+        session.setAttribute("turnStar3", turnStar3);
+        session.setAttribute("turnStar4", turnStar4);
+        session.setAttribute("turnStar5", turnStar5);
+   
+        session.setAttribute("listRatedFrom", listRatedFrom);
+        session.setAttribute("listCourseOfRated", listCourseOfRated);
         session.setAttribute("rankStar", rankStar);
         session.setAttribute("userRatedStar", userRatedStar);
         session.setAttribute("listFeedBack", listFeedBack);
@@ -67,6 +87,12 @@ public class RatingController extends HttpServlet {
                 int ratedID = Integer.parseInt(request.getParameter("ratedId"));
                 listRate = rateDAO.getRateByUserId(ratedID);
                 request.setAttribute("urlPattern", requestURL + "?search=feedback&ratedId=" + ratedID);
+                break;
+            case "rate-by-course":
+                int courseID = Integer.parseInt(request.getParameter("courseid"));
+                int ratedID4 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByCourse(courseID,ratedID4);
+                request.setAttribute("urlPattern", requestURL + "?search=rate-by-course&ratedId="+ratedID4+"&courseid="+courseID);
                 break;
 
             default:

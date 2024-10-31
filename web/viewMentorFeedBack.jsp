@@ -5,6 +5,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
         <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
         <title>Product Reviews</title>
         <style>
@@ -153,6 +157,18 @@
                 font-size: 16px;
                 line-height: 1.5;
             }
+            .btn-transparent {
+                background-color: rgba(255, 255, 255, 0.2) !important; /* Nền trắng với opacity 20% */
+                color: white !important; /* Màu chữ */
+                border: 1px solid white !important; /* Đường viền */
+            }
+
+            .btn-transparent:hover {
+                background-color: rgba(255, 255, 255, 0.4); /* Tăng độ mờ khi hover */
+                color: black; /* Màu chữ khi hover */
+            }
+
+
         </style>
     </head>
     <body>
@@ -165,9 +181,53 @@
             <div class="seller-info">
                 <img class="avatar-large" src="data:image/jpeg;base64,${userById.avatarPath}" alt="Seller Avatar">
                 <div class="profile-details">
-                    <h3>${userById.username}'s FEEDBACK</h3>
-                    <p>RATING OVERALL: ${userRatedStar}</p>
+                    <h3>${userById.username}'s FEEDBACK 
+                    </h3>
+
+
+                    <p>RATING OVERALL: ${userRatedStar}★</p>
                     <p>TOP: ${rankStar}</p>
+                    <button type="button" class="btn btn-transparent" data-toggle="modal" data-target="#feedbackModal">
+                        Leave Feedback
+                    </button>
+
+                </div>
+            </div>
+            <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="feedbackModalLabel">Leave Your Feedback</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="submitFeedback" method="POST">
+                                <div class="form-group">
+                                    <label for="rating">Rating</label>
+                                    <select class="form-control" name="rating" required>
+                                        <option value="">Select a rating</option>
+                                        <option value="1">1 Star</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="5">5 Stars</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment">Comment</label>
+                                    <textarea class="form-control" name="comment" rows="3" required></textarea>
+                                </div>
+                                <input type="hidden" name="ratedId" value="${userById.id}">
+                                <input type="hidden" name="userN" value="${userById.username}">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -175,12 +235,27 @@
                 <div class="review-header" style="display: flex; align-items: center;">
                     <h2 style="margin-right: 20px;">Product Reviews</h2> <!-- Added margin for spacing -->
                     <div class="sort-by">
-                        <span>Sort By:</span>
-                        <select>
-                            <option value="latest">Latest</option>
-                            <option value="highest-rated">Highest Rated</option>
+                        <span>Choose course:</span>
+                        <select id="courseSelect" onchange="redirectToCourse(this)">
+                            <option value="">Select a course</option>
+                            <c:forEach items="${listCourseOfRated}" var="course">
+                                <option value="Rating?search=rate-by-course&ratedId=${userById.id}&courseid=${course.courseId}">
+                                    ${course.courseName}
+                                </option>
+                            </c:forEach>
                         </select>
                     </div>
+
+                    <script>
+                        function redirectToCourse(selectElement) {
+                            const selectedValue = selectElement.value;
+                            console.log("Redirecting to:", selectedValue); // In ra giá trị sẽ được chuyển hướng
+                            if (selectedValue) {
+                                window.location.href = selectedValue;
+                            }
+                        }
+                    </script>
+
 
                 </div>
                 <br/>
@@ -210,36 +285,51 @@
                 <div class="review-summary">
                     <a href="Rating?ratedId=${userById.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
-                        <span>All (10000k)</span>
+                        <span>All (${turnStar})</span>
                     </a>
                     <a href="Rating?search=search-by-noStar&noStar=1&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
-                        <span>1 Sao (75k)</span>
+                        <span>1 Star (${turnStar1})</span>
                     </a>
                     <a href="Rating?search=search-by-noStar&noStar=2&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
-                        <span>2 Sao (75k)</span>
+                        <span>2 Star (${turnStar2})</span>
                     </a>
                     <a href="Rating?search=search-by-noStar&noStar=3&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
-                        <span>3 Sao (75k)</span>
+                        <span>3 Star (${turnStar3})</span>
                     </a>
                     <a href="Rating?search=search-by-noStar&noStar=4&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
-                        <span>4 Sao (75k)</span>
+                        <span>4 Star (${turnStar4})</span>
                     </a>
                     <a href="Rating?search=search-by-noStar&noStar=5&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
-                        <span>5 Sao (75k)</span>
+                        <span>5 Star (${turnStar5})</span>
                     </a>
                 </div>
 
                 <div class="review-item">
-                    <c:forEach items = "${listFeedBack}" var = "f">
+                    <c:forEach items="${listFeedBack}" var="f">
+                        <c:set var="user" value="${null}" />
+                        <c:set var="cou" value="${null}" />
+                        <c:forEach items="${listCourseOfRated}" var="cr">
+                            <c:if test="${cr.courseId == f.courseId}">
+                                <c:set var="cou" value="${r}" />
+                            </c:if>
+                        </c:forEach>
+                        <c:forEach items="${listRatedFrom}" var="u">
+                            <c:if test="${u.username == f.ratedFromUser}">
+                                <c:set var="user" value="${u}" />
+                            </c:if>
+                        </c:forEach>
+
                         <div class="user-info">
-                            <img src="https://via.placeholder.com/40" alt="User Avatar">
-                            <span class="username">${f.ratedFromUser}</span>
+                            <img src="data:image/jpeg;base64,${user.avatarPath}" alt="User Avatar">
+                            <span class="username">${user.username} To ${r.courseName}</span>
                         </div>
+                        (${f.noStar}/5.0★)
+                        <br/>
                         <div class="review-content">
                             ${f.ratingComment}
                         </div>
