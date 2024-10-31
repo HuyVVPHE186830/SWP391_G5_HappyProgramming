@@ -399,7 +399,12 @@ public class BlogDAO extends DBContext {
 
             // Add new tags
             for (Tag tag : blog.getTags()) {
-                addTagToBlog(blog.getBlogId(), tag);
+                // Check if the tag already exists, if not, add it
+                int tagId = getTagIdByName(tag.getTagName());
+                if (tagId == 0) { // If tag doesn't exist, add it
+                    tagId = addNewTag(tag.getTagName());
+                }
+                addTagToBlog(blog.getBlogId(), new Tag(tagId, tag.getTagName()));
             }
 
             // Add new images
@@ -443,5 +448,5 @@ public class BlogDAO extends DBContext {
         }
         return tagId;
     }
-    
+
 }

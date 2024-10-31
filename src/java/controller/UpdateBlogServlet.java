@@ -40,8 +40,10 @@ public class UpdateBlogServlet extends HttpServlet {
 
         for (String tagName : tagNames) {
             int tagId = blogDAO.getTagIdByName(tagName);
-            Tag tag = new Tag(tagId, tagName);
-            tags.add(tag);
+            if (tagId == 0) { // If tag does not exist, add it to the database
+                tagId = blogDAO.addNewTag(tagName);
+            }
+            tags.add(new Tag(tagId, tagName)); // Add tag to list with either existing or new tag ID
         }
 
         Blog blog = blogDAO.getBlogById(blogId);
