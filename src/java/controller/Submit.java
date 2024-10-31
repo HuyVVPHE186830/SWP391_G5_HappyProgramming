@@ -88,13 +88,11 @@ public class Submit extends HttpServlet {
         Timestamp deadlineTimestamp = null;
 
         try {
-            // Chuyển đổi chuỗi ngày giờ thành Timestamp
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
             Date deadlineDate = dateFormat.parse(deadlineParam);
             deadlineTimestamp = new Timestamp(deadlineDate.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
-            // Xử lý lỗi nếu không thể phân tích deadline
         }
 
         boolean isLate = System.currentTimeMillis() > (deadlineTimestamp != null ? deadlineTimestamp.getTime() : 0);
