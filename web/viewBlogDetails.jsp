@@ -134,14 +134,14 @@
             </div>
             <c:remove var="succMsg" scope="session"/>
         </c:if>
-    
+
         <c:if test="${not empty failedMsg}">
             <div style="margin-top: 50px" class="alert alert-danger" role="alert">
                 ${failedMsg}
             </div>
-        <c:remove var="failedMsg" scope="session"/>
+            <c:remove var="failedMsg" scope="session"/>
         </c:if>
-            
+
         <div class="container mt-5"> <!-- Keep container for responsiveness -->
             <div class="blog-detail">
                 <%
@@ -152,10 +152,14 @@
                 <p class="author-info"><strong>By:</strong> <%= blog.getCreatedBy() %></p>
                 <p><%= blog.getContent() %></p>
 
+                <!-- Edit Button for Author Only -->
+                <c:if test="${sessionScope.u.getUsername() == blog.getCreatedBy()}">
+                    <a href="editBlog?id=<%= blog.getBlogId() %>" class="btn btn-warning edit-button">Edit</a>
+                </c:if>
+
                 <h3>Images:</h3>
                 <div class="image-container">
                     <%
-                        // Loop through each image URL in the blog
                         for (String imageUrl : blog.getImageUrls()) {
                     %>
                     <div class="blog-image" data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-img="<%= imageUrl %>">
@@ -185,6 +189,8 @@
                 %>
             </div>
         </div>
+
+
 
         <!-- Comment Form -->
         <div class="comment-form">
@@ -585,16 +591,16 @@
                         })
                         .catch(error => console.error('Error fetching comments:', error));
             }
-            
+
             function displayReportDescription() {
                 const reportTypeSelect = document.getElementById("reportType");
                 const selectedOption = reportTypeSelect.options[reportTypeSelect.selectedIndex];
                 const description = selectedOption.getAttribute("data-description");
                 document.getElementById("reportDescription").textContent = description;
             }
-            
+
             window.onload = displayReportDescription;
-            
+
             document.querySelectorAll('.report-comment').forEach(item => {
                 item.addEventListener('click', event => {
                     event.preventDefault();
@@ -602,7 +608,7 @@
                     document.getElementById('commentId').value = commentId;
                     new bootstrap.Modal(document.getElementById('reportModal')).show();
                 });
-            });        
+            });
         </script>
 
         <!-- Image Modal -->
