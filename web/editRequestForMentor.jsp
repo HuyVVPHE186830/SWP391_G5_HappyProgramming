@@ -26,10 +26,10 @@
             .applyCourse-form {
                 background-color: #fff;
                 border-radius: 25px;
-                width: 700px;
+                width: 800px;
                 box-shadow: 0 0 10px #888;
                 overflow: hidden;
-                height: 60vh;
+                height: 50vh;
                 padding: 10px;
             }
 
@@ -46,10 +46,10 @@
 
             .applyCourse-form a {
                 color: #452cbf;
-                padding: 10px 20px;
+                padding: 10px 20px 10px 0;
                 border-radius: 5px;
                 text-decoration: none;
-                font-size: 1rem;
+                font-size: 1.2rem;
                 font-weight: bold;
                 margin-bottom: 20px;
                 transition: background-color 0.3s ease;
@@ -66,7 +66,7 @@
                 justify-content: space-between;
                 width: 100%;
                 margin-bottom: 3%;
-                padding-right: 10px;
+                padding-right: 25px;
             }
 
             label {
@@ -145,7 +145,9 @@
         <!-- CONTENT MIDDLE -->
         <div class="middle">
             <div class="applyCourse-form">
-                <a href="listRequestForMentor?userId=${sessionScope.user.id}">Back</a>
+                <a href="listRequestForMentor?userId=${sessionScope.user.id}">
+                    <i class="fas fa-arrow-left"></i> 
+                </a>
                 <div class="applyCourse-form-left">
                     <h2>View Request Detail</h2>
                     <form action="editRequestForMentor" method="post">
