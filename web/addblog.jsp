@@ -39,16 +39,11 @@
                     <small class="form-text text-muted">You can upload multiple images.</small>
                 </div>
 
-                <!-- Tags Dropdown -->
+                <!-- Tags Input (Text) -->
                 <div class="mb-3">
                     <label for="blogTags" class="form-label">Tags</label>
-                    <select class="form-control" id="blogTags" name="blogTags">
-                        <option value="">Select a tag</option>
-                        <c:forEach var="tag" items="${tags}">
-                            <option value="${tag.tagName}">${tag.tagName}</option>
-                        </c:forEach>
-                    </select>
-                    <small class="form-text text-muted">Select a relevant tag for your blog post.</small>
+                    <input type="text" class="form-control" id="blogTags" name="blogTags" placeholder="Enter tags separated by commas">
+                    <small class="form-text text-muted">Separate tags with commas (e.g., tag1, tag2).</small>
                 </div>
 
                 <!-- Submit Button -->
