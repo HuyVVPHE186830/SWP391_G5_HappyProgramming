@@ -138,6 +138,7 @@
                     <select id="orderby" name="orderby">                                
                         <option value="default" ${requestScope.order == "default" ? 'selected' : ''}>Default</option>
                         <option value="name" ${requestScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
+                        <option value="rating" ${requestScope.order == "rating" ? 'selected' : ''}>Sort By Rating</option>
                     </select>
                     <input type="hidden" name="courseId" value="${cM.courseId}">
                 </form>
@@ -193,6 +194,7 @@
                         <select id="orderby" name="orderby">                                
                             <option value="default" ${requestScope.order == "default" ? 'selected' : ''}>Default</option>
                             <option value="name" ${requestScope.order == "name" ? 'selected' : ''}>Sort By Name</option>
+                            <option value="rating" ${requestScope.order == "rating" ? 'selected' : ''}>Sort By Rating</option>
                         </select>
                         <input type="hidden" name="courseId" value="${cM.courseId}">
                     </form>

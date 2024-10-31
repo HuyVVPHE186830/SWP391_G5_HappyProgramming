@@ -6,6 +6,7 @@
 package controller;
 
 import dal.CourseDAO;
+import dal.RatingDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +16,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import model.Course;
 import model.User;
 
@@ -64,11 +68,12 @@ public class ViewCourseMentor extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String orderby = request.getParameter("orderby");
-        if(orderby == null) {
+        if (orderby == null) {
             orderby = "default";
         }
         HttpSession session = request.getSession();
         UserDAO daoU = new UserDAO();
+        RatingDAO daoR = new RatingDAO();
         CourseDAO daoC = new CourseDAO();
         String courseId_str = request.getParameter("courseId");
 
@@ -81,6 +86,28 @@ public class ViewCourseMentor extends HttpServlet {
             }
             if (orderby.equals("name")) {
                 mentor = daoU.getAllMentorByCourseIdOrderByName(courseId);
+            }
+            if (orderby.equals("rating")) {
+                List<User> mentorRated = daoU.getAllMentorByCourseId(courseId)
+                        .stream()
+                        .collect(Collectors.toMap(
+                                User::getUsername,
+                                m -> m,
+                                (existing, replacement) -> existing
+                        ))
+                        .values()
+                        .stream()
+                        .collect(Collectors.toList());
+                Map<String, Float> mentorAvgRatingMap = new HashMap<>();
+                for (User m : mentorRated) {
+                    float averageStar = daoR.getAverageStar(m.getId());
+                    mentorAvgRatingMap.put(m.getUsername(), averageStar);
+                }
+                List<User> topMentors = mentorRated.stream()
+                        .sorted((m1, m2) -> Float.compare(mentorAvgRatingMap.get(m2.getUsername()), mentorAvgRatingMap.get(m1.getUsername())))
+                        .limit(4)
+                        .collect(Collectors.toList());
+                mentor = topMentors;
             }
             List<Course> otherCourse = daoC.getAllCoursesExceptOne(courseId);
             Course course = daoC.getCourseByCourseId(courseId);
@@ -116,7 +143,7 @@ public class ViewCourseMentor extends HttpServlet {
             List<User> mentor = daoU.getAllMentorBySearchKey(courseId, keyword);
             Course course = daoC.getCourseByCourseId(courseId);
             List<Course> otherCourse = daoC.getAllCoursesExceptOne(courseId);
-            if(mentor == null) {
+            if (mentor == null) {
                 request.setAttribute("searchNull", null);
             }
             request.setAttribute("keyword", keyword);

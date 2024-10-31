@@ -175,6 +175,8 @@
 
             .dropdown-content a:hover {
                 background-color: #f1f1f1;
+                text-decoration: none;
+                color: #6a1b9a;
             }
 
             .show {

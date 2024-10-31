@@ -79,21 +79,30 @@
                 text-decoration: none;
             }
 
+
             .rating-container {
-                background-color: #f9f9f9; /* Light background */
-                border: 1px solid #ccc; /* Gray border */
-                border-radius: 8px; /* Rounded corners */
-                padding: 10px; /* Inner spacing */
-                margin-bottom: 10px; /* Space below the rating */
-                max-width: 250px; /* Maximum width */
-                text-align: center; /* Centered text */
-                text-decoration: none; /* Remove underline for links */
-                color: inherit; /* Inherit color */
+                background-color: #fff8e1; 
+                border: 2px solid #f9a825;
+                border-radius: 10px;
+                padding: 15px 60px; 
+                margin: 30px 0; 
+                max-width: 300px; 
+                text-align: center; 
+                color: #333;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+                transition: transform 0.2s, box-shadow 0.2s;
+                text-decoration: none;
             }
-         
 
             .rating-container:hover {
-                background-color: #e0e0e0; /* Change background on hover */
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                text-decoration: none;
+            }
+
+            .avg {
+                color: #5e3fd3;
+                font-weight: 500;
             }
 
             .star {
@@ -102,17 +111,7 @@
                 margin-left: 5px; /* Space between number and star */
             }
 
-            .rating-display {
-                display: flex; /* Flex layout */
-                justify-content: center; /* Center items horizontally */
-                align-items: center; /* Center items vertically */
-            }
 
-            /* Style for links to prevent underline and color change */
-            a {
-                text-decoration: none; /* No underline */
-                color: inherit; /* Inherit color from parent */
-            }
         </style>
     </head>
     <body>
@@ -140,15 +139,13 @@
                         <h2>${mD.lastName} ${mD.firstName}</h2>
                         <h3>Course: ${cM.courseName} <a href="Rating" class="link-2">(${cT.categoryName})</a></h3>
 
-                        <h3>Đánh giá của Mentor:</h3>
-                    <a href="Rating?search=feedback&ratedId=${mentorDetail.id}"> 
-                            <div class="rating-container">
-                                <div class="rating-display">
-                                    <span class="avg">${requestScope.avg}</span> 
-                                    <span class="star">★</span> 
-                                </div>
-                            </div>
-                        </a>
+                        <h3 style="margin-bottom: 20px;">Rating Of This Mentor</h3>
+                        <c:if test="${sessionScope.user.username != mD.username}">
+                            <a href="Rating?search=feedback&ratedId=${mentorDetail.id}" class="rating-container"> 
+                                <span class="avg">${requestScope.avg}</span> 
+                                <span class="star">★</span> 
+                            </a>
+                        </c:if>
 
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
@@ -160,7 +157,9 @@
                             </form>
                         </c:if>
                         <c:if test="${sessionScope.user.username == mD.username}">
-                            <a href="userProfile" class="button-enroll">View Your Profile</a>
+                            <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="mentor-course">
+                                Your Course
+                            </a>
                         </c:if>
                     </div>
                 </div>

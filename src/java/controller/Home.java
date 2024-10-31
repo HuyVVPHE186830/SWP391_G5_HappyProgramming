@@ -8,6 +8,7 @@ package controller;
 import dal.CategoryDAO;
 import dal.CourseDAO;
 import dal.ParticipateDAO;
+import dal.RatingDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,10 +18,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import model.Category;
 import model.Course;
 import model.Participate;
+import model.Rating;
 import model.User;
 import util.PageControl;
 
@@ -69,33 +74,36 @@ public class Home extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDAO daoU = new UserDAO();
+        RatingDAO daoR = new RatingDAO();
         CourseDAO daoC = new CourseDAO();
         ParticipateDAO daoP = new ParticipateDAO();
         CategoryDAO daoCt = new CategoryDAO();
-        List<User> mentor = daoU.getAllUserByRoleId(2);
+        List<User> mentorRated = daoU.getAllUserByRoleId(2)
+                .stream()
+                .collect(Collectors.toMap(
+                        User::getUsername,
+                        mentor -> mentor,
+                        (existing, replacement) -> existing
+                ))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+        Map<String, Float> mentorAvgRatingMap = new HashMap<>();
+        for (User mentor : mentorRated) {
+            float averageStar = daoR.getAverageStar(mentor.getId());
+            mentorAvgRatingMap.put(mentor.getUsername(), averageStar);
+        }
+        List<User> topMentors = mentorRated.stream()
+                .sorted((m1, m2) -> Float.compare(mentorAvgRatingMap.get(m2.getUsername()), mentorAvgRatingMap.get(m1.getUsername())))
+                .limit(4)
+                .collect(Collectors.toList());
         List<Course> allCourse = daoC.getAll();
         List<Course> course = daoC.getEachCategoryLessThan2Courses();
         List<Category> category = daoCt.getAll();
         List<User> mentee = daoU.getAllUserByRoleId(3);
-        List<User> choosedMentee = new ArrayList<>();
         List<Course> sortedCourse = daoC.getAllCourseOrderByDESCMenteeNum();
         List<Participate> participate = daoP.getAll();
-        for (User m : mentor) {
-            int count = 0;
-            for (Participate p : participate) {
-                if (m.getUsername().equals(p.getUsername())) {
-                    for (Course c : allCourse) {
-                        if (c.getCourseId() == p.getCourseId()) {
-                            count++;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (count >= 2) {
-                choosedMentee.add(m);
-            }
-        }
         int countCourse = daoC.countCourse();
         int countMentor = daoU.countUser(2);
         int countMentee = daoU.countUser(3);
@@ -103,12 +111,11 @@ public class Home extends HttpServlet {
         session.setAttribute("countMentor", countMentor);
         session.setAttribute("countMentee", countMentee);
         session.setAttribute("category", category);
-        session.setAttribute("mentor", mentor);
         session.setAttribute("course", course);
         session.setAttribute("mentee", mentee);
         session.setAttribute("participate", participate);
         session.setAttribute("sortedCourses", sortedCourse);
-        session.setAttribute("choosedMentor", choosedMentee);
+        session.setAttribute("choosedMentor", topMentors);
         PageControl pageControl = new PageControl();
         List<Course> listCourse = findCourseDoGet(request, pageControl);
         session.setAttribute("listCourse", listCourse);

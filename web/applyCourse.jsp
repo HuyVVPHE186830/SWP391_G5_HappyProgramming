@@ -26,19 +26,33 @@
                 background-color: #fff;
                 border-radius: 25px;
                 display: flex;
-                width: 500px;
+                width: 550px;
                 box-shadow: 0 0 10px #888;
                 justify-content: space-between;
                 overflow: hidden;
-                height: 60vh;
+                height: 45vh;
+                position: relative;
+            }
+            
+            .applyCourse-form a {
+                position: absolute;
+                color: #452cbf;
+                left: 10px;
+                top: 10px;
+                border-radius: 5px;
+                text-decoration: none;
+                font-size: 1.2rem;
+                font-weight: bold;
+                margin-bottom: 20px;
+                transition: background-color 0.3s ease;
             }
 
-            .applyCourse-form-left {
+            .applyCourse-form-main {
                 margin: auto 10px;
                 width: 100%;
             }
 
-            .applyCourse-form-left h2 {
+            .applyCourse-form-main h2 {
                 font-size: 2rem;
                 margin-bottom: 20px;
                 text-align: center;
@@ -113,7 +127,10 @@
 
         <div class="middle">
             <div class="applyCourse-form">
-                <div class="applyCourse-form-left">
+                <a href="listRequestForMentor?userId=${sessionScope.user.id}">
+                    <i class="fas fa-arrow-left"></i> 
+                </a>
+                <div class="applyCourse-form-main">
                     <h2>Apply Course</h2>
                     <form action="applyCourse" method="post">
                         <input type="hidden" value="${user.username}" name="username">
