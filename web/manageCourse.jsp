@@ -532,14 +532,13 @@
 
 
             <div class="modal fade" id="requestListModal" tabindex="-1" aria-labelledby="requestListModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;"> <!-- Giới hạn chiều rộng tối đa -->
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title" id="requestListModalLabel">List Request: ${rmember}</h3>
                         </div>
                         <p class="modal-title" style="margin: 10px 0 0 20px">Course: ${course.courseName}</p>
                         <div class="modal-body">
-                            <!-- Bảng hiển thị thông tin yêu cầu -->
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -547,7 +546,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Date of Birth</th>
-                                        <th>Action</th> <!-- Nút Accept/Decline -->
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -558,17 +557,17 @@
                                                     <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
                                                 <td>${user.lastName} ${user.firstName}</td>
-                                                <td>${user.mail}</td> <!-- Thêm Email -->
-                                                <td>${user.dob}</td> <!-- Thêm Ngày sinh -->
+                                                <td>${user.mail}</td>
+                                                <td>${user.dob}</td>
                                                 <td>
                                                     <form action="manageMentee" method="get">
                                                         <input type="hidden" name="courseId" value="${course.courseId}">
                                                         <input type="hidden" name="username" value="${user.username}">
                                                         <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
-                                                            <i class="fas fa-check"></i> <!-- Icon dấu tick -->
+                                                            <i class="fas fa-check"></i>
                                                         </button>
                                                         <button type="submit" class="btn btn-danger btn-sm" name="action" value="decline">
-                                                            <i class="fas fa-times"></i> <!-- Icon dấu X -->
+                                                            <i class="fas fa-times"></i>
                                                         </button>
                                                     </form>
                                                 </td>
