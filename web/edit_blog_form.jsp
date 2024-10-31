@@ -21,7 +21,7 @@
         <div class="container mt-5">
             <h2>Edit Blog</h2>
             <form action="updateBlog" method="POST" enctype="multipart/form-data">
-                
+
                 <!-- Blog ID (hidden) -->
                 <input type="hidden" name="blogId" value="<%= ((Blog) request.getAttribute("blog")).getBlogId() %>">
 
@@ -45,9 +45,25 @@
                            value="<%= ((Blog) request.getAttribute("blog")).getTags().stream().map(Tag::getTagName).collect(Collectors.joining(", ")) %>">
                 </div>
 
-                <!-- Images -->
+                <!-- Existing Images -->
                 <div class="form-group">
-                    <label for="images" class="form-label">Upload Images</label>
+                    <label class="form-label">Current Images</label>
+                    <div class="row">
+                        <c:forEach var="imageUrl" items="${blog.imageUrls}">
+                            <div class="col-md-3 mb-2">
+                                <img src="${imageUrl}" class="img-thumbnail" alt="Current Blog Image">
+                                <div class="form-check">
+                                    <input type="checkbox" name="deleteImages" value="${imageUrl}" class="form-check-input">
+                                    <label class="form-check-label">Delete</label>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+
+                <!-- New Images -->
+                <div class="form-group">
+                    <label for="images" class="form-label">Upload New Images</label>
                     <input type="file" name="images" id="images" class="form-control" multiple>
                 </div>
 
