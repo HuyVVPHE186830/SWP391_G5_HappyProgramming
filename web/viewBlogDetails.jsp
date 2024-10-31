@@ -153,7 +153,7 @@
                 <p><%= blog.getContent() %></p>
 
                 <!-- Edit Button for Author Only -->
-                <c:if test="${sessionScope.u.getUsername() == blog.getCreatedBy()}">
+                <c:if test="${sessionScope.user.getUsername() == blog.getCreatedBy()}">
                     <a href="editBlog?id=<%= blog.getBlogId() %>" class="btn btn-warning edit-button">Edit</a>
                 </c:if>
 

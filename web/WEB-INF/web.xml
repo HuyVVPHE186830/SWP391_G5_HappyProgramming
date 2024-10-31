@@ -176,6 +176,10 @@
         <servlet-name>EditBlogServlet</servlet-name>
         <servlet-class>controller.EditBlogServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateBlogServlet</servlet-name>
+        <servlet-class>controller.UpdateBlogServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -351,5 +355,9 @@
     <servlet-mapping>
         <servlet-name>EditBlogServlet</servlet-name>
         <url-pattern>/editBlog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateBlogServlet</servlet-name>
+        <url-pattern>/updateBlog</url-pattern>
     </servlet-mapping>
 </web-app>

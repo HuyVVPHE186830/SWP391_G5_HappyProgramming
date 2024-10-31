@@ -6,14 +6,18 @@ import dal.ReportDAO;
 import model.Blog;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import model.BlogComment;
 import model.ReportType;
+import model.User;
 
 public class ViewBlogDetailServlet extends HttpServlet {
 
@@ -37,6 +41,9 @@ public class ViewBlogDetailServlet extends HttpServlet {
         request.setAttribute("comments", comments);
         request.setAttribute("reportTypes", reportTypes);
 
+        HttpSession session = request.getSession();
+        session.setAttribute("blogId", blogId);
+        
         // Forward to the JSP page
         request.getRequestDispatcher("viewBlogDetails.jsp").forward(request, response);
     }
