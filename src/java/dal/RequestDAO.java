@@ -60,6 +60,30 @@ public class RequestDAO extends DBContext {
         return list;
     }
 
+    public List<Request> getAllRequestByKeyword(String keyword) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Request] JOIN Course ON Request.CourseId = Course.CourseId WHERE username LIKE ? OR Course.CourseName LIKE ? OR Request.RequestReason LIKE ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, "%" + keyword + "%");
+            st.setString(2, "%" + keyword + "%");
+            st.setString(3, "%" + keyword + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("CourseId");
+                String username = rs.getString("username");
+                Date requestTime = rs.getDate("requestTime");
+                int requestStatus = rs.getInt("requestStatus");
+                String requestReason = rs.getString("requestReason");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                list.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
     public Request getRequestByUsername(String username, int courseId) {
         Request request = new Request();
         String sql = "SELECT * FROM [Request] where username = ? and courseId = ?";
