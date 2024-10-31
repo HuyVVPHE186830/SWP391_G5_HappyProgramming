@@ -370,5 +370,58 @@ public class BlogDAO extends DBContext {
 
         return list; // Return the list of blogs
     }
+// Method to update a blog post
+
+    public void updateBlog(Blog blog) {
+        String updateBlogSQL = "UPDATE Blogs SET title = ?, content = ?, updated_at = CURRENT_TIMESTAMP WHERE blog_id = ? AND user_name = ?";
+        String deleteTagsSQL = "DELETE FROM blog_tags WHERE blog_id = ?";
+        String deleteImagesSQL = "DELETE FROM blog_images WHERE blog_id = ?";
+
+        try {
+            connection.setAutoCommit(false); // Start transaction
+
+            // Update the blog content
+            PreparedStatement st = connection.prepareStatement(updateBlogSQL);
+            st.setString(1, blog.getTitle());
+            st.setString(2, blog.getContent());
+            st.setInt(3, blog.getBlogId());
+            st.setString(4, blog.getCreatedBy());
+            st.executeUpdate();
+
+            // Remove old tags and images
+            PreparedStatement deleteTagsStmt = connection.prepareStatement(deleteTagsSQL);
+            deleteTagsStmt.setInt(1, blog.getBlogId());
+            deleteTagsStmt.executeUpdate();
+
+            PreparedStatement deleteImagesStmt = connection.prepareStatement(deleteImagesSQL);
+            deleteImagesStmt.setInt(1, blog.getBlogId());
+            deleteImagesStmt.executeUpdate();
+
+            // Add new tags
+            for (Tag tag : blog.getTags()) {
+                addTagToBlog(blog.getBlogId(), tag);
+            }
+
+            // Add new images
+            for (String imageUrl : blog.getImageUrls()) {
+                addImageToBlog(blog.getBlogId(), imageUrl);
+            }
+
+            connection.commit(); // Commit transaction
+        } catch (SQLException ex) {
+            try {
+                connection.rollback(); // Rollback on error
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            System.out.println(ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Reset to default
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
