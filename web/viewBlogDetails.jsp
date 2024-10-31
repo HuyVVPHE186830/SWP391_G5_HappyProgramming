@@ -170,12 +170,13 @@
 
                 <h3>Tags:</h3>
                 <ul class="tag-list">
-                    <%
-                        for (Tag tag : blog.getTags()) {
-                    %>
-                    <li><%= tag.getTagName() %></li>
-                        <% } %>
+                    <% for (Tag tag : blog.getTags()) { %>
+                    <li>
+                        <a href="searchBlogs?query=<%= tag.getTagName() %>" class="text-white"><%= tag.getTagName() %></a>
+                    </li>
+                    <% } %>
                 </ul>
+
 
                 <!-- Back Button -->
                 <a href="<%= request.getContextPath() %>/viewblogs" class="btn btn-secondary back-button">Back to Blog List</a>
