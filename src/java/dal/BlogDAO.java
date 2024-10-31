@@ -424,4 +424,24 @@ public class BlogDAO extends DBContext {
         }
     }
 
+    public int addNewTag(String tagName) {
+        int tagId = getTagIdByName(tagName);
+        if (tagId == 0) { // Tag doesn't exist
+            String sql = "INSERT INTO tags (tag_name) VALUES (?)";
+            try {
+                PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+                st.setString(1, tagName);
+                st.executeUpdate();
+
+                ResultSet generatedKeys = st.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    tagId = generatedKeys.getInt(1); // Get the newly generated tag ID
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+        return tagId;
+    }
+    
 }
