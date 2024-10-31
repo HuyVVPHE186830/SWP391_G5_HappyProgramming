@@ -315,7 +315,7 @@
                         <c:set var="cou" value="${null}" />
                         <c:forEach items="${listCourseOfRated}" var="cr">
                             <c:if test="${cr.courseId == f.courseId}">
-                                <c:set var="cou" value="${r}" />
+                                <c:set var="cou" value="${rr}" />
                             </c:if>
                         </c:forEach>
                         <c:forEach items="${listRatedFrom}" var="u">
@@ -326,7 +326,7 @@
 
                         <div class="user-info">
                             <img src="data:image/jpeg;base64,${user.avatarPath}" alt="User Avatar">
-                            <span class="username">${user.username} To ${r.courseName}</span>
+                            <span class="username">${user.username} To ${rr.courseName}</span>
                         </div>
                         (${f.noStar}/5.0★)
                         <br/>

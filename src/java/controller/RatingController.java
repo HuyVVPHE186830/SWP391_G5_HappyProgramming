@@ -27,6 +27,7 @@ public class RatingController extends HttpServlet {
 
     RatingDAO rateDAO = new RatingDAO();
     UserDAO userDAO = new UserDAO();
+    CourseDAO courseDAO = new CourseDAO();
     
 
     @Override
@@ -41,7 +42,7 @@ public class RatingController extends HttpServlet {
         int rankStar = rateDAO.getRankMentor(userID);
         List<User> listRatedFrom = userDAO.getAll();
         List<Integer> listDis = rateDAO.getDistinctNoStars();
-        List<Course> listCourseOfRated = rateDAO.getCourseOfRated(userID);
+        List<Course> listCourseOfRated = courseDAO.getAll();
         List<Rating> listFeedBack = findRatingDoGet(request);
         int turnStar = rateDAO.getTurnStarOverallByUserId(userID);
         int turnStar1 = rateDAO.getTurnStar(1,userID);
