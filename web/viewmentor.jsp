@@ -144,8 +144,7 @@
                     <a href="Rating?search=feedback&ratedId=${mentorDetail.id}"> 
                             <div class="rating-container">
                                 <div class="rating-display">
-                                    <span>${requestScope.rateListByUsernameCID}</span> 
-                                    <span class="avg">${requestScope.averageRating}</span> 
+                                    <span class="avg">${requestScope.avg}</span> 
                                     <span class="star">★</span> 
                                 </div>
                             </div>

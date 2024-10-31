@@ -34,8 +34,12 @@ public class RatingController extends HttpServlet {
         int userID = Integer.parseInt(request.getParameter("ratedId"));
 
         User userById = userDAO.getUserById(userID);
+        float userRatedStar  = rateDAO.getAverageStar(userID);
+        int rankStar = rateDAO.getRankMentor(userID);
         List<Integer> listDis = rateDAO.getDistinctNoStars();
         List<Rating> listFeedBack = findRatingDoGet(request);
+        session.setAttribute("rankStar", rankStar);
+        session.setAttribute("userRatedStar", userRatedStar);
         session.setAttribute("listFeedBack", listFeedBack);
         session.setAttribute("listDis", listDis);
         session.setAttribute("userList", userList);

@@ -166,8 +166,8 @@
                 <img class="avatar-large" src="data:image/jpeg;base64,${userById.avatarPath}" alt="Seller Avatar">
                 <div class="profile-details">
                     <h3>${userById.username}'s FEEDBACK</h3>
-                    <p>RATING OVERALL: 4.5</p>
-                    <p>TOP: 4</p>
+                    <p>RATING OVERALL: ${userRatedStar}</p>
+                    <p>TOP: ${rankStar}</p>
                 </div>
             </div>
 

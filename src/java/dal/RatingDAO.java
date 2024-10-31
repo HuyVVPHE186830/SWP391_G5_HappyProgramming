@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Rating;
 import java.sql.ResultSet;
+import model.User;
 
 /**
  *
@@ -203,4 +204,51 @@ public class RatingDAO extends DBContext {
         return ratings;
     }
 
+public float getAverageStar(int ratedId) {
+    float averageRating = 0.0f;
+    String query = "SELECT CAST(AVG(noStar) AS DECIMAL(10, 2)) AS averageRating " +
+                   "FROM [Rating] " +
+                   "WHERE ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
+
+    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        pstmt.setInt(1, ratedId);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                averageRating = rs.getFloat("averageRating");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the exception
+    }
+
+    return averageRating;
+}
+
+    public int getRankMentor(int userID) {
+    int rank = 0;
+    String query = "SELECT COUNT(*) + 1 AS rank " +
+                   "FROM ( " +
+                   "    SELECT ratedToUser, AVG(noStar) AS averageRating " +
+                   "    FROM [Rating] " +
+                   "    GROUP BY ratedToUser " +
+                   ") AS ratings " +
+                   "WHERE averageRating > ( " +
+                   "    SELECT AVG(noStar) " +
+                   "    FROM [Rating] " +
+                   "    WHERE ratedToUser = (SELECT username FROM [User] WHERE id = ?) " +
+                   ")";
+
+    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        pstmt.setInt(1, userID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                rank = rs.getInt("rank");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the exception
+    }
+
+    return rank;
+}
 }
