@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Rating;
 import java.sql.ResultSet;
+import model.User;
 
 /**
  *
@@ -47,11 +48,11 @@ public class RatingDAO extends DBContext {
         RatingDAO dao = new RatingDAO();
 //        int o = dao.getByUsnAndCId("anmentor", 2);
 //        System.out.println(o);
-//        List<Rating> ratings = new ArrayList<>();
-//        ratings = dao.getAll();
-//        for (Rating rating : ratings) {
-//            System.out.println(rating);
-//        }
+        List<Rating> ratings = new ArrayList<>();
+        ratings = dao.getRateByNoStar2(3, "ducmentor");
+        for (Rating rating : ratings) {
+            System.out.println(rating);
+        }
 //        dao.addFeedback("ducmentor", "anmentor", 4, 1, "non2");
     }
 
@@ -152,4 +153,102 @@ public class RatingDAO extends DBContext {
         return noStars;
     }
 
+    public List<Rating> getRateByUserId(int ratedID) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT * FROM [Rating] WHERE ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, ratedID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ratedFromUser = rs.getString("ratedFromUser");
+                    String ratedToUser = rs.getString("ratedToUser");
+                    int noStar = rs.getInt("noStar");
+                    int courseId = rs.getInt("courseId");
+                    String ratingComment = rs.getString("ratingComment");
+
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ratings;
+    }
+
+    public List<Rating> getRateByNoStar2(int numS, String ratedUsername) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT * FROM [Rating] WHERE noStar = ? AND ratedToUser = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, numS);
+            pstmt.setString(2, ratedUsername);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ratedFromUser = rs.getString("ratedFromUser");
+                    String ratedToUser = rs.getString("ratedToUser");
+                    int noStar = rs.getInt("noStar");
+                    int courseId = rs.getInt("courseId");
+                    String ratingComment = rs.getString("ratingComment");
+
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log the exception
+        }
+
+        return ratings;
+    }
+
+public float getAverageStar(int ratedId) {
+    float averageRating = 0.0f;
+    String query = "SELECT CAST(AVG(noStar) AS DECIMAL(10, 2)) AS averageRating " +
+                   "FROM [Rating] " +
+                   "WHERE ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
+
+    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        pstmt.setInt(1, ratedId);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                averageRating = rs.getFloat("averageRating");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the exception
+    }
+
+    return averageRating;
+}
+
+    public int getRankMentor(int userID) {
+    int rank = 0;
+    String query = "SELECT COUNT(*) + 1 AS rank " +
+                   "FROM ( " +
+                   "    SELECT ratedToUser, AVG(noStar) AS averageRating " +
+                   "    FROM [Rating] " +
+                   "    GROUP BY ratedToUser " +
+                   ") AS ratings " +
+                   "WHERE averageRating > ( " +
+                   "    SELECT AVG(noStar) " +
+                   "    FROM [Rating] " +
+                   "    WHERE ratedToUser = (SELECT username FROM [User] WHERE id = ?) " +
+                   ")";
+
+    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        pstmt.setInt(1, userID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                rank = rs.getInt("rank");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the exception
+    }
+
+    return rank;
+}
 }

@@ -31,9 +31,15 @@ public class RatingController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         List<User> userList = userDAO.getAll();
-        User userById = userDAO.getUserById(29);
+        int userID = Integer.parseInt(request.getParameter("ratedId"));
+
+        User userById = userDAO.getUserById(userID);
+        float userRatedStar  = rateDAO.getAverageStar(userID);
+        int rankStar = rateDAO.getRankMentor(userID);
         List<Integer> listDis = rateDAO.getDistinctNoStars();
         List<Rating> listFeedBack = findRatingDoGet(request);
+        session.setAttribute("rankStar", rankStar);
+        session.setAttribute("userRatedStar", userRatedStar);
         session.setAttribute("listFeedBack", listFeedBack);
         session.setAttribute("listDis", listDis);
         session.setAttribute("userList", userList);
@@ -50,12 +56,23 @@ public class RatingController extends HttpServlet {
         String requestURL = request.getRequestURL().toString();
         switch (actionSearch) {
             case "search-by-noStar":
+                int ratedID3 = Integer.parseInt(request.getParameter("ratedId"));
+
                 int numS = Integer.parseInt(request.getParameter("noStar"));
-                listRate = rateDAO.getRateByNoStar(numS);
-                request.setAttribute("urlPattern", requestURL + "?search=search-by-noStar&noStar=" + numS);
+                String us = request.getParameter("userN");
+                listRate = rateDAO.getRateByNoStar2(numS, us);
+                request.setAttribute("urlPattern", requestURL + "?search=search-by-noStar&noStar=" + numS+"&ratedId=${userById.id}&&userN"+us);
                 break;
+            case "feedback":
+                int ratedID = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID);
+                request.setAttribute("urlPattern", requestURL + "?search=feedback&ratedId=" + ratedID);
+                break;
+
             default:
-                listRate = rateDAO.getAll();
+                int ratedID2 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID2);
+                request.setAttribute("urlPattern", requestURL + "?ratedId=" + ratedID2);
         }
         return listRate;
     }
@@ -63,7 +80,7 @@ public class RatingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                response.sendRedirect("Rating");
+        response.sendRedirect("Rating");
 
     }
 

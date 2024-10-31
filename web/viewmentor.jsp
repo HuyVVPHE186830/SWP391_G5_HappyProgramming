@@ -141,11 +141,10 @@
                         <h3>Course: ${cM.courseName} <a href="Rating" class="link-2">(${cT.categoryName})</a></h3>
 
                         <h3>Đánh giá của Mentor:</h3>
-                        <a href="Rating"> <!-- Replace with the actual link -->
+                    <a href="Rating?search=feedback&ratedId=${mentorDetail.id}"> 
                             <div class="rating-container">
                                 <div class="rating-display">
-                                    <span>${requestScope.rateListByUsernameCID}</span> 
-                                    <span class="avg">${requestScope.averageRating}</span> 
+                                    <span class="avg">${requestScope.avg}</span> 
                                     <span class="star">★</span> 
                                 </div>
                             </div>
