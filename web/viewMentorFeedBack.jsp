@@ -208,27 +208,27 @@
                     }
                 </style>
                 <div class="review-summary">
-                    <a href="Rating" class="review-summary-item">
+                    <a href="Rating?ratedId=${userById.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>All (10000k)</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=1" class="review-summary-item">
+                    <a href="Rating?search=search-by-noStar&noStar=1&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>1 Sao (75k)</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=2" class="review-summary-item">
+                    <a href="Rating?search=search-by-noStar&noStar=2&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>2 Sao (75k)</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=3" class="review-summary-item">
+                    <a href="Rating?search=search-by-noStar&noStar=3&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>3 Sao (75k)</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=4" class="review-summary-item">
+                    <a href="Rating?search=search-by-noStar&noStar=4&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>4 Sao (75k)</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=5" class="review-summary-item">
+                    <a href="Rating?search=search-by-noStar&noStar=5&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>5 Sao (75k)</span>
                     </a>
