@@ -159,6 +159,30 @@ public class RatingDAO extends DBContext {
 
         return ratings;
     }
+    
+    public List<Rating> getRateByCourseId(int courseId) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT * FROM [Rating] WHERE courseId = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, courseId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ratedFromUser = rs.getString("ratedFromUser");
+                    String ratedToUser = rs.getString("ratedToUser");
+                    int noStar = rs.getInt("noStar");
+                    String ratingComment = rs.getString("ratingComment");
+
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ratings;
+    }
 
     public List<Integer> getDistinctNoStars() {
         List<Integer> noStars = new ArrayList<>();

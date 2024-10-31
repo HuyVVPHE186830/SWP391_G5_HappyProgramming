@@ -78,7 +78,7 @@ public class Home extends HttpServlet {
         CourseDAO daoC = new CourseDAO();
         ParticipateDAO daoP = new ParticipateDAO();
         CategoryDAO daoCt = new CategoryDAO();
-        List<User> mentorRated = daoU.getAllUserByRatingStar()
+        List<User> mentorRated = daoU.getAllUserByRoleId(2)
                 .stream()
                 .collect(Collectors.toMap(
                         User::getUsername,
@@ -88,7 +88,6 @@ public class Home extends HttpServlet {
                 .values()
                 .stream()
                 .collect(Collectors.toList());
-        List<User> allMentors = daoU.getAllUserByRoleId(2);
 
         Map<String, Float> mentorAvgRatingMap = new HashMap<>();
         for (User mentor : mentorRated) {
@@ -99,24 +98,6 @@ public class Home extends HttpServlet {
                 .sorted((m1, m2) -> Float.compare(mentorAvgRatingMap.get(m2.getUsername()), mentorAvgRatingMap.get(m1.getUsername())))
                 .limit(4)
                 .collect(Collectors.toList());
-
-        if (topMentors.size() < 4) {
-            for (User u : allMentors) {
-                int count = 0;
-                if (topMentors.size() >= 4) {
-                    break;
-                }
-                for (User men : topMentors) {
-                    if (men.getUsername().equals(u.getUsername())) {
-                        count++;
-                        break;
-                    }
-                }
-                if(count == 0) {
-                    topMentors.add(u);
-                }
-            }
-        }
         List<Course> allCourse = daoC.getAll();
         List<Course> course = daoC.getEachCategoryLessThan2Courses();
         List<Category> category = daoCt.getAll();

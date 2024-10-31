@@ -8,6 +8,7 @@ package controller;
 import dal.CategoryDAO;
 import dal.CourseCategoryDAO;
 import dal.CourseDAO;
+import dal.RatingDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,7 +18,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import model.Category;
 import model.Course;
 import model.CourseCategory;
@@ -70,21 +74,40 @@ public class ViewCourse extends HttpServlet {
 
         HttpSession session = request.getSession();
         CourseDAO daoC = new CourseDAO();
+        RatingDAO daoR = new RatingDAO();
         String courseId_str = request.getParameter("courseId");
         CategoryDAO daoCt = new CategoryDAO();
         CourseCategoryDAO daoCC = new CourseCategoryDAO();
         UserDAO daoU = new UserDAO();
         try {
             int courseId = Integer.parseInt(courseId_str);
+            List<User> mentorRated = daoU.getAllMentorByCourseId(courseId)
+                    .stream()
+                    .collect(Collectors.toMap(
+                            User::getUsername,
+                            mentor -> mentor,
+                            (existing, replacement) -> existing
+                    ))
+                    .values()
+                    .stream()
+                    .collect(Collectors.toList());
+            Map<String, Float> mentorAvgRatingMap = new HashMap<>();
+            for (User mentor : mentorRated) {
+                float averageStar = daoR.getAverageStar(mentor.getId());
+                mentorAvgRatingMap.put(mentor.getUsername(), averageStar);
+            }
+            List<User> topMentors = mentorRated.stream()
+                .sorted((m1, m2) -> Float.compare(mentorAvgRatingMap.get(m2.getUsername()), mentorAvgRatingMap.get(m1.getUsername())))
+                .limit(4)
+                .collect(Collectors.toList());
             Course c = daoC.getCourseByCourseId(courseId);
             List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(courseId);
             List<Course> sameCourse = daoC.getSameCourse(courseId);
             Category cate = daoCt.getCategoryByCourseId(courseId);
             List<Course> otherCourse = daoC.getOtherCourseHasOtherCategory(sameCategoryId);
-            List<User> mentor = daoU.getAllMentorByCourseId(courseId);
             List<Category> allCategory = daoCt.getAll();
             List<Category> category = daoCt.getAllExceptOne(sameCategoryId);
-            
+
             request.setAttribute("category", allCategory);
             request.setAttribute("sameCateId", sameCategoryId);
             request.setAttribute("othercategory", category);
@@ -92,7 +115,7 @@ public class ViewCourse extends HttpServlet {
             request.setAttribute("sameCourse", sameCourse);
             request.setAttribute("categoryCourse", cate);
             request.setAttribute("courseDetail", c);
-            request.setAttribute("mentorThisCourse", mentor);
+            request.setAttribute("mentorThisCourse", topMentors);
             request.getRequestDispatcher("viewcourse.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
