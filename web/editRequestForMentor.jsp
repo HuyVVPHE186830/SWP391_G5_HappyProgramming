@@ -46,7 +46,7 @@
 
             .applyCourse-form a {
                 color: #452cbf;
-                padding: 10px 20px 10px 0;
+                padding: 10px 20px;
                 border-radius: 5px;
                 text-decoration: none;
                 font-size: 1.2rem;

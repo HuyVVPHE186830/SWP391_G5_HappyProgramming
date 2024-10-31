@@ -116,7 +116,7 @@
             <!-- MENTOR SLIDE -->
             <div class="mentor-content">
                 <div class="mentor-content-heading">
-                    <div class="mentor-heading">SEE OUR MENTORS</div>
+                    <div class="mentor-heading">SEE OUR BEST MENTORS</div>
                 </div>
                 <c:if test="${not empty sessionScope.choosedMentor}">
                     <div class="mentor-cards">
