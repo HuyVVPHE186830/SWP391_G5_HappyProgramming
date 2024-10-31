@@ -97,7 +97,19 @@ public class ListRequestForMentor extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        HttpSession session = request.getSession();
+        User u = (User) session.getAttribute("user");
+        String keyword = request.getParameter("keyword");
+        RequestDAO daoR = new RequestDAO();
+        CourseDAO daoC = new CourseDAO();
+        StatusDAO daoS = new StatusDAO();
+        List<Request> requests = daoR.getAllRequestOfMentorByKeyword(keyword ,u.getUsername());
+        List<Course> courses = daoC.getAll();
+        List<Status> status = daoS.getAll();
+        request.setAttribute("requests", requests);
+        request.setAttribute("courses", courses);
+        request.setAttribute("status", status);
+        request.getRequestDispatcher("listRequestForMentor.jsp").forward(request, response);
     }
 
     /**
