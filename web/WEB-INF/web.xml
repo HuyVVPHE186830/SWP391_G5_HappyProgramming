@@ -184,6 +184,22 @@
         <servlet-name>DeleteBlogServlet</servlet-name>
         <servlet-class>controller.DeleteBlogServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddBlogControl</servlet-name>
+        <servlet-class>admin.AddBlogControl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateBlogControl</servlet-name>
+        <servlet-class>admin.UpdateBlogControl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteBlogControl</servlet-name>
+        <servlet-class>admin.DeleteBlogControl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManagerBlog</servlet-name>
+        <servlet-class>ManagerBlog</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -367,5 +383,21 @@
     <servlet-mapping>
         <servlet-name>DeleteBlogServlet</servlet-name>
         <url-pattern>/deleteBlog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddBlogControl</servlet-name>
+        <url-pattern>/addblog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateBlogControl</servlet-name>
+        <url-pattern>/updateblog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteBlogControl</servlet-name>
+        <url-pattern>/deleteblog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerBlog</servlet-name>
+        <url-pattern>/ManagerBlog</url-pattern>
     </servlet-mapping>
 </web-app>
