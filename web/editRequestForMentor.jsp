@@ -46,7 +46,7 @@
 
             .applyCourse-form a {
                 color: #452cbf;
-                padding: 10px 20px;
+                padding: 10px 20px 10px 0;
                 border-radius: 5px;
                 text-decoration: none;
                 font-size: 1.2rem;
@@ -54,7 +54,6 @@
                 margin-bottom: 20px;
                 transition: background-color 0.3s ease;
             }
-
             form {
                 display: flex;
                 flex-direction: column;
@@ -155,9 +154,13 @@
                         <input type="hidden" value="${req.courseId}" name="oldCourseId">
                         <input type="hidden" value="${req.requestStatus}" name="requestStatus">
                         <div class="input">
-                            <label>Name</label>
+                            <label>Fullname</label>
                             <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
                         </div>
+                        <div class="input">
+                                <label>Username</label>
+                                <input type="text" name="name" value="${user.username}" disabled>
+                            </div>
                         <div class="input">
                             <label>Course</label>
                             <select name="newCourseId" class="form-select">

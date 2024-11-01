@@ -136,8 +136,12 @@
                         <h2>View Request Detail</h2>
                         <div class="form">
                             <div class="input">
-                                <label>Name</label>
+                                <label>Fullname</label>
                                 <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
+                            </div>
+                            <div class="input">
+                                <label>Username</label>
+                                <input type="text" name="name" value="${user.username}" disabled>
                             </div>
                             <div class="input">
                                 <label>Course</label>
@@ -172,7 +176,12 @@
                                 </div>
                             </c:if>
                             <% session.removeAttribute("message"); %>
-                            <button type="button" class="button-applyCourse" onclick="window.location.href = 'editRequestForMentor.jsp'">EDIT REQUEST</button>
+                            <c:if test="${req.requestStatus != 0}">
+                                <button type="button" class="button-applyCourse" style="background-color: #ccc; color: white; width: 400px; cursor: not-allowed" disabled>This Request Can Not Change Anymore</button>
+                            </c:if>
+                            <c:if test="${req.requestStatus == 0}">
+                                <button type="button" class="button-applyCourse" onclick="window.location.href = 'editRequestForMentor.jsp'">EDIT REQUEST</button>
+                            </c:if>
                         </div>
                     </c:if>
                 </div>

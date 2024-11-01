@@ -173,12 +173,8 @@
                                     </c:forEach></td>
                                 <td style="word-wrap: break-word; white-space: normal; max-width: 300px;">${req.requestReason}</td>
                                 <td>
-                                    <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}" 
-                                       <c:if test="${req.requestStatus != 0}">
-                                           style="color: gray; pointer-events: none;" 
-                                       </c:if>>                                  
-                                        <i class="fas fa-eye" 
-                                           style="<c:if test='${req.requestStatus != 0}'>color: gray;</c:if>">
+                                    <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}">                                  
+                                        <i class="fas fa-eye">
                                            </i>
                                         </a>
                                     </td>
