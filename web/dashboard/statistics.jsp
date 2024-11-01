@@ -90,17 +90,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Messages in Conversations -->
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="text_page_head">Messages in Conversations</h4>
-                                    <div class="chart-container">
-                                        <canvas id="messagesChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </section>
