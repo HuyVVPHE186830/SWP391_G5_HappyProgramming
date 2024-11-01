@@ -33,6 +33,26 @@ public class ManagerBlog extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Retrieve the search query from the request
+        String searchQuery = request.getParameter("valueSearch");
+        
+        BlogDAO blogDAO = new BlogDAO();
+        List<Blog> blogList;
+        
+        // Check if searchQuery is not null or empty
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            // Search blogs based on the query
+            blogList = blogDAO.searchBlogs(searchQuery);
+        } else {
+            // If no search query, retrieve all blogs
+            blogList = blogDAO.getAllBlogs();
+        }
+        
+        // Set the blogList attribute in the session
+        HttpSession session = request.getSession();
+        session.setAttribute("blogList", blogList);
+        
+        // Forward to the JSP page for displaying the blogs
+        request.getRequestDispatcher("dashboard/mngblog.jsp").forward(request, response);
     }
 }

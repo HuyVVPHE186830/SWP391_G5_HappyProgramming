@@ -30,7 +30,7 @@ public class UpdateBlogControl extends HttpServlet {
             blogDAO.updateBlog(blog);
         }
 
-        response.sendRedirect("ManagerBlog");
+        response.sendRedirect("managerBlog");
     }
 
     @Override

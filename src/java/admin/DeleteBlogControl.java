@@ -17,7 +17,7 @@ public class DeleteBlogControl extends HttpServlet {
         BlogDAO blogDAO = new BlogDAO();
         blogDAO.deleteBlog(blogId);
 
-        response.sendRedirect("ManagerBlog");
+        response.sendRedirect("managerBlog");
     }
 
     @Override
