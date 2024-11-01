@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.PrintWriter;
 
 public class ManagerBlog extends HttpServlet {
 
@@ -21,6 +22,8 @@ public class ManagerBlog extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("blogList", blogList);
 
+        PrintWriter out = response.getWriter();
+        out.print(blogList);
         request.getRequestDispatcher("dashboard/mngblog.jsp").forward(request, response);
     }
 
