@@ -15,7 +15,7 @@
                 <i style="margin-right: 10px; font-size: 18px" class="fas fa-user-circle fa-fw me-3"></i>
                 <span style="font-size: 16px; font-weight: 600">Accounts</span>
             </a>
-            <a href="<%= request.getContextPath() %>/ManagerBlog" class="list-group-item list-group-item-action" style="margin-top: 10px">
+            <a href="<%= request.getContextPath() %>/managerBlog" class="list-group-item list-group-item-action" style="margin-top: 10px">
                 <i style="margin-right: 10px; font-size: 18px" class="fas fa-user-circle fa-fw me-3"></i>
                 <span style="font-size: 16px; font-weight: 600">Blogs</span>
             </a>

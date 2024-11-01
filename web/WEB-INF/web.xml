@@ -198,7 +198,7 @@
     </servlet>
     <servlet>
         <servlet-name>ManagerBlog</servlet-name>
-        <servlet-class>ManagerBlog</servlet-class>
+        <servlet-class>admin.ManagerBlog</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
@@ -398,6 +398,6 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ManagerBlog</servlet-name>
-        <url-pattern>/ManagerBlog</url-pattern>
+        <url-pattern>/managerBlog</url-pattern>
     </servlet-mapping>
 </web-app>
