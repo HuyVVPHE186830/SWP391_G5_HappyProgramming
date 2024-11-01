@@ -28,55 +28,39 @@ public class BlogDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
 
-            // Temporary storage for blog data
-            int currentBlogId = -1;
-            Blog currentBlog = null;
-            List<String> imageUrls = new ArrayList<>();
-            List<Tag> tags = new ArrayList<>();
+            Map<Integer, Blog> blogMap = new HashMap<>(); // Map to track unique blogs by blogId
 
             while (rs.next()) {
                 int blogId = rs.getInt("blog_Id");
 
-                if (blogId != currentBlogId) {
-                    if (currentBlog != null) {
-                        currentBlog.setTags(tags);
-                        currentBlog.setImageUrls(imageUrls);
-                        list.add(currentBlog);
-                    }
-
+                // Check if this blogId is already in the map
+                Blog blog = blogMap.get(blogId);
+                if (blog == null) {
                     // Create a new Blog object for a new blogId
                     String title = rs.getString("title");
                     String content = rs.getString("content");
                     String createdBy = rs.getString("user_Name");
 
-                    currentBlog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
-                    currentBlogId = blogId;
-
-                    // Reset imageUrls and tags lists for the new blog
-                    imageUrls = new ArrayList<>();
-                    tags = new ArrayList<>();
+                    blog = new Blog(blogId, title, content, createdBy, new ArrayList<>(), new ArrayList<>());
+                    blogMap.put(blogId, blog); // Add the blog to the map
+                    list.add(blog); // Add to the final list
                 }
 
-                // Add the current row's imageUrl and tag to the respective lists
+                // Add the current row's imageUrl if available and unique
                 String imageUrl = rs.getString("image_url");
-                if (imageUrl != null && !imageUrl.isEmpty()) {
-                    imageUrls.add(imageUrl);
+                if (imageUrl != null && !imageUrl.isEmpty() && !blog.getImageUrls().contains(imageUrl)) {
+                    blog.getImageUrls().add(imageUrl);
                 }
 
-                // Create a new Tag object and add to the tags list
+                // Add the current row's tag if available and unique
                 int tagId = rs.getInt("tag_id");
                 String tagName = rs.getString("tag_name");
                 if (tagName != null && !tagName.isEmpty()) {
-                    Tag tag = new Tag(tagId, tagName); // Create Tag object
-                    tags.add(tag); // Add Tag to list
+                    Tag tag = new Tag(tagId, tagName);
+                    if (!blog.getTags().contains(tag)) {
+                        blog.getTags().add(tag); // Add unique Tag to blog
+                    }
                 }
-            }
-
-            // Add the last blog in the result set
-            if (currentBlog != null) {
-                currentBlog.setTags(tags);
-                currentBlog.setImageUrls(imageUrls);
-                list.add(currentBlog);
             }
 
         } catch (SQLException ex) {

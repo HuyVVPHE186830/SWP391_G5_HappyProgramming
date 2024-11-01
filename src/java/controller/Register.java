@@ -97,8 +97,6 @@ public class Register extends HttpServlet {
         String repassword = request.getParameter("repassword");
         String dobString = request.getParameter("dob");
         Date dob = null;
-
-        // Parse date
         if (dobString != null && !dobString.isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
