@@ -270,25 +270,24 @@
                 <br/>
                 <style>
                     .review-summary-item {
-                        text-decoration: none; /* Không gạch chân */
-                        color: inherit; /* Duy trì màu chữ của phần tử con */
-                        display: flex; /* Để các phần tử con nằm ngang */
-                        align-items: center; /* Căn giữa theo chiều dọc */
-                        padding: 10px; /* Thêm khoảng cách bên trong */
-                        border: 1px solid #ccc; /* Đường viền cho mỗi mục */
-                        border-radius: 5px; /* Bo góc */
-                        margin-bottom: 10px; /* Khoảng cách giữa các mục */
-                        transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+                        text-decoration: none; 
+                        color: inherit; 
+                        display: flex;
+                        align-items: center;
+                        padding: 10px; 
+                        border: 1px solid #ccc;
+                        border-radius: 5px; 
+                        margin-bottom: 10px; 
+                        transition: background-color 0.3s; 
                     }
 
                     .review-summary-item:hover {
-                        background-color: purple; /* Thay đổi màu nền khi di chuột */
+                        background-color: purple; 
                     }
 
-                    /* Đảm bảo không có gạch chân cho tất cả các liên kết trong review-summary-item */
                     .review-summary-item:hover {
-                        text-decoration: none; /* Không gạch chân khi hover */
-                        color: inherit; /* Giữ màu chữ không thay đổi khi hover */
+                        text-decoration: none;
+                        color: inherit; 
                     }
                 </style>
                 <div class="review-summary">
