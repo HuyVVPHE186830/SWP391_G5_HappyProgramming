@@ -292,7 +292,7 @@
                     }
                 </style>
                 <div class="review-summary">
-                    <a href="rating?ratedId=${userById.id}" class="review-summary-item">
+                    <a href="rating?ratedId=${ratedUser.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>All (${turnStar})</span>
                     </a>
@@ -317,7 +317,7 @@
                         <span>5 Star (${turnStar5})</span>
                     </a>
                 </div>
- <div class="review-item">
+                <div class="review-item">
                     <c:forEach items="${ratingList}" var="f">
                         <c:forEach items="${listRatedFromToId}" var="fti">
 
@@ -334,7 +334,7 @@
                         </c:forEach>
                     </c:forEach>
                 </div>
-              
+
             </div>
         </div>
 

@@ -152,16 +152,6 @@
                                 </div>
                             </div>
                         </a>
-                        <h3 style="margin-bottom: 20px;">Rating Of This Mentor</h3>
-                        <c:if test="${sessionScope.user.username != mD.username}">
-                            <a href="Rating?search=feedback&ratedId=${mentorDetail.id}" class="rating-container"> 
-                                <span class="avg">${requestScope.avg}</span> 
-                                <span class="star">★</span> 
-                            </a>
-                        </c:if>
-
-                        <h3>Email: ${mD.mail}</h3>
-                        <p>Date Of Birth: ${mD.dob}</p>
                         <c:if test="${sessionScope.user.username != mD.username}">
                             <form action="requestScreen" method="post">
                                 <input type="hidden" name="courseId" value="${cM.courseId}">
