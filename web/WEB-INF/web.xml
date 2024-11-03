@@ -161,10 +161,6 @@
         <servlet-class>controller.DeleteRequestForMentor</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RatingController</servlet-name>
-        <servlet-class>controller.RatingController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>manageCourseComment</servlet-name>
         <servlet-class>controller.ManageCourseComment</servlet-class>
     </servlet>
@@ -183,6 +179,10 @@
     <servlet>
         <servlet-name>DeleteBlogServlet</servlet-name>
         <servlet-class>controller.DeleteBlogServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MentorFeedBack</servlet-name>
+        <servlet-class>controller.MentorFeedBack</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
@@ -345,10 +345,6 @@
         <url-pattern>/deleteRequestForMentor</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>RatingController</servlet-name>
-        <url-pattern>/Rating</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>manageCourseComment</servlet-name>
         <url-pattern>/manageCourseComment</url-pattern>
     </servlet-mapping>
@@ -368,4 +364,11 @@
         <servlet-name>DeleteBlogServlet</servlet-name>
         <url-pattern>/deleteBlog</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MentorFeedBack</servlet-name>
+        <url-pattern>/rating</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
 </web-app>

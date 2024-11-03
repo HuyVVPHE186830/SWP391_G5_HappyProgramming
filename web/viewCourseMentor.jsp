@@ -3,7 +3,6 @@
     Created on : Oct 8, 2024, 9:12:48 PM
     Author     : ThuanNV
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>

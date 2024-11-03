@@ -179,9 +179,9 @@
 
         <div class="container">
             <div class="seller-info">
-                <img class="avatar-large" src="data:image/jpeg;base64,${userById.avatarPath}" alt="Seller Avatar">
+                <img class="avatar-large" src="data:image/jpeg;base64,${ratedUser.avatarPath}" alt="Seller Avatar">
                 <div class="profile-details">
-                    <h3>${userById.username}'s FEEDBACK 
+                    <h3>[${ratedUser.username}]'s FEEDBACK 
                     </h3>
 
 
@@ -203,9 +203,18 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="submitFeedback" method="POST">
+                            <form action="rating?action=rate-this-guy" method="POST">
                                 <div class="form-group">
-                                    <label for="rating">Rating</label>
+                                    <label for="course">Select Course</label>
+                                    <select class="form-control" name="couRseId" required>
+                                        <option value="">Select a course</option>
+                                        <c:forEach items="${listCourseOfRated}" var="coo">
+                                            <option value="${coo.courseId}">${coo.courseName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rating">rating</label>
                                     <select class="form-control" name="rating" required>
                                         <option value="">Select a rating</option>
                                         <option value="1">1 Star</option>
@@ -219,8 +228,8 @@
                                     <label for="comment">Comment</label>
                                     <textarea class="form-control" name="comment" rows="3" required></textarea>
                                 </div>
-                                <input type="hidden" name="ratedId" value="${userById.id}">
-                                <input type="hidden" name="userN" value="${userById.username}">
+                                <input type="hidden" name="ratedId" value="${ratedUser.id}">
+                                <input type="hidden" name="userN" value="${user.id}">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Submit Feedback</button>
@@ -233,13 +242,13 @@
 
             <div class="review-container">
                 <div class="review-header" style="display: flex; align-items: center;">
-                    <h2 style="margin-right: 20px;">Product Reviews</h2> <!-- Added margin for spacing -->
+                    <h2 style="margin-right: 20px;">Product Reviews</h2> 
                     <div class="sort-by">
                         <span>Choose course:</span>
                         <select id="courseSelect" onchange="redirectToCourse(this)">
                             <option value="">Select a course</option>
                             <c:forEach items="${listCourseOfRated}" var="course">
-                                <option value="Rating?search=rate-by-course&ratedId=${userById.id}&courseid=${course.courseId}">
+                                <option value="rating?search=rate-by-course&ratedId=${userById.id}&courseid=${course.courseId}">
                                     ${course.courseName}
                                 </option>
                             </c:forEach>
@@ -283,59 +292,33 @@
                     }
                 </style>
                 <div class="review-summary">
-                    <a href="Rating?ratedId=${userById.id}" class="review-summary-item">
+                    <a href="rating?ratedId=${userById.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>All (${turnStar})</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=1&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
+                    <a href="rating?search=search-by-noStar&noStar=1&ratedId=${ratedUser.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>1 Star (${turnStar1})</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=2&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
-                        <i class="fas fa-star"></i>
+                    <a href="rating?search=search-by-noStar&noStar=2&ratedId=${ratedUser.id}" class="review-summary-item">
+                        <i class="fas fa-sta    r"></i>
                         <span>2 Star (${turnStar2})</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=3&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
+                    <a href="rating?search=search-by-noStar&noStar=3&ratedId=${ratedUser.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>3 Star (${turnStar3})</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=4&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
+                    <a href="rating?search=search-by-noStar&noStar=4&ratedId=${ratedUser.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>4 Star (${turnStar4})</span>
                     </a>
-                    <a href="Rating?search=search-by-noStar&noStar=5&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
+                    <a href="rating?search=search-by-noStar&noStar=5&ratedId=${ratedUser.id}" class="review-summary-item">
                         <i class="fas fa-star"></i>
                         <span>5 Star (${turnStar5})</span>
                     </a>
                 </div>
 
-                <div class="review-item">
-                    <c:forEach items="${listFeedBack}" var="f">
-                        <c:set var="user" value="${null}" />
-                        <c:set var="cou" value="${null}" />
-                        <c:forEach items="${listCourseOfRated}" var="cr">
-                            <c:if test="${cr.courseId == f.courseId}">
-                                <c:set var="cou" value="${rr}" />
-                            </c:if>
-                        </c:forEach>
-                        <c:forEach items="${listRatedFrom}" var="u">
-                            <c:if test="${u.username == f.ratedFromUser}">
-                                <c:set var="user" value="${u}" />
-                            </c:if>
-                        </c:forEach>
-
-                        <div class="user-info">
-                            <img src="data:image/jpeg;base64,${user.avatarPath}" alt="User Avatar">
-                            <span class="username">${user.username} To ${rr.courseName}</span>
-                        </div>
-                        (${f.noStar}/5.0★)
-                        <br/>
-                        <div class="review-content">
-                            ${f.ratingComment}
-                        </div>
-                        <hr/>
-                    </c:forEach>
-                </div>
+              
             </div>
         </div>
 

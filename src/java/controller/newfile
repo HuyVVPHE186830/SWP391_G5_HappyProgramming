@@ -1,0 +1,304 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package controller;
+
+import dal.CourseDAO;
+import dal.RatingDAO;
+import dal.UserDAO;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Course;
+import model.Rating;
+import model.User;
+
+/**
+ *
+ * @author mONESIUU
+ */
+public class RatingController extends HttpServlet {
+
+    RatingDAO rateDAO = new RatingDAO();
+    UserDAO userDAO = new UserDAO();
+    CourseDAO courseDAO = new CourseDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<User> userList = userDAO.getAll();
+        int userID = Integer.parseInt(request.getParameter("ratedId"));
+
+        User userById = userDAO.getUserById(userID);
+        float userRatedStar = rateDAO.getAverageStar(userID);
+        int rankStar = rateDAO.getRankMentor(userID);
+        List<User> listRatedFrom = userDAO.getAll();
+        List<Integer> listDis = rateDAO.getDistinctNoStars();
+        List<Course> listCourseOfRated = rateDAO.getCourseByRated(userID);
+        
+        
+        
+        List<Rating> listFeedBack = findRatingDoGet(request);
+        
+        int turnStar = rateDAO.getTurnStarOverallByUserId(userID);
+        int turnStar1 = rateDAO.getTurnStar(1, userID);
+        int turnStar2 = rateDAO.getTurnStar(2, userID);
+        int turnStar3 = rateDAO.getTurnStar(3, userID);
+        int turnStar4 = rateDAO.getTurnStar(4, userID);
+        int turnStar5 = rateDAO.getTurnStar(5, userID);
+        
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("turnStar", turnStar);
+        session.setAttribute("turnStar1", turnStar1);
+        session.setAttribute("turnStar2", turnStar2);
+        session.setAttribute("turnStar3", turnStar3);
+        session.setAttribute("turnStar4", turnStar4);
+        session.setAttribute("turnStar5", turnStar5);
+
+        session.setAttribute("listRatedFrom", listRatedFrom);
+        session.setAttribute("listCourseOfRated", listCourseOfRated);
+        session.setAttribute("rankStar", rankStar);
+        session.setAttribute("userRatedStar", userRatedStar);
+        session.setAttribute("listFeedBack", listFeedBack);
+        session.setAttribute("listDis", listDis);
+        session.setAttribute("userList", userList);
+        session.setAttribute("userById", userById);
+        
+        request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
+
+    }
+
+    private List<Rating> findRatingDoGet(HttpServletRequest request) {
+        String actionSearch = request.getParameter("search") == null
+                ? "default"
+                : request.getParameter("search");
+        List<Rating> listRate;
+        String requestURL = request.getRequestURL().toString();
+        switch (actionSearch) {
+            case "test":
+                int ratedID5 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID5);
+                break;
+
+            default:
+                int ratedID2 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID2);
+                request.setAttribute("urlPattern", requestURL + "?ratedId=" + ratedID2);
+        }
+        return listRate;
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    }
+
+
+    @Override
+
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
+---------------------------------------------
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package controller;
+
+import dal.CourseDAO;
+import dal.RatingDAO;
+import dal.UserDAO;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Course;
+import model.Rating;
+import model.User;
+
+/**
+ *
+ * @author mONESIUU
+ */
+public class RatingController extends HttpServlet {
+
+    RatingDAO rateDAO = new RatingDAO();
+    UserDAO userDAO = new UserDAO();
+    CourseDAO courseDAO = new CourseDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<User> userList = userDAO.getAll();
+        int userID = Integer.parseInt(request.getParameter("ratedId"));
+
+        User userById = userDAO.getUserById(userID);
+        float userRatedStar = rateDAO.getAverageStar(userID);
+        int rankStar = rateDAO.getRankMentor(userID);
+        List<User> listRatedFrom = userDAO.getAll();
+        List<Integer> listDis = rateDAO.getDistinctNoStars();
+        List<Course> listCourseOfRated = rateDAO.getCourseByRated(userID);
+        
+        
+        
+        List<Rating> listFeedBack = findRatingDoGet(request);
+        
+        int turnStar = rateDAO.getTurnStarOverallByUserId(userID);
+        int turnStar1 = rateDAO.getTurnStar(1, userID);
+        int turnStar2 = rateDAO.getTurnStar(2, userID);
+        int turnStar3 = rateDAO.getTurnStar(3, userID);
+        int turnStar4 = rateDAO.getTurnStar(4, userID);
+        int turnStar5 = rateDAO.getTurnStar(5, userID);
+        
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("turnStar", turnStar);
+//        session.setAttribute("turnStar1", turnStar1);
+        session.setAttribute("turnStar2", turnStar2);
+        session.setAttribute("turnStar3", turnStar3);
+        session.setAttribute("turnStar4", turnStar4);
+        session.setAttribute("turnStar5", turnStar5);
+
+        session.setAttribute("listRatedFrom", listRatedFrom);
+        session.setAttribute("listCourseOfRated", listCourseOfRated);
+        session.setAttribute("rankStar", rankStar);
+        session.setAttribute("userRatedStar", userRatedStar);
+        session.setAttribute("listFeedBack", listFeedBack);
+        session.setAttribute("listDis", listDis);
+        session.setAttribute("userList", userList);
+        session.setAttribute("userById", userById);
+        
+        request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
+
+    }
+
+    private List<Rating> findRatingDoGet(HttpServletRequest request) {
+        String actionSearch = request.getParameter("search") == null
+                ? "default"
+                : request.getParameter("search");
+        List<Rating> listRate;
+        String requestURL = request.getRequestURL().toString();
+        switch (actionSearch) {
+            case "search-by-noStar":
+                int numS = Integer.parseInt(request.getParameter("noStar"));
+                String us = request.getParameter("userN");
+                listRate = rateDAO.getRateByNoStar2(numS, us);
+                request.setAttribute("urlPattern", requestURL + "?search=search-by-noStar&noStar=" + numS + "&ratedId=${userById.id}&&userN" + us);
+                break;
+            case "feedback":
+                int ratedID = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID);
+                request.setAttribute("urlPattern", requestURL + "?search=feedback&ratedId=" + ratedID);
+                break;
+            case "rate-by-course":
+                int courseID = Integer.parseInt(request.getParameter("courseid"));
+                int ratedID4 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByCourse(courseID, ratedID4);
+                request.setAttribute("urlPattern", requestURL + "?search=rate-by-course&ratedId=" + ratedID4 + "&courseid=" + courseID);
+                break;
+            case "test":
+                int ratedID5 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID5);
+                break;
+
+            default:
+                int ratedID2 = Integer.parseInt(request.getParameter("ratedId"));
+                listRate = rateDAO.getRateByUserId(ratedID2);
+                request.setAttribute("urlPattern", requestURL + "?ratedId=" + ratedID2);
+        }
+        return listRate;
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String actioN = request.getParameter("action");
+        HttpSession session = request.getSession(false);
+
+        switch (actioN) {
+            case "rate-this-guy":
+                int ratedID = Integer.parseInt(request.getParameter("ratedId"));
+                int ratedFromID = Integer.parseInt(request.getParameter("userN"));
+                int courssE = Integer.parseInt(request.getParameter("couRseId"));
+                int noS = Integer.parseInt(request.getParameter("rating"));
+                String com = request.getParameter("comment");
+                List<Course> listCourseByBoth = courseDAO.getAll();
+                session.setAttribute("listCourseByBoth", listCourseByBoth);
+                session.setAttribute("ratedID", ratedID);
+                rateDAO.addFeedbackById(ratedFromID, ratedID, noS, courssE, com);
+                response.sendRedirect("Rating?ratedId=" + ratedID);
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+//    @Override
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        String actioN = request.getParameter("action");
+//
+//        if ("rate-this-guy".equals(actioN)) {
+//            // Lấy các tham số từ request
+//            String ratedID = request.getParameter("ratedId");
+//            String ratedFromId = request.getParameter("userN");
+//            String courseId = request.getParameter("couRseId");
+//            String rating = request.getParameter("rating");
+//            String comment = request.getParameter("comment");
+//
+//            // Tạo chuỗi kết quả
+//            String resultMessage = "Rated ID: " + ratedID + "<br>"
+//                    + "Rated From: " + ratedFromId + "<br>"
+//                    + "Course ID: " + courseId + "<br>"
+//                    + "Rating: " + rating + "<br>"
+//                    + "Comment: " + comment;
+//
+//            // Set chuỗi kết quả vào request
+//            request.setAttribute("resultMessage", resultMessage);
+//        } 
+//
+//        // Chuyển hướng đến result.jsp
+//        request.getRequestDispatcher("result.jsp").forward(request, response);
+//    }
+
+    @Override
+
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
+--------------------------------------------------------------------------------
+<a href="Rating?search=search-by-noStar&noStar=1&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
+                        <i class="fas fa-star"></i>
+                        <span>1 Star (${turnStar1})</span>
+                    </a>
+ <a href="Rating?search=search-by-noStar&noStar=2&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
+                        <i class="fas fa-star"></i>
+                        <span>2 Star (${turnStar2})</span>
+                    </a>
+                    <a href="Rating?search=search-by-noStar&noStar=3&ratedId=${userById.id}&userN=${userById.username}" class="review-summary-item">
+                        <i class="fas fa-star"></i>
+                        <span>3 Star (${turnStar3})</span>
+                    </a>
+                    <a href="Rating?search=search-by-noStar&noStar=4&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
+                        <i class="fas fa-star"></i>
+                        <span>4 Star (${turnStar4})</span>
+                    </a>
+                    <a href="Rating?search=search-by-noStar&noStar=5&ratedId=${userById.id}&&userN=${userById.username}" class="review-summary-item">
+                        <i class="fas fa-star"></i>
+                        <span>5 Star (${turnStar5})</span>
+                    </a>

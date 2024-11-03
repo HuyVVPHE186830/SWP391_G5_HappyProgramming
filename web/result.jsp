@@ -4,7 +4,7 @@
     <title>Test ViewMentor</title>
 </head>
 <body>
-    <h1>Kiểm Tra ViewMentor : ${test}</h1>
+    <h1>Kiểm Tra ViewMentor : ${resultMessage}</h1>
    
 </body>
 </html>

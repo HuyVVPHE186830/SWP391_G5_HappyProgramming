@@ -78,7 +78,7 @@ public class ViewMentor extends HttpServlet {
         }
         String courseId_str = request.getParameter("courseId");
         int courseID = Integer.parseInt(request.getParameter("courseId"));
-        float ratedToUser = Float.parseFloat(request.getParameter("userId"));
+        int ratedToUser = Integer.parseInt(request.getParameter("userId"));
         try {
             int courseId = Integer.parseInt(courseId_str);
             int userId = Integer.parseInt(userId_str);

@@ -18,10 +18,38 @@ public class User {
     private boolean isVerified;
     private String verificationCode;
     private int roleId;
+    private String courseName;
 
     // Constructors
     public User() {
     }
+
+    public User(int id, String username, String password, String firstName, String lastName, Date dob, String mail, Date createdDate, String avatarPath, String cvPath, boolean activeStatus, boolean isVerified, String verificationCode, int roleId, String courseName) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.mail = mail;
+        this.createdDate = createdDate;
+        this.avatarPath = avatarPath;
+        this.cvPath = cvPath;
+        this.activeStatus = activeStatus;
+        this.isVerified = isVerified;
+        this.verificationCode = verificationCode;
+        this.roleId = roleId;
+        this.courseName = courseName;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+    
 
     public User(int id, String username, String password, String firstName, String lastName, Date dob, String mail, Date createdDate, String avatarPath, String cvPath, boolean activeStatus, boolean isVerified, String verificationCode, int roleId) {
         this.id = id;

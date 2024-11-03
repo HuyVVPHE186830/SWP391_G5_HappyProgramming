@@ -90,7 +90,7 @@
                 text-decoration: none; /* Remove underline for links */
                 color: inherit; /* Inherit color */
             }
-         
+
 
             .rating-container:hover {
                 background-color: #e0e0e0; /* Change background on hover */
@@ -138,10 +138,13 @@
                     </div>
                     <div class="content-right">
                         <h2>${mD.lastName} ${mD.firstName}</h2>
-                        <h3>Course: ${cM.courseName} <a href="Rating" class="link-2">(${cT.categoryName})</a></h3>
+                        <h3>Course: ${cM.courseName} <a href="rating" class="link-2">(${cT.categoryName})</a></h3>
 
-                        <h3>Đánh giá của Mentor:</h3>
-                    <a href="Rating?search=feedback&ratedId=${mentorDetail.id}"> 
+                        <!--<h3>rating for this course:</h3>-->
+
+                        <h3>Email: ${mD.mail}</h3>
+                        <p>Date Of Birth: ${mD.dob}</p>
+                        <a href="rating?ratedId=${mentorDetail.id}"> 
                             <div class="rating-container">
                                 <div class="rating-display">
                                     <span class="avg">${requestScope.avg}</span> 
@@ -149,9 +152,6 @@
                                 </div>
                             </div>
                         </a>
-
-                        <h3>Email: ${mD.mail}</h3>
-                        <p>Date Of Birth: ${mD.dob}</p>
                         <c:if test="${sessionScope.user.username != mD.username}">
                             <form action="requestScreen" method="post">
                                 <input type="hidden" name="courseId" value="${cM.courseId}">
