@@ -23,6 +23,44 @@
 
             }
 
+            .search-bar {
+                display: flex;
+                align-items: center;
+                margin: 0 auto;
+                width: 100%;
+                max-width: 40%;
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 10px;
+            }
+
+            .input-submit {
+                border: none;
+                padding: 10px;
+                flex: 1;
+                border-radius: 10px 0 0 10px;
+                font-size: 16px;
+                outline: none;
+                background-color: #f2f2f2; 
+                opacity: 2;
+            }
+
+            .button-submit {
+                background-color: #5e3fd3;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 0 10px 10px 0;
+                font-size: 16px;
+                transition: all 1s ease;
+                font-weight: bold;
+            }
+
+            .button-submit:hover {
+                background-color: #541371;
+            }
+
             .title {
                 font-size: 2rem;
                 text-align: center;
@@ -46,7 +84,7 @@
             .table th, .table td {
                 padding: 15px;
                 text-align: center;
-                font-size: 0.9rem;
+                font-size: 1rem;
             }
 
             .table thead th {
@@ -98,6 +136,11 @@
         <!-- TABLE -->
         <div class="content">
             <h3 class="title">List Request Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
+            <form action="#" method="post" class="search-bar">
+                <input type="hidden" name="search" value="searchByName"/>
+                <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                <input type="submit" class="button-submit" value="Search">
+            </form>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -130,12 +173,8 @@
                                     </c:forEach></td>
                                 <td style="word-wrap: break-word; white-space: normal; max-width: 300px;">${req.requestReason}</td>
                                 <td>
-                                    <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}" 
-                                       <c:if test="${req.requestStatus != 0}">
-                                           style="color: gray; pointer-events: none;" 
-                                       </c:if>>                                  
-                                        <i class="fas fa-eye" 
-                                           style="<c:if test='${req.requestStatus != 0}'>color: gray;</c:if>">
+                                    <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}">                                  
+                                        <i class="fas fa-eye">
                                            </i>
                                         </a>
                                     </td>
@@ -161,7 +200,7 @@
                 </tbody>
             </table>
         </div>
-            
+
         <!-- CHAT -->
         <jsp:include page="chat.jsp"/>
     </body>

@@ -368,7 +368,6 @@
                             </div>
                         </c:if>
                         <% session.removeAttribute("error"); %>
-
                         <c:if test="${not empty sessionScope.note}">
                             <div class="success-message">
                                 ${sessionScope.note}

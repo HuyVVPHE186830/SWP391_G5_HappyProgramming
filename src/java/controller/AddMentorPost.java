@@ -89,20 +89,14 @@ public class AddMentorPost extends HttpServlet {
         int courseId = Integer.parseInt(courseIdStr);
         String createdBy = request.getParameter("username");
 
-        // Khai báo biến deadline
         Timestamp deadline = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        // Chuyển đổi deadline từ String sang java.sql.Timestamp
         try {
-            // Phân tích chuỗi thành đối tượng Date
             Date date = dateFormat.parse(deadlineStr);
-            // Chuyển đổi Date thành Timestamp
             deadline = new Timestamp(date.getTime());
         } catch (ParseException e) {
             System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
         }
-
-        // Tạo đối tượng MentorPost
         MentorPost mentorPost = new MentorPost();
         mentorPost.setPostTitle(postTitle);
         mentorPost.setPostContent(postContent);
@@ -110,7 +104,7 @@ public class AddMentorPost extends HttpServlet {
         mentorPost.setDeadline(deadline);
         mentorPost.setCourseId(courseId);
         mentorPost.setCreatedBy(createdBy);
-        mentorPost.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Đặt createdAt là thời gian hiện tại
+        mentorPost.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         mentorPostDAO.addMentorPost(mentorPost);
 
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);

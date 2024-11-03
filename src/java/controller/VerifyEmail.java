@@ -76,7 +76,7 @@ public class VerifyEmail extends HttpServlet {
             if (emailSent) {
                 session.setAttribute("message-verify", "Verification code has been sent to " + user.getMail());
             } else {
-                session.setAttribute("error-message-verify", "Failed to send verification email. Please try again.");
+                session.setAttribute("error-message-verify", "Failed to send verification email. Please try again!");
             }
             request.getRequestDispatcher("verifyEmail.jsp").forward(request, response);
             return;

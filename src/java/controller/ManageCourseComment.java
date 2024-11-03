@@ -82,7 +82,6 @@ public class ManageCourseComment extends HttpServlet {
         String mentorName = request.getParameter("mentorName");
         String commentContent = request.getParameter("commentContent");
         UserDAO daoU = new UserDAO();
-
         if (postIdString != null && commentContent != null && !commentContent.trim().isEmpty()) {
             try {
                 int postId = Integer.parseInt(postIdString);
@@ -100,18 +99,18 @@ public class ManageCourseComment extends HttpServlet {
 
                 StringBuilder commentHtml = new StringBuilder();
                 commentHtml.append("<div class='comment d-flex align-items-start mb-3' style='margin-bottom: 5px !important;'>")
-                        .append("<img src='data:image/jpeg;base64,") // Bạn cần thay thế bằng cách lấy ảnh người dùng
+                        .append("<img src='data:image/jpeg;base64,")
                         .append(user.getAvatarPath()).append("' alt='Avatar' class='avatar-image' style='width:40px; height:40px; border-radius:50%; object-fit: cover;'>")
                         .append("<div class='comment-body' style='background-color: #f1f1f1; margin-left:10px; padding: 10px; border-radius: 5px;'>")
                         .append("<div class='comment-author-info d-flex justify-content-between align-items-center'>")
                         .append("<p class='comment-author fw-bold mb-1' style='font-weight: bold; margin-bottom: 0;'>")
-                        .append(user.getLastName()).append(" ").append(user.getFirstName()).append("</p>") // Tên và họ của người dùng
+                        .append(user.getLastName()).append(" ").append(user.getFirstName()).append("</p>")
                         .append("</div>")
                         .append("<p class='comment-text' style='margin-bottom: 0'>")
-                        .append(commentContent).append("</p>") // Nội dung bình luận
-                        .append("</div></div>") // Đóng comment-body và comment
+                        .append(commentContent).append("</p>")
+                        .append("</div></div>")
                         .append("<p style='font-size: 0.8em; color: gray; margin: 0 50px 10px;'>")
-                        .append(new SimpleDateFormat("dd-MM-yyyy, HH:mm").format(commentedAt)) // Thời gian bình luận
+                        .append(new SimpleDateFormat("dd-MM-yyyy, HH:mm").format(commentedAt))
                         .append("</p>");
 
                 response.setContentType("text/html");

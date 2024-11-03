@@ -47,7 +47,7 @@ public class UserDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        return null; 
+        return null;
     }
 
     public List<User> getAll() {
@@ -117,6 +117,36 @@ public class UserDAO extends DBContext {
                 boolean activeStatus = rs.getBoolean("activeStatus");
                 boolean isVerified = rs.getBoolean("isVerified");
                 String verificationCode = rs.getString("verification_code");
+                list.add(new User(id, username, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<User> getAllUserByRatingStar() {
+        List<User> list = new ArrayList<>();
+        String sql = "select [User].* from [User] join Rating on ratedToUser = [User].username\n"
+                + "join Course on Rating.courseId = Course.courseId";
+        try (PreparedStatement pre = connection.prepareStatement(sql)) {
+            ResultSet rs = pre.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
                 list.add(new User(id, username, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId));
             }
         } catch (SQLException e) {
@@ -698,14 +728,14 @@ public class UserDAO extends DBContext {
         UserDAO dao = new UserDAO();
         User user = dao.getUserById(31);
         List<User> list = dao.getAllMentorBySearchKey(1, "h");
-        for(User l : list) {
+        for (User l : list) {
             System.out.println(l);
         }
-        if(user != null){
+        if (user != null) {
             System.out.println(user);
-        }else{
+        } else {
             System.out.println("Not found");
         }
-      
+
     }
 }

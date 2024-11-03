@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class StatisticsController extends HttpServlet {
 
@@ -16,19 +17,27 @@ public class StatisticsController extends HttpServlet {
             throws ServletException, IOException {
         StatisticsDAO dao = new StatisticsDAO();
 
-        // Fetch statistics
+        // Get filter parameters
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String user = request.getParameter("user");
+
+        // Fetch statistics based on filters
         Map<String, Integer> userRolesStats = dao.getUserRolesStats();
         Map<String, Integer> courseStats = dao.getCoursesStats();
-        Map<String, Integer> userBlogStats = dao.getUserBlogStats();
+        Map<String, Integer> userBlogStats = dao.getUserBlogStats(startDate, endDate, user);  // Pass filters here
         Map<String, Integer> messageStats = dao.getMessagesStats();
 
-        // Set the attributes for JSP to access
+        // Fetch all users for the dropdown
+        List<String> allUsers = dao.getAllUsernames();
+
+        // Set attributes for JSP
         request.setAttribute("userRolesStats", userRolesStats);
         request.setAttribute("courseStats", courseStats);
         request.setAttribute("userBlogStats", userBlogStats);
         request.setAttribute("messageStats", messageStats);
+        request.setAttribute("allUsers", allUsers);
 
-        // Forward to JSP
         request.getRequestDispatcher("dashboard/statistics.jsp").forward(request, response);
     }
 

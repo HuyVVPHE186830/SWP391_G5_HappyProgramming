@@ -113,6 +113,81 @@ public class RatingDAO extends DBContext {
         return rating;
     }
 
+
+    public List<Rating> getRateByNoStar(int numS) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT * FROM [Rating] WHERE noStar = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, numS);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ratedFromUser = rs.getString("ratedFromUser");
+                    String ratedToUser = rs.getString("ratedToUser");
+                    int noStar = rs.getInt("noStar");
+                    int courseId = rs.getInt("courseId");
+                    String ratingComment = rs.getString("ratingComment");
+
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ratings;
+    }
+
+    public List<Rating> getRateByMentor(String ratedToUser) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT * FROM [Rating] WHERE rateToUser = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, ratedToUser);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ratedFromUser = rs.getString("ratedFromUser");
+                    int noStar = rs.getInt("noStar");
+                    int courseId = rs.getInt("courseId");
+                    String ratingComment = rs.getString("ratingComment");
+
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ratings;
+    }
+    
+    public List<Rating> getRateByCourseId(int courseId) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT * FROM [Rating] WHERE courseId = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, courseId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ratedFromUser = rs.getString("ratedFromUser");
+                    String ratedToUser = rs.getString("ratedToUser");
+                    int noStar = rs.getInt("noStar");
+                    String ratingComment = rs.getString("ratingComment");
+
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ratings;
+    }
+
+
     public List<Integer> getDistinctNoStars() {
         List<Integer> noStars = new ArrayList<>();
         String sql = "SELECT DISTINCT noStar FROM Rating ORDER BY noStar";
