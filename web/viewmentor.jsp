@@ -93,10 +93,7 @@
                 transition: transform 0.2s, box-shadow 0.2s;
                 text-decoration: none;
             }
-<<<<<<< HEAD
 
-=======
->>>>>>> f1d5b3ba4e35f75a0d806521da6a2a32f78a5917
 
             .rating-container:hover {
                 transform: translateY(-3px);
@@ -143,7 +140,6 @@
                         <h2>${mD.lastName} ${mD.firstName}</h2>
                         <h3>Course: ${cM.courseName} <a href="rating" class="link-2">(${cT.categoryName})</a></h3>
 
-<<<<<<< HEAD
                         <!--<h3>rating for this course:</h3>-->
 
                         <h3>Email: ${mD.mail}</h3>
@@ -156,7 +152,6 @@
                                 </div>
                             </div>
                         </a>
-=======
                         <h3 style="margin-bottom: 20px;">Rating Of This Mentor</h3>
                         <c:if test="${sessionScope.user.username != mD.username}">
                             <a href="Rating?search=feedback&ratedId=${mentorDetail.id}" class="rating-container"> 
@@ -167,7 +162,6 @@
 
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
->>>>>>> f1d5b3ba4e35f75a0d806521da6a2a32f78a5917
                         <c:if test="${sessionScope.user.username != mD.username}">
                             <form action="requestScreen" method="post">
                                 <input type="hidden" name="courseId" value="${cM.courseId}">

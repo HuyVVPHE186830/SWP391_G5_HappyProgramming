@@ -317,7 +317,23 @@
                         <span>5 Star (${turnStar5})</span>
                     </a>
                 </div>
+ <div class="review-item">
+                    <c:forEach items="${ratingList}" var="f">
+                        <c:forEach items="${listRatedFromToId}" var="fti">
 
+                            <div class="user-info">
+                                <img src="data:image/jpeg;base64,${fti.avatarPath}" alt="User Avatar">
+                                <span class="username">${f.ratedFromUser} To ${fti.courseName}</span>
+                            </div>
+                            (${f.noStar}/5.0★)
+                            <br/>
+                            <div class="review-content">
+                                ${f.ratingComment}
+                            </div>
+                            <hr/>
+                        </c:forEach>
+                    </c:forEach>
+                </div>
               
             </div>
         </div>

@@ -23,7 +23,7 @@ import model.User;
  *
  * @author mONESIUU
  */
-public class MentorFeedBack extends HttpServlet {
+public class FeedbackMentor extends HttpServlet {
 
     RatingDAO rateDAO = new RatingDAO();
     UserDAO userDAO = new UserDAO();

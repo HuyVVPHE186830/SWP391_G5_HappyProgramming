@@ -160,7 +160,6 @@
         <servlet-name>DeleteRequestForMentor</servlet-name>
         <servlet-class>controller.DeleteRequestForMentor</servlet-class>
     </servlet>
-  
     <servlet>
         <servlet-name>manageCourseComment</servlet-name>
         <servlet-class>controller.ManageCourseComment</servlet-class>
@@ -180,6 +179,10 @@
     <servlet>
         <servlet-name>DeleteBlogServlet</servlet-name>
         <servlet-class>controller.DeleteBlogServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FeedbackMentor</servlet-name>
+        <servlet-class>controller.FeedbackMentor</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
@@ -360,6 +363,10 @@
     <servlet-mapping>
         <servlet-name>DeleteBlogServlet</servlet-name>
         <url-pattern>/deleteBlog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FeedbackMentor</servlet-name>
+        <url-pattern>/rating</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
