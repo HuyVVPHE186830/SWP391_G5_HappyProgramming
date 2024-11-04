@@ -140,25 +140,37 @@ public class FeedbackMentor extends HttpServlet {
 
         switch (actioN) {
             case "rate-this-guy":
-
+        try {
                 int ratedFromID = Integer.parseInt(request.getParameter("userN"));
-                int courssE = Integer.parseInt(request.getParameter("couRseId"));
+                int courseId = Integer.parseInt(request.getParameter("couRseId"));
                 int noS = Integer.parseInt(request.getParameter("rating"));
-                List<User> listMenteeOfMentor = rateDAO.getListMenteeOfMentor(ratedID);
+                List<User> listMenteeOfMentor = rateDAO.getListMenteeOfMentor(ratedFromID);
+                boolean isMentee = false;
                 for (User user : listMenteeOfMentor) {
-                    if(user.getId() != ratedFromID){
-                        request.setAttribute("message","You have to apply to course of this mentor for leave feedback!" );
+                    if (user.getId() == ratedFromID) {
+                        isMentee = true;
+                        break;
                     }
                 }
-
-                String com = request.getParameter("comment");
+                if (!isMentee) {
+                    request.setAttribute("errorMessage", "You have to apply to the course of this mentor to leave feedback!");
+                    request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
+                    return;
+                }
+                String comment = request.getParameter("comment");
                 List<Course> listCourseByBoth = courseDAO.getAll();
                 session.setAttribute("listCourseByBoth", listCourseByBoth);
                 session.setAttribute("ratedID", ratedID);
-                rateDAO.addFeedbackById(ratedFromID, ratedID, noS, courssE, com);
+                rateDAO.addFeedbackById(ratedFromID, ratedID, noS, courseId, comment);
                 response.sendRedirect("rating?ratedId=" + ratedID);
-
-                break;
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Invalid input. Please provide valid numbers.");
+                request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
+            } catch (Exception e) {
+                request.setAttribute("errorMessage", "An unexpected error occurred.");
+                request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
+            }
+            break;
             default:
                 throw new AssertionError();
         }
