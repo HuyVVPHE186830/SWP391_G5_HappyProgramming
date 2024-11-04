@@ -127,7 +127,7 @@
 
         <div class="middle">
             <div class="applyCourse-form">
-                <a href="listRequestForMentor?userId=${sessionScope.user.id}">
+                <a href="viewMyCourses">
                     <i class="fas fa-arrow-left"></i> 
                 </a>
                 <div class="applyCourse-form-main">

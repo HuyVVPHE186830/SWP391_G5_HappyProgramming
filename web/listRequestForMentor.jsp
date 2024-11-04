@@ -14,13 +14,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
-        
+
         <title>List Request For Mentor</title>
         <style>
             .content {
                 text-align: center;
                 margin-top: 80px;
-                font-family: Arial, sans-serif;
 
             }
 
@@ -124,6 +123,7 @@
             }
             .link {
                 color: black;
+                text-align: start;
             }
 
             .link:hover {
@@ -141,11 +141,11 @@
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
 
+
         <!-- TABLE -->
         <div class="content">
-            <h6>
-                <a href="home" class="link">Home</a> <span>></span> 
-                List Request
+            <h6 style="text-align: start">
+                <a href="home" class="link" style="margin-left: 30px">Home</a> <span>></span> <a href="viewMyCourses" class="link">My Courses</a> <span>></span> List Request   
             </h6>
             <h3 class="title">List Request Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
             <form action="#" method="post" class="search-bar">
