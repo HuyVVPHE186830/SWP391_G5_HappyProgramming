@@ -9,12 +9,41 @@ package model;
  * @author yeuda
  */
 public class Rating {
+
     private String ratedFromUser, ratedToUser;
     private float noStar;
     private int courseId;
     private String ratingComment;
+    private String courseName;
+    private String avatarPath;
 
     public Rating() {
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
+    public Rating(String ratedFromUser, String ratedToUser, float noStar, int courseId, String ratingComment, String courseName, String avatarPath) {
+        this.ratedFromUser = ratedFromUser;
+        this.ratedToUser = ratedToUser;
+        this.noStar = noStar;
+        this.courseId = courseId;
+        this.ratingComment = ratingComment;
+        this.courseName = courseName;
+        this.avatarPath = avatarPath;
     }
 
     public Rating(String ratedFromUser, String ratedToUser, float noStar, int courseId, String ratingComment) {
@@ -69,6 +98,5 @@ public class Rating {
     public String toString() {
         return "Rating{" + "ratedFromUser=" + ratedFromUser + ", ratedToUser=" + ratedToUser + ", noStar=" + noStar + ", courseId=" + courseId + ", ratingComment=" + ratingComment + '}';
     }
-     
-    
+
 }

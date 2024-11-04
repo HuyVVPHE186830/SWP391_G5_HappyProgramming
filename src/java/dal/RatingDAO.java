@@ -52,9 +52,9 @@ public class RatingDAO extends DBContext {
 //        int o = dao.getTurnStar(3, 29);
 //        System.out.println(o);
         List<User> ratings = new ArrayList<>();
-        ratings = dao.getListRatedFromToId(29);
+        ratings = dao.getListMenteeOfMentor( 29);
         for (User rating : ratings) {
-            System.out.println(rating.getCourseName());
+            System.out.println(rating);
         }
 //        dao.addFeedback("ducmentor", "anmentor", 4, 1, "non2");
     }
@@ -73,6 +73,41 @@ public class RatingDAO extends DBContext {
                 String ratingComment = rs.getString("ratingComment");
 
                 Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                ratings.add(rating);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log the exception
+        }
+
+        return ratings;
+    }
+
+    public List<Rating> getMentorsRatingById(int userId) {
+        List<Rating> ratings = new ArrayList<>();
+        String query = "SELECT r.*, u.username AS ratedFromUsername, u.avatarPath, c.courseName "
+                + "FROM Rating r "
+                + "JOIN [User] u ON r.ratedFromUser = u.username "
+                + "JOIN Course c ON r.courseId = c.courseId "
+                + "WHERE r.ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, userId); // Thiết lập tham số userId vào câu truy vấn
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String ratedFromUser = rs.getString("ratedFromUsername");
+                String ratedToUser = rs.getString("ratedToUser");
+                int noStar = rs.getInt("noStar");
+                int courseId = rs.getInt("courseId");
+                String ratingComment = rs.getString("ratingComment");
+                String avatarPath = rs.getString("avatarPath");
+                String courseName = rs.getString("courseName");
+
+                // Tạo đối tượng Rating, có thể thêm avatarPath và courseName nếu cần
+                Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                rating.setAvatarPath(avatarPath); // Giả sử bạn có setter cho avatarPath
+                rating.setCourseName(courseName); // Giả sử bạn có setter cho courseName
+
                 ratings.add(rating);
             }
         } catch (SQLException e) {
@@ -112,7 +147,6 @@ public class RatingDAO extends DBContext {
 
         return rating;
     }
-
 
     public List<Rating> getRateByNoStar(int numS) {
         List<Rating> ratings = new ArrayList<>();
@@ -162,7 +196,7 @@ public class RatingDAO extends DBContext {
 
         return ratings;
     }
-    
+
     public List<Rating> getRateByCourseId(int courseId) {
         List<Rating> ratings = new ArrayList<>();
         String query = "SELECT * FROM [Rating] WHERE courseId = ?";
@@ -186,7 +220,6 @@ public class RatingDAO extends DBContext {
 
         return ratings;
     }
-
 
     public List<Integer> getDistinctNoStars() {
         List<Integer> noStars = new ArrayList<>();
@@ -330,29 +363,36 @@ public class RatingDAO extends DBContext {
         return list;
     }
 
-    public List<Rating> getRateByCourse(int courseID, int ratedID4) {
+    public List<Rating> getRateByCourse(int courseId, int ratedToUserId) {
         List<Rating> ratings = new ArrayList<>();
-        String query = "SELECT * FROM Rating\n"
-                + "	WHERE courseId = ? "
-                + "AND ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
+        String query = "SELECT r.*, u.username AS ratedFromUsername, u.avatarPath, c.courseName "
+                + "FROM Rating r "
+                + "JOIN [User] u ON r.ratedFromUser = u.username "
+                + "JOIN Course c ON r.courseId = c.courseId "
+                + "WHERE r.courseId = ? AND r.ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, courseID);
-            pstmt.setInt(2, ratedID4);
+            pstmt.setInt(1, courseId); // Thiết lập tham số courseId
+            pstmt.setInt(2, ratedToUserId); // Thiết lập tham số ratedToUserId
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    String ratedFromUser = rs.getString("ratedFromUser");
+                    String ratedFromUser = rs.getString("ratedFromUsername");
                     String ratedToUser = rs.getString("ratedToUser");
                     int noStar = rs.getInt("noStar");
-                    int courseId = rs.getInt("courseId");
                     String ratingComment = rs.getString("ratingComment");
+                    String avatarPath = rs.getString("avatarPath");
+                    String courseName = rs.getString("courseName");
 
+                    // Tạo đối tượng Rating
                     Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    rating.setAvatarPath(avatarPath); // Thiết lập avatarPath
+                    rating.setCourseName(courseName); // Thiết lập courseName
+
                     ratings.add(rating);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
+            e.printStackTrace(); // Log lỗi
         }
 
         return ratings;
@@ -532,5 +572,56 @@ public class RatingDAO extends DBContext {
         return users;
     }
 
-    
+    public List<User> getListMenteeOfMentor(int mentorId) {
+        List<User> mentees = new ArrayList<>();
+        String query = "SELECT u.* "
+                + "FROM [User] u "
+                + "JOIN Participate p ON u.username = p.username "
+                + "JOIN Course c ON p.courseId = c.courseId "
+                + "WHERE p.participateRole = 3 "
+                + // Giả sử participateRole = 3 là vai trò của mentee
+                "AND p.courseId IN ( "
+                + "    SELECT courseId "
+                + "    FROM Participate "
+                + "    WHERE username IN ( "
+                + "        SELECT username "
+                + "        FROM [User] "
+                + "        WHERE id = ? "
+                + // Thay thế bằng ID của mentor
+                "    ) AND participateRole = 2 "
+                + // Giả sử participateRole = 2 là vai trò của mentor
+                ");";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, mentorId); // Thiết lập tham số cho ID của mentor
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String username = rs.getString("username");
+                    String password = rs.getString("password");
+                    String firstName = rs.getString("firstName");
+                    String lastName = rs.getString("lastName");
+                    Date dob = rs.getDate("dob");
+                    String mail = rs.getString("mail");
+                    Date createdDate = rs.getDate("createdDate");
+                    String avatarPath = rs.getString("avatarPath");
+                    String cvPath = rs.getString("cvPath");
+                    boolean activeStatus = rs.getBoolean("activeStatus");
+                    boolean isVerified = rs.getBoolean("isVerified");
+                    String verificationCode = rs.getString("verification_code");
+                    int roleId = rs.getInt("roleId");
+                    User u = new User(id, username, password, firstName,
+                            lastName, dob, mail, createdDate, avatarPath,
+                            cvPath, activeStatus, isVerified, verificationCode,
+                            roleId);
+                    mentees.add(u);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log lỗi
+        }
+
+        return mentees;
+    }
+
 }

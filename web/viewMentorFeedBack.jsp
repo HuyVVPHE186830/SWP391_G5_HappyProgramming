@@ -181,15 +181,17 @@
             <div class="seller-info">
                 <img class="avatar-large" src="data:image/jpeg;base64,${ratedUser.avatarPath}" alt="Seller Avatar">
                 <div class="profile-details">
-                    <h3>[${ratedUser.username}]'s FEEDBACK 
+                    <h3>${ratedUser.username}
                     </h3>
 
 
                     <p>RATING OVERALL: ${userRatedStar}★</p>
                     <p>TOP: ${rankStar}</p>
                     <button type="button" class="btn btn-transparent" data-toggle="modal" data-target="#feedbackModal">
-                        Leave Feedback
+                        Leave Feedback 
                     </button>
+                    <p style="color: white">${errorMessage}</p>
+
 
                 </div>
             </div>
@@ -242,13 +244,13 @@
 
             <div class="review-container">
                 <div class="review-header" style="display: flex; align-items: center;">
-                    <h2 style="margin-right: 20px;">Product Reviews</h2> 
+                    <h2 style="margin-right: 20px;">Mentor Reviews</h2> 
                     <div class="sort-by">
                         <span>Choose course:</span>
                         <select id="courseSelect" onchange="redirectToCourse(this)">
                             <option value="">Select a course</option>
                             <c:forEach items="${listCourseOfRated}" var="course">
-                                <option value="rating?search=rate-by-course&ratedId=${userById.id}&courseid=${course.courseId}">
+                                <option value="rating?search=rate-by-course&ratedId=${ratedUser.id}&courseid=${course.courseId}">
                                     ${course.courseName}
                                 </option>
                             </c:forEach>
@@ -270,24 +272,24 @@
                 <br/>
                 <style>
                     .review-summary-item {
-                        text-decoration: none; 
-                        color: inherit; 
+                        text-decoration: none;
+                        color: inherit;
                         display: flex;
                         align-items: center;
-                        padding: 10px; 
+                        padding: 10px;
                         border: 1px solid #ccc;
-                        border-radius: 5px; 
-                        margin-bottom: 10px; 
-                        transition: background-color 0.3s; 
+                        border-radius: 5px;
+                        margin-bottom: 10px;
+                        transition: background-color 0.3s;
                     }
 
                     .review-summary-item:hover {
-                        background-color: purple; 
+                        background-color: purple;
                     }
 
                     .review-summary-item:hover {
                         text-decoration: none;
-                        color: inherit; 
+                        color: inherit;
                     }
                 </style>
                 <div class="review-summary">
@@ -318,19 +320,16 @@
                 </div>
                 <div class="review-item">
                     <c:forEach items="${ratingList}" var="f">
-                        <c:forEach items="${listRatedFromToId}" var="fti">
-
-                            <div class="user-info">
-                                <img src="data:image/jpeg;base64,${fti.avatarPath}" alt="User Avatar">
-                                <span class="username">${f.ratedFromUser} To ${fti.courseName}</span>
-                            </div>
-                            (${f.noStar}/5.0★)
-                            <br/>
-                            <div class="review-content">
-                                ${f.ratingComment}
-                            </div>
-                            <hr/>
-                        </c:forEach>
+                                <div class="user-info">
+                                    <img src="data:image/jpeg;base64,${f.avatarPath}" alt="User Avatar">
+                                    <span class="username">${f.ratedFromUser} To ${f.courseName}</span>
+                                </div>
+                                (${f.noStar}/5.0★)
+                                <br/>
+                                <div class="review-content">
+                                    ${f.ratingComment}
+                                </div>
+                                <hr/>
                     </c:forEach>
                 </div>
 
