@@ -72,9 +72,9 @@ public class ManageMentee extends HttpServlet {
         CourseDAO daoC = new CourseDAO();
 
         if ("accept".equals(action)) {
-            daoC.banMentee(courseId, username, 1);
+            daoC.setMenteeStatus(courseId, username, 1, mentorName);
         } else if ("decline".equals(action)) {
-            daoC.banMentee(courseId, username, -1);
+            daoC.setMenteeStatus(courseId, username, -1, mentorName);
         }
 
         response.sendRedirect("manageCourse?courseId=" + courseId+"&mentorName=" + mentorName);
@@ -96,7 +96,7 @@ public class ManageMentee extends HttpServlet {
         String mentorName = request.getParameter("mentorName");
         CourseDAO daoC = new CourseDAO();
 
-        daoC.banMentee(courseId, username, -1);
+        daoC.setMenteeStatus(courseId, username, -1, mentorName);
 
         response.sendRedirect("manageCourse?courseId=" + courseId+"&mentorName=" + mentorName);
     }
