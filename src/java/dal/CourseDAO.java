@@ -18,33 +18,34 @@ public class CourseDAO extends DBContext {
     public static void main(String[] args) {
         CourseDAO dao = new CourseDAO();
         CourseCategoryDAO daoCC = new CourseCategoryDAO();
-        int count = dao.findTotalRecordOrderByNumberOfMentee();
-//        List<Integer> in = new ArrayList<>();
-//        in.add(1);
-//        in.add(3);
-//        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-        List<Course> list = dao.getAll();
-        List<Course> otherlist = dao.getOtherCourses(list);
-        for (Course course : list) {
-            System.out.println(course);
-        }
-//        List<String> string = dao.getMenteeByCourse(1, 1);
+//        int count = dao.findTotalRecordOrderByNumberOfMentee();
+////        List<Integer> in = new ArrayList<>();
+////        in.add(1);
+////        in.add(3);
+////        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
+//        List<Course> list = dao.getAll();
+//        List<Course> otherlist = dao.getOtherCourses(list);
+//        for (Course course : list) {
+//            System.out.println(course);
+//        }
+////        List<String> string = dao.getMenteeByCourse(1, 1);
+////        for (String string1 : string) {
+////            System.out.println(string1);
+////        }
+////        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
+////        List<Course> otherlist = dao.getOtherCourses(list);
+////        for (Course course : otherlist) {
+////            System.out.println(course);
+////        }
+//        List<String> string = dao.getUserByCourse(1, 1, "huyenmentor");
 //        for (String string1 : string) {
 //            System.out.println(string1);
 //        }
-//        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
-//        List<Course> otherlist = dao.getOtherCourses(list);
-//        for (Course course : otherlist) {
-//            System.out.println(course);
-//        }
-        List<String> string = dao.getUserByCourse(1, 1, "huyenmentor");
-        for (String string1 : string) {
-            System.out.println(string1);
-        }
-        int num = dao.getTotalParticipants(1, 1, "huyenmentor");
-        System.out.println(num);
-//        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
-//        System.out.println(totalRecord);
+//        int num = dao.getTotalParticipants(1, 1, "huyenmentor");
+//        System.out.println(num);
+////        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
+////        System.out.println(totalRecord);
+        dao.setMenteeStatus(1, "minhnd", 0, "phuongmentor");
     }
 
     public List<Category> getAllCategories() {
@@ -1439,7 +1440,7 @@ public class CourseDAO extends DBContext {
 
         return usernames;
     }
-    
+
     public List<String> getUserByCourse(int courseId, int status, String mentorName) {
         List<String> usernames = new ArrayList<>();
 
@@ -1492,8 +1493,8 @@ public class CourseDAO extends DBContext {
                 + "AND statusId = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, courseId); 
-            preparedStatement.setInt(2, 2); 
+            preparedStatement.setInt(1, courseId);
+            preparedStatement.setInt(2, 2);
             preparedStatement.setInt(3, status);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -1507,19 +1508,39 @@ public class CourseDAO extends DBContext {
 
         return usernames;
     }
-    
+
     public void setMenteeStatus(int courseId, String username, int status, String mentorName) {
-        String sql = "UPDATE Participate SET statusId = ? WHERE courseId = ? AND username = ? AND mentorUsername = ?";
+        String checkSql = "SELECT COUNT(*) FROM Participate WHERE courseId = ? AND username = ? AND mentorUsername = ?";
+        String updateSql = "UPDATE Participate SET statusId = ? WHERE courseId = ? AND username = ? AND mentorUsername = ?";
+        String insertSql = "INSERT INTO Participate (courseId, username, participateRole, statusId, mentorUsername) VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try {
+            try (PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
+                checkStatement.setInt(1, courseId);
+                checkStatement.setString(2, username);
+                checkStatement.setString(3, mentorName);
 
-            statement.setInt(1, status);     // Trạng thái muốn cập nhật, ví dụ: -1
-            statement.setInt(2, courseId);   // ID của khóa học
-            statement.setString(3, username); // Tên tài khoản của mentee
-            statement.setString(4, mentorName); // Tên tài khoản của mentee
-
-            // Thực thi câu lệnh update
-            statement.executeUpdate();
+                try (ResultSet resultSet = checkStatement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+                            updateStatement.setInt(1, status);
+                            updateStatement.setInt(2, courseId);
+                            updateStatement.setString(3, username);
+                            updateStatement.setString(4, mentorName);
+                            updateStatement.executeUpdate();
+                        }
+                    } else {
+                        try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
+                            insertStatement.setInt(1, courseId);
+                            insertStatement.setString(2, username);
+                            insertStatement.setInt(3, 3);
+                            insertStatement.setInt(4, status);
+                            insertStatement.setString(5, mentorName);
+                            insertStatement.executeUpdate();
+                        }
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

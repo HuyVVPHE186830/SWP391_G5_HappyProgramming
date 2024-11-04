@@ -75,11 +75,8 @@ public class RequestScreen extends HttpServlet {
         String mentorUsername = request.getParameter("mentorUsername");
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         CourseDAO daoC = new CourseDAO();
-
-        // Gọi phương thức banMentee với giá trị 0 để gửi yêu cầu
         daoC.setMenteeStatus(courseId, username, 0,mentorUsername);
 
-        // Thiết lập thông báo
         request.setAttribute("message", "Your request is waiting!");
 
         request.getRequestDispatcher("request.jsp").forward(request, response);
