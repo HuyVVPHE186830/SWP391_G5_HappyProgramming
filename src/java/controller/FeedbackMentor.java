@@ -140,23 +140,32 @@ public class FeedbackMentor extends HttpServlet {
         switch (actioN) {
             case "rate-this-guy":
         try {
-                if (session.getAttribute("user") == null) { 
-                    response.sendRedirect("login.jsp"); 
+                if (session.getAttribute("user") == null) {
+                    response.sendRedirect("login.jsp");
                     return;
                 }
+                List<Rating> listAllRate = rateDAO.getAll();
                 int ratedFromID = Integer.parseInt(request.getParameter("userN"));
+                int ratedIDD = Integer.parseInt(request.getParameter("ratedId"));
 
                 int courseId = Integer.parseInt(request.getParameter("couRseId"));
                 int noS = Integer.parseInt(request.getParameter("rating"));
-                List<User> listMenteeOfMentor = rateDAO.getListMenteeOfMentor(ratedFromID);
+                List<User> listMenteeOfMentor = rateDAO.getListMenteeOfMentorOfCourse(ratedIDD, courseId);
+//                getListMenteeOfMentorOfCourse(ratedFromID, courseId);
+//             getListMenteeOfMentor(ratedFromID);
+
+                String userRated = userDAO.getUserById(ratedIDD).getUsername();
+                String userRatedFrom = userDAO.getUserById(ratedFromID).getUsername();
                 boolean isMentee = false;
-                for (User user : listMenteeOfMentor) {
-                    if (user.getId() == ratedFromID) {
-                        isMentee = true;
+                boolean isRated = false;
+                for (Rating rate : listAllRate) {
+                    if (rate.getRatedFromUser().equals(userRatedFrom) && rate.getRatedToUser().equals(userRated)
+                            && rate.getCourseId() == courseId) {
+                        isRated = true;
                         break;
                     }
                 }
-
+              
                 if (!isMentee) {
                     request.setAttribute("errorMessage", "You have to apply to the course of this mentor to leave feedback!");
                     request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);

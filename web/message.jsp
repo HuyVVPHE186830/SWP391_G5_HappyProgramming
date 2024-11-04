@@ -310,8 +310,8 @@
                       (sessionScope.currentChatRecipient.roleId == 2 ? 'Mentor' : 'Unknown Role')}
                 </p>    
                 <p>
-                    <c:if test="${currentChatRecipient.roleId == 2}">
                         <a href="rating?ratedId=${currentChatRecipient.id}" class="btn" style="background-color: #5e3fd3; color: white;">View Profile</a>
+                    <c:if test="${currentChatRecipient.roleId == 2}">
                     </c:if>
                 </p> 
 
@@ -336,59 +336,7 @@
             </div>
         </div>
 
-        <!-- Rating Modal -->
-            <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ratingModalLabel">Feedback about  ${currentChatRecipient.username}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="manageConversation?action=rate-recipient" method="post">
-                                <input type="hidden" name="recipientUsername" value="${sessionScope.currentChatRecipient.username}">
-                                <input type="hidden" name="currentUser" value="${user.username}">
-                                <input type="hidden" name="conversationId" value="${currentConversationId}">
-                                <div class="mb-3">
-                                    <label for="courseId" class="form-label">Select Course:</label>
-                                    <select name="courseId" id="courseId" class="form-select" required>
-                                        <option value="">--Choose course--</option>
-                                        <c:forEach items ="${listUser4}" var = "u">
-                                            <c:if test = "${u.username == currentChatRecipient.username}">
-                                                <c:forEach items ="${listParticipate4}" var = "p">
-                                                    <c:if test = "${p.username == u.username}">
-                                                        <c:forEach items ="${listCourse4}" var = "c">
-                                                            <c:if test = "${c.courseId == p.courseId}">
-                                                                <option value = "${c.courseId}">${c.courseName}</option>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="rating" class="form-label">Select Rating:</label>
-                                    <select name="rating" id="rating" class="form-select" required>
-                                        <option value="">--Choose a rating--</option>
-                                        <option value="1">1 Star</option>
-                                        <option value="2">2 Stars</option>
-                                        <option value="3">3 Stars</option>
-                                        <option value="4">4 Stars</option>
-                                        <option value="5">5 Stars</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="comments" class="form-label">Comments:</label>
-                                    <textarea name="comments" id="comments" class="form-control" rows="3"></textarea>
-                                </div>
-                                <button type="submit" style="background-color: #5e3fd3; color: white;" class="btn btn-primary">Submit Rating</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      
 
         <!-- Include Bootstrap CSS and JS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
