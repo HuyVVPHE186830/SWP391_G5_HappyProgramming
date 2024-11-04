@@ -365,6 +365,7 @@
                                             <form id="editPostForm_${post.postId}" action="editMentorPost" method="POST">
                                                 <input type="hidden" name="postId" value="${post.postId}">
                                                 <input type="hidden" name="courseId" value="${course.courseId}">
+                                                <input type="hidden" name="mentorName" value="${mentorName}">
                                                 <div class="form-group">
                                                     <label for="postTitle">Title</label>
                                                     <input type="text" class="form-control" id="editTitle_${post.postId}" name="editTitle" value="${post.postTitle}" required>
@@ -434,7 +435,7 @@
 
             <!-- Modal tạo post -->
             <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered"> <!-- Thêm lớp modal-dialog-centered -->
+                <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
@@ -497,19 +498,20 @@
                                 </thead>
                                 <tbody>
                                     <c:if test="${not empty listMentee}">
-                                        <c:forEach var="user" items="${listMentee}">
+                                        <c:forEach var="mentee" items="${listMentee}">
                                             <tr>
                                                 <td>
-                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
+                                                    <img src="data:image/jpeg;base64,${mentee.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
-                                                <td>${user.lastName} ${user.firstName}</td>
-                                                <td>${user.mail}</td>
+                                                <td>${mentee.lastName} ${mentee.firstName}</td>
+                                                <td>${mentee.mail}</td>
                                                 <c:if test="${user.username == mentorName}">
-                                                    <td>${user.dob}</td>
+                                                    <td>${mentee.dob}</td>
                                                     <td>
                                                         <form action="manageMentee" method="post">
                                                             <input type="hidden" name="courseId" value="${course.courseId}">
-                                                            <input type="hidden" name="username" value="${user.username}">
+                                                            <input type="hidden" name="username" value="${mentee.username}">
+                                                            <input type="hidden" name="mentorName" value="${mentorName}">
                                                             <button type="submit" class="btn btn-danger btn-sm">Ban</button>
                                                         </form>
                                                     </td>
@@ -551,18 +553,19 @@
                                 </thead>
                                 <tbody>
                                     <c:if test="${not empty listRequest}">
-                                        <c:forEach var="user" items="${listRequest}">
+                                        <c:forEach var="requesto" items="${listRequest}">
                                             <tr>
                                                 <td>
-                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
+                                                    <img src="data:image/jpeg;base64,${requesto.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
-                                                <td>${user.lastName} ${user.firstName}</td>
-                                                <td>${user.mail}</td>
-                                                <td>${user.dob}</td>
+                                                <td>${requesto.lastName} ${requesto.firstName}</td>
+                                                <td>${requesto.mail}</td>
+                                                <td>${requesto.dob}</td>
                                                 <td>
                                                     <form action="manageMentee" method="get">
                                                         <input type="hidden" name="courseId" value="${course.courseId}">
-                                                        <input type="hidden" name="username" value="${user.username}">
+                                                        <input type="hidden" name="username" value="${requesto.username}">
+                                                        <input type="hidden" name="mentorName" value="${mentorName}">
                                                         <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
                                                             <i class="fas fa-check"></i>
                                                         </button>

@@ -138,7 +138,7 @@ public class EditRequestForMentor extends HttpServlet {
             int oldCourseId = Integer.parseInt(oldCourseId_str);
             int newCourseId = Integer.parseInt(newCourseId_str);
             Request req1 = daoR.getRequestByUsername(username, oldCourseId);
-            daoP.addParticipate(new Participate(newCourseId, req1.getUsername(), 2, req1.getRequestStatus()));
+            daoP.addParticipate(new Participate(newCourseId, req1.getUsername(), 2, req1.getRequestStatus(), req1.getUsername()));
             daoR.updateRequest(oldCourseId, newCourseId, username, requestReason);
             daoP.deleteParticipate(oldCourseId, username);
             Request req2 = daoR.getRequestByUsername(username, newCourseId);

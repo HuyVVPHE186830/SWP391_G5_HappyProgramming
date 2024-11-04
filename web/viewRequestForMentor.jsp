@@ -29,7 +29,7 @@
                 width: 800px;
                 box-shadow: 0 0 10px #888;
                 overflow: hidden;
-                height: 50vh;
+                height: 590px;
                 padding: 10px;
             }
 
@@ -136,7 +136,7 @@
                         <h2>View Request Detail</h2>
                         <div class="form">
                             <div class="input">
-                                <label>Fullname</label>
+                                <label>Full Name</label>
                                 <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
                             </div>
                             <div class="input">

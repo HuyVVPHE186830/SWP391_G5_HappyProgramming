@@ -14,7 +14,8 @@ public class Participate {
     private String username;
     private int participateRole;
     private int statusId;
-
+    private String mentorUsername;
+    
     public int getCourseId() {
         return courseId;
     }
@@ -47,11 +48,21 @@ public class Participate {
         this.statusId = statusId;
     }
 
-    public Participate(int courseId, String username, int participateRole, int statusId) {
+    public String getMentorUsername() {
+        return mentorUsername;
+    }
+
+    public void setMentorUsername(String mentorUsername) {
+        this.mentorUsername = mentorUsername;
+    }
+    
+
+    public Participate(int courseId, String username, int participateRole, int statusId, String mentorUsername) {
         this.courseId = courseId;
         this.username = username;
         this.participateRole = participateRole;
         this.statusId = statusId;
+        this.mentorUsername = mentorUsername;
     }
 
     public Participate() {

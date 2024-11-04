@@ -116,13 +116,15 @@ public class ApplyCourse extends HttpServlet {
         String courseId_str = request.getParameter("courseId");
         String requestReason = request.getParameter("requestReason");
         ParticipateDAO daoP = new ParticipateDAO();
+        UserDAO daoU = new UserDAO();
         RequestDAO daoR = new RequestDAO();
         CourseDAO daoC = new CourseDAO();
         Date date = new Date();
         try {
-
+            User u = daoU.getUserByUsernameM(username);
             int courseId = Integer.parseInt(courseId_str);
-            daoP.addParticipate(new Participate(courseId, username, 2, 0));
+            Participate p = daoP.getParticipateByUsernameAndCourseId(courseId, username);
+            daoP.addParticipate(new Participate(courseId, username, 2, 0, username));
             daoR.addRequest(new Request(courseId, username, date, 0, requestReason));
             List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(username);
             List<Request> requests = daoR.getAllRequestByUsername(username);
@@ -144,7 +146,7 @@ public class ApplyCourse extends HttpServlet {
             List<Course> otherCourses = daoC.getOtherCourses(courses);
             session.setAttribute("otherCourse", otherCourses);
             session.setAttribute("message", "*Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
-            response.sendRedirect("applyCourse.jsp");
+            response.sendRedirect("applyCourse?userId=" + u.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }

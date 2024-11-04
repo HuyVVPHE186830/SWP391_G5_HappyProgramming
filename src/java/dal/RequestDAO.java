@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.Participate;
 import model.Request;
 
 /**
@@ -39,9 +40,30 @@ public class RequestDAO extends DBContext {
         return list;
     }
 
+    public List<Request> getAllRequestByUsernameForList(String username) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Request] where username = ? order by requestTime DESC";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseId");
+                Date requestTime = rs.getDate("requestTime");
+                int requestStatus = rs.getInt("requestStatus");
+                String requestReason = rs.getString("requestReason");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                list.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
     public List<Request> getAllRequestByUsername(String username) {
         List<Request> list = new ArrayList<>();
-        String sql = "SELECT * FROM [Request] where username = ?";
+        String sql = "SELECT * FROM [Request] where username = ? and requestStatus != -1";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);
@@ -71,6 +93,63 @@ public class RequestDAO extends DBContext {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int courseId = rs.getInt("CourseId");
+                Date requestTime = rs.getDate("requestTime");
+                int requestStatus = rs.getInt("requestStatus");
+                String requestReason = rs.getString("requestReason");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                list.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
+    public List<Request> getAllRequestMentorByKeyword(String keyword) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Request] "
+                + "JOIN Course ON Request.CourseId = Course.CourseId "
+                + "JOIN [User] ON [User].username = Request.username "
+                + "WHERE [User].roleId = 2 AND (Course.CourseName LIKE ? "
+                + "OR Request.RequestReason LIKE ? "
+                + "OR [User].firstName LIKE ? "
+                + "OR [User].lastName LIKE ? "
+                + "OR [User].Username LIKE ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, "%" + keyword + "%");
+            st.setString(2, "%" + keyword + "%");
+            st.setString(3, "%" + keyword + "%");
+            st.setString(4, "%" + keyword + "%");
+            st.setString(5, "%" + keyword + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("CourseId");
+                String username = rs.getString("username");
+                Date requestTime = rs.getDate("requestTime");
+                int requestStatus = rs.getInt("requestStatus");
+                String requestReason = rs.getString("requestReason");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                list.add(r);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
+    public List<Request> getAllRequestByRole(int roleId) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Request] JOIN [User] ON Request.Username = [User].Username "
+                + "WHERE [User].roleId = ? "
+                + "ORDER BY Request.requestTime";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, roleId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("CourseId");
+                String username = rs.getString("username");
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
@@ -137,9 +216,27 @@ public class RequestDAO extends DBContext {
         return f;
     }
 
+    public boolean updateRequestStatus(int courseId, String username, int statusId) {
+        boolean f = false;
+        try {
+            String sql = "Update Request Set requestStatus = ? Where username = ? and courseId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, statusId);
+            ps.setString(2, username);
+            ps.setInt(3, courseId);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+
     public boolean deleteRequest(int courseId, String username) {
         boolean f = false;
-        String sql = "DELETE FROM Request WHERE courseId = ? and username = ?";
+        String sql = "DELETE FROM Request WHERE courseId = ? and username = ? and requestStatus != 1";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, courseId);
@@ -156,10 +253,13 @@ public class RequestDAO extends DBContext {
 
     public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
-//        List<Request> list = dao.getRequestByStatus(0);
-//        for (Request l : list) {
-//            System.out.println(l);
-//        }
+        ParticipateDAO a = new ParticipateDAO();
+        Date date = new Date();
+        Participate p = a.getParticipateByUsernameAndCourseId(1, "anmentor");
+        List<Request> list = dao.getAllRequestMentorByKeyword("ja");
+            a.addParticipate(new Participate(1, "anmentor", 2, 0, "anmentor"));
+        dao.addRequest(new Request(1, "anmentor", date, 0, "he"));
+
 //        Date date = new Date();
 //        int courseId = 1;
 ////        dao.updateRequest(1, 2, "anmentor", "helo");

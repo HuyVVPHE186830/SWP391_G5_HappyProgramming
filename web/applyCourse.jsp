@@ -30,7 +30,7 @@
                 box-shadow: 0 0 10px #888;
                 justify-content: space-between;
                 overflow: hidden;
-                height: 45vh;
+                height: 430px;
                 position: relative;
             }
             

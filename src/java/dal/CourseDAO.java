@@ -1507,4 +1507,21 @@ public class CourseDAO extends DBContext {
 
         return usernames;
     }
+    
+    public void setMenteeStatus(int courseId, String username, int status, String mentorName) {
+        String sql = "UPDATE Participate SET statusId = ? WHERE courseId = ? AND username = ? AND mentorUsername = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, status);     // Trạng thái muốn cập nhật, ví dụ: -1
+            statement.setInt(2, courseId);   // ID của khóa học
+            statement.setString(3, username); // Tên tài khoản của mentee
+            statement.setString(4, mentorName); // Tên tài khoản của mentee
+
+            // Thực thi câu lệnh update
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
