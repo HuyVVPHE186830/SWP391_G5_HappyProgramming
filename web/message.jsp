@@ -311,9 +311,8 @@
                 </p>    
                 <p>
                     <c:if test="${currentChatRecipient.roleId == 2}">
-                        <a href="#miniProfileModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;">View</a>
+                        <a href="rating?ratedId=${currentChatRecipient.id}" class="btn" style="background-color: #5e3fd3; color: white;">View Profile</a>
                     </c:if>
-                    <button class="btn" style="background-color: #5e3fd3; color: white;" data-toggle="modal" data-target="#ratingModal">Rate</button>
                 </p> 
 
                 <div class="action-icons">

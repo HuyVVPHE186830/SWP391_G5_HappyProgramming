@@ -97,7 +97,6 @@ public class FeedbackMentor extends HttpServlet {
         int rankStar = rateDAO.getRankMentor(ratedID);
         List<Rating> ratingList = findRatingGet(request);
         List<User> listRatedFromToId = rateDAO.getListRatedFromToId(ratedID);
-//                findRatingGet(request);
         int turnStar = rateDAO.getTurnStarOverallByUserId(ratedID);
         int turnStar1 = rateDAO.getTurnStar(1, ratedID);
         int turnStar2 = rateDAO.getTurnStar(2, ratedID);
@@ -141,7 +140,12 @@ public class FeedbackMentor extends HttpServlet {
         switch (actioN) {
             case "rate-this-guy":
         try {
+                if (session.getAttribute("user") == null) { 
+                    response.sendRedirect("login.jsp"); 
+                    return;
+                }
                 int ratedFromID = Integer.parseInt(request.getParameter("userN"));
+
                 int courseId = Integer.parseInt(request.getParameter("couRseId"));
                 int noS = Integer.parseInt(request.getParameter("rating"));
                 List<User> listMenteeOfMentor = rateDAO.getListMenteeOfMentor(ratedFromID);
@@ -152,6 +156,7 @@ public class FeedbackMentor extends HttpServlet {
                         break;
                     }
                 }
+
                 if (!isMentee) {
                     request.setAttribute("errorMessage", "You have to apply to the course of this mentor to leave feedback!");
                     request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
