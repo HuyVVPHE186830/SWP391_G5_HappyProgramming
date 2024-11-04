@@ -72,11 +72,12 @@ public class RequestScreen extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String username = request.getParameter("username");
+        String mentorUsername = request.getParameter("mentorUsername");
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         CourseDAO daoC = new CourseDAO();
 
         // Gọi phương thức banMentee với giá trị 0 để gửi yêu cầu
-        daoC.banMentee(courseId, username, 0);
+        daoC.setMenteeStatus(courseId, username, 0,mentorUsername);
 
         // Thiết lập thông báo
         request.setAttribute("message", "Your request is waiting!");

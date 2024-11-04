@@ -118,7 +118,6 @@
     <body>
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
-
         <!-- DESCRIPTION -->
         <div class="description">
             <c:if test="${not empty requestScope.mentorDetail}">
@@ -154,6 +153,7 @@
                         <c:if test="${sessionScope.user.username != mD.username}">
                             <form action="requestScreen" method="post">
                                 <input type="hidden" name="courseId" value="${cM.courseId}">
+                                <input type="hidden" name="courseId" value="${mD.username}">
                                 <input type="hidden" name="username" value="${sessionScope.user.username}">
                                 <button type="submit" class="button-enroll">Enroll</button>
                             </form>
