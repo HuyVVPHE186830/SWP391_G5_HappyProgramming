@@ -25,6 +25,7 @@ import java.util.Map;
 import model.Course;
 import model.MentorPost;
 import model.MentorPostComment;
+import model.Submission;
 import model.User;
 
 /**
@@ -94,8 +95,11 @@ public class ManageCourse extends HttpServlet {
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
         List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), mentorName);
         Map<Integer, List<MentorPostComment>> postComments = new HashMap<>();
+        Map<Integer, List<Submission>> postSubmissions = new HashMap<>();
         for (MentorPost post : posts) {
             List<MentorPostComment> comments = mentorPostDAO.getAllCommentsByPostId(post.getPostId());
+            List<Submission> submissions = mentorPostDAO.getSubmissionsByPostId(post.getPostId());
+            postSubmissions.put(post.getPostId(), submissions);
             postComments.put(post.getPostId(), comments);
         }
         List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1, mentorName);
@@ -117,6 +121,7 @@ public class ManageCourse extends HttpServlet {
         session.setAttribute("listRequest", listRequest);
         session.setAttribute("listUser", listUser);
         session.setAttribute("postComments", postComments);
+        session.setAttribute("postSubmissions", postSubmissions);
         session.setAttribute("mentorName", mentorName);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }

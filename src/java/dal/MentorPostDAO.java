@@ -149,7 +149,7 @@ public class MentorPostDAO extends DBContext {
         }
         return listMentee;
     }
-    
+
     public List<User> getUserList(int courseId, int status, String mentorName) {
         CourseDAO daoC = new CourseDAO();
         UserDAO daoU = new UserDAO();
@@ -188,7 +188,6 @@ public class MentorPostDAO extends DBContext {
         return commentList;
     }
 
-
     public void addComment(MentorPostComment comment) {
         String sql = "INSERT INTO MentorPostComments (postId, commentedBy, commentedAt, commentContent) "
                 + "VALUES (?, ?, ?, ?)";
@@ -203,21 +202,105 @@ public class MentorPostDAO extends DBContext {
             System.out.println("Error inserting comment: " + ex.getMessage());
         }
     }
-    
-    public void addSubmission(Submission submission) {
-        String sql = "INSERT INTO Submissions (postId, submittedBy, submittedAt, submissionContent, isLate, status) VALUES (?, ?, ?, ?, ?, ?)";
-        
+
+    public void addOrUpdateSubmission(Submission submission) {
+        String sql = "MERGE INTO Submissions AS target "
+                + "USING (SELECT ? AS postId, ? AS submittedBy) AS source "
+                + "ON target.postId = source.postId AND target.submittedBy = source.submittedBy "
+                + "WHEN MATCHED THEN "
+                + "    UPDATE SET target.submittedAt = ?, target.submissionContent = ?, target.isLate = ?, "
+                + "    target.fileName = ?, target.fileType = ? "
+                + "WHEN NOT MATCHED THEN "
+                + "    INSERT (postId, submittedBy, submittedAt, submissionContent, isLate, fileName, fileType) "
+                + "    VALUES (?, ?, ?, ?, ?, ?, ?);";
+
         try (PreparedStatement st = connection.prepareStatement(sql)) {
+            // Set parameters for the source and target
             st.setInt(1, submission.getPostId());
             st.setString(2, submission.getSubmittedBy());
             st.setTimestamp(3, submission.getSubmittedAt());
-            st.setString(4, submission.getSubmissionContent());
-            st.setBoolean(5, submission.isLate());
-            st.setBoolean(6, submission.getStatus());
+            st.setBytes(4, submission.getSubmissionContent());
+            st.setBoolean(5, submission.isIsLate());
+            st.setString(6, submission.getFileName());
+            st.setString(7, submission.getFileType());
+            st.setInt(8, submission.getPostId());
+            st.setString(9, submission.getSubmittedBy());
+            st.setTimestamp(10, submission.getSubmittedAt());
+            st.setBytes(11, submission.getSubmissionContent());
+            st.setBoolean(12, submission.isIsLate());
+            st.setString(13, submission.getFileName());
+            st.setString(14, submission.getFileType());
+
             st.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println("Error adding submission: " + ex.getMessage());
+            System.out.println("Error adding/updating submission: " + ex.getMessage());
         }
+    }
+
+    public List<Submission> getSubmissionsByPostId(int postId) {
+        List<Submission> submissions = new ArrayList<>();
+        String sql = "SELECT s.submissionId, s.postId, s.submittedBy, s.submittedAt, "
+                + "s.submissionContent, s.isLate, s.fileName, s.fileType, u.avatarPath, u.firstName, u.lastName "
+                + "FROM Submissions s "
+                + "JOIN [dbo].[User] u ON s.submittedBy = u.username "
+                + "WHERE s.postId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, postId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Submission submission = new Submission(
+                        rs.getInt("submissionId"),
+                        rs.getInt("postId"),
+                        rs.getString("submittedBy"),
+                        rs.getTimestamp("submittedAt"),
+                        rs.getBytes("submissionContent"),
+                        rs.getBoolean("isLate"),
+                        rs.getString("fileName"),
+                        rs.getString("fileType")
+                );
+                submission.setAvatarPath(rs.getString("avatarPath"));
+                submission.setFullName(rs.getString("lastName") + " " + rs.getString("firstName"));
+
+                submissions.add(submission);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return submissions;
+    }
+
+    public Submission getSubmissionBySubmissionId(int submissionId) {
+        Submission submission = null; // Khởi tạo là null để kiểm tra sau này
+        String sql = "SELECT s.submissionId, s.postId, s.submittedBy, s.submittedAt, "
+                + "s.submissionContent, s.isLate, s.fileName, s.fileType, u.avatarPath, u.firstName, u.lastName "
+                + "FROM Submissions s "
+                + "JOIN [dbo].[User] u ON s.submittedBy = u.username "
+                + "WHERE s.submissionId = ?"; // Sửa từ postId sang submissionId
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, submissionId); // Sử dụng submissionId để truy vấn
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                submission = new Submission(
+                        rs.getInt("submissionId"),
+                        rs.getInt("postId"),
+                        rs.getString("submittedBy"),
+                        rs.getTimestamp("submittedAt"),
+                        rs.getBytes("submissionContent"), // Giả định submissionContent là String
+                        rs.getBoolean("isLate"),
+                        rs.getString("fileName"),
+                        rs.getString("fileType")
+                );
+                submission.setAvatarPath(rs.getString("avatarPath"));
+                submission.setFullName(rs.getString("lastName") + " " + rs.getString("firstName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return submission; // Trả về null nếu không tìm thấy
     }
 
     public static void main(String[] args) {

@@ -295,26 +295,41 @@
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Avatar</th>
+                                                        <th style="width: 40px">Avatar</th>
                                                         <th>Name</th>
-                                                        <th>Email</th>
-                                                        <th>Date of Birth</th>
+                                                        <th>Submitted At</th>
+                                                        <th>Status</th>
+                                                        <th>Submission</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                        <c:forEach var="mentee" items="${listMentee}">
-                                                            <tr>
-                                                                <td>
-                                                                    <img src="data:image/jpeg;base64,${user.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
-                                                                </td>
-                                                                <td>${mentee.lastName} ${user.firstName}</td>
-                                                                <td>${mentee.mail}</td>
-                                                                <td>${mentee.dob}</td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    <c:if test="${empty listMentee}">
+                                                    <c:forEach var="submission" items="${postSubmissions[post.postId]}">
                                                         <tr>
-                                                            <td colspan="5" class="text-center">No mentee found.</td>
+                                                            <td style="text-align: center; vertical-align: middle;">
+                                                                <img src="data:image/jpeg;base64,${submission.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
+                                                            </td>
+                                                            <td>${submission.fullName}</td>
+                                                            <td><fmt:formatDate value="${submission.submittedAt}" pattern="dd-MM-yyyy, HH:mm" /></td>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${submission.isLate}">
+                                                                        <span style="color: red; font-weight: bold;">LATE</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span style="color: green; font-weight: bold;">ON TIME</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
+                                                            <td>
+                                                                <a href="Submit?submissionId=${submission.submissionId}" class="btn btn-primary">
+                                                                    Download
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                    <c:if test="${empty postSubmissions[post.postId]}">
+                                                        <tr>
+                                                            <td colspan="5" class="text-center">No submission found.</td>
                                                         </tr>
                                                     </c:if>
                                                 </tbody>
@@ -331,6 +346,16 @@
                                             <h5 class="modal-title" id="submitFormModalLabel_${post.postId}">Submit</h5>
                                         </div>
                                         <div class="modal-body">
+                                            <c:if test="${not empty postSubmissions[post.postId]}">
+                                                <c:forEach var="submission1" items="${postSubmissions[post.postId]}">
+                                                    <c:if test="${submission1.submittedBy == user.username}">
+                                                        <div class="alert alert-info">
+                                                            Lastest Submission: <strong>${submission1.fileName}</strong>
+                                                            <a href="Submit?submissionId=${submission1.submissionId}" class="btn btn-primary">Download</a>
+                                                        </div>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:if>
                                             <form id="submitAdditionalForm_${post.postId}" action="Submit" method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="postId" value="${post.postId}">
                                                 <input type="hidden" name="deadline" value="${post.deadline}">
@@ -338,8 +363,8 @@
                                                 <input type="hidden" name="username" value="${user.username}">
                                                 <input type="hidden" name="mentorName" value="${mentorName}">
                                                 <div class="form-group">
-                                                    <label for="additionalInfo">Additional Information</label>
-                                                    <input type="file" class="form-control" id="additionalInfo_${post.postId}" name="file"required></input>
+                                                    <label for="additionalInfo">Submission</label>
+                                                    <input type="file" class="form-control" id="additionalInfo_${post.postId}" name="file" required>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
@@ -354,6 +379,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="modal fade" id="editPostModal_${post.postId}" tabindex="-1" aria-labelledby="editPostModalLabel_${post.postId}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
@@ -487,7 +514,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Avatar</th>
+                                        <th style="width: 40px">Avatar</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                             <c:if test="${user.username == mentorName}">
@@ -500,7 +527,7 @@
                                     <c:if test="${not empty listMentee}">
                                         <c:forEach var="mentee" items="${listMentee}">
                                             <tr>
-                                                <td>
+                                                <td style="text-align: center; vertical-align: middle;">
                                                     <img src="data:image/jpeg;base64,${mentee.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
                                                 <td>${mentee.lastName} ${mentee.firstName}</td>
@@ -544,7 +571,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Avatar</th>
+                                        <th style="width: 40px">Avatar</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Date of Birth</th>
@@ -555,7 +582,7 @@
                                     <c:if test="${not empty listRequest}">
                                         <c:forEach var="requesto" items="${listRequest}">
                                             <tr>
-                                                <td>
+                                                <td style="text-align: center; vertical-align: middle;">
                                                     <img src="data:image/jpeg;base64,${requesto.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
                                                 </td>
                                                 <td>${requesto.lastName} ${requesto.firstName}</td>

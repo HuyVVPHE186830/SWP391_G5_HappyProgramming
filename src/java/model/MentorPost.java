@@ -15,12 +15,10 @@ public class MentorPost {
     private String postTitle;
     private String postContent;
     private int postTypeId;
-    private Timestamp deadline; // Đổi từ Date sang Timestamp
+    private Timestamp deadline;
     private int courseId;
     private String createdBy;
-    private Timestamp createdAt; // Thêm thuộc tính createdAt
-
-    // Constructor
+    private Timestamp createdAt;
 
     public MentorPost() {
     }

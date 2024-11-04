@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import model.Submission;
 
@@ -66,7 +67,19 @@ public class Submit extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        MentorPostDAO daoM = new MentorPostDAO();
+        int submissionId = Integer.parseInt(request.getParameter("submissionId"));
+        Submission submission = daoM.getSubmissionBySubmissionId(submissionId);
+        if (submission != null && submission.getSubmissionContent() != null) {
+            // Thiết lập kiểu dữ liệu trả về là file đính kèm
+            response.setContentType(submission.getFileType()); // Sử dụng loại file đã lưu
+            response.setHeader("Content-Disposition", "attachment;filename=" + submission.getFileName());
+
+            // Ghi nội dung file vào output stream
+            response.getOutputStream().write(submission.getSubmissionContent());
+        } else {
+            response.getWriter().println("File not found or submission is empty.");
+        }
     }
 
     /**
@@ -99,23 +112,24 @@ public class Submit extends HttpServlet {
         boolean status = true;
         Timestamp submittedAt = new Timestamp(System.currentTimeMillis());
         Part filePart = request.getPart("file");
-        String submissionContent = null;
-
-        if (filePart != null) {
-            InputStream inputStream = filePart.getInputStream();
-            submissionContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        }
-
+        byte[] submissionContent = null;
         Submission submission = new Submission();
+        if (filePart != null) {
+            String fileName = filePart.getSubmittedFileName();
+            String fileType = filePart.getContentType();
+            InputStream inputStream = filePart.getInputStream();
+            submissionContent = inputStream.readAllBytes();
+            submission.setFileName(fileName);
+            submission.setFileType(fileType);
+        }
         submission.setPostId(postId);
         submission.setSubmittedBy(submittedBy);
         submission.setSubmittedAt(submittedAt);
         submission.setSubmissionContent(submissionContent);
         submission.setLate(isLate);
-        submission.setStatus(status);
 
         MentorPostDAO daoM = new MentorPostDAO();
-        daoM.addSubmission(submission);
+        daoM.addOrUpdateSubmission(submission);
 
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }

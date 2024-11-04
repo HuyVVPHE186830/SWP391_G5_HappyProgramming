@@ -16,21 +16,25 @@ public class Submission {
     private int postId;
     private String submittedBy;
     private Timestamp submittedAt;
-    private String submissionContent;
+    private byte[] submissionContent;
     private boolean isLate;
-    private boolean status;
+    private String avatarPath;
+    private String fullName;
+    private String fileName;
+    private String fileType;
 
     public Submission() {
     }
     
-    public Submission(int submissionId, int postId, String submittedBy, Timestamp submittedAt, String submissionContent, boolean isLate, boolean status) {
+    public Submission(int submissionId, int postId, String submittedBy, Timestamp submittedAt, byte[] submissionContent, boolean isLate, String fileName, String fileType) {
         this.submissionId = submissionId;
         this.postId = postId;
         this.submittedBy = submittedBy;
         this.submittedAt = submittedAt;
         this.submissionContent = submissionContent;
         this.isLate = isLate;
-        this.status = status;
+        this.fileName = fileName;
+        this.fileType = fileType;
     }
 
     public int getSubmissionId() {
@@ -65,27 +69,51 @@ public class Submission {
         this.submittedAt = submittedAt;
     }
 
-    public String getSubmissionContent() {
+    public byte[] getSubmissionContent() {
         return submissionContent;
     }
 
-    public void setSubmissionContent(String submissionContent) {
+    public void setSubmissionContent(byte[] submissionContent) {
         this.submissionContent = submissionContent;
     }
 
-    public boolean isLate() {
+    public boolean isIsLate() {
         return isLate;
     }
 
     public void setLate(boolean late) {
         isLate = late;
     }
-
-    public boolean getStatus() {
-        return status;
+    
+    public String getAvatarPath() {
+        return avatarPath;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }
