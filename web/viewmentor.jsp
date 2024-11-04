@@ -81,15 +81,15 @@
 
 
             .rating-container {
-                background-color: #fff8e1; 
+                background-color: #fff8e1;
                 border: 2px solid #f9a825;
                 border-radius: 10px;
-                padding: 15px 60px; 
-                margin: 30px 0; 
-                max-width: 300px; 
-                text-align: center; 
+                padding: 15px 60px;
+                margin: 30px 0;
+                max-width: 300px;
+                text-align: center;
                 color: #333;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 transition: transform 0.2s, box-shadow 0.2s;
                 text-decoration: none;
             }
@@ -125,7 +125,6 @@
                 <c:set var="mD" value="${requestScope.mentorDetail}"/>
                 <c:set var="cM" value="${requestScope.courseOfMentor}"/>
                 <c:set var="cT" value="${requestScope.thisCate}"/>
-
                 <h6>
                     <a href="home" class="link">Home</a> <span>></span> 
                     <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> 
