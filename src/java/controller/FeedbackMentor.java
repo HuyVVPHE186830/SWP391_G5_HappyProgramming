@@ -165,7 +165,17 @@ public class FeedbackMentor extends HttpServlet {
                         break;
                     }
                 }
-              
+                for (User user : listMenteeOfMentor) {
+                    if (user.getId() == ratedFromID) {
+                        isMentee = true;
+                        break;
+                    }
+                }
+                if (isRated) {
+                    request.setAttribute("errorMessage", "You have already rated this mentor for the selected course.");
+                    request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
+                    return;
+                }
                 if (!isMentee) {
                     request.setAttribute("errorMessage", "You have to apply to the course of this mentor to leave feedback!");
                     request.getRequestDispatcher("viewMentorFeedBack.jsp").forward(request, response);
