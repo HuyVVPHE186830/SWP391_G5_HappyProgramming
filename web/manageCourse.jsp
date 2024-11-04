@@ -286,7 +286,7 @@
                                 </div>
                             </div>
                             <div class="modal fade" id="viewSubmit_${post.postId}" tabindex="-1" aria-labelledby="viewSubmit_${post.postId}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="viewSubmitModalLabel_${post.postId}">Submission</h5>
@@ -295,11 +295,11 @@
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 40px">Avatar</th>
+                                                        <th style="width: 6.25%">Avatar</th>
                                                         <th>Name</th>
-                                                        <th>Submitted At</th>
-                                                        <th>Status</th>
-                                                        <th>Submission</th>
+                                                        <th style="width: 26%">Submitted At</th>
+                                                        <th style="width: 6.25%">Status</th>
+                                                        <th style="width: 6.25%">Download</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -322,7 +322,7 @@
                                                             </td>
                                                             <td>
                                                                 <a href="Submit?submissionId=${submission.submissionId}" class="btn btn-primary">
-                                                                    Download
+                                                                    <i class="fas fa-download"></i>
                                                                 </a>
                                                             </td>
                                                         </tr>
@@ -351,7 +351,7 @@
                                                     <c:if test="${submission1.submittedBy == user.username}">
                                                         <div class="alert alert-info">
                                                             Lastest Submission: <strong>${submission1.fileName}</strong>
-                                                            <a href="Submit?submissionId=${submission1.submissionId}" class="btn btn-primary">Download</a>
+                                                            <a href="Submit?submissionId=${submission1.submissionId}" class="btn btn-primary"><i class="fas fa-download"></i></a>
                                                         </div>
                                                     </c:if>
                                                 </c:forEach>
