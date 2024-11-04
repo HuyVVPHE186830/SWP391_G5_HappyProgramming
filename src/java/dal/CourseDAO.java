@@ -18,24 +18,7 @@ public class CourseDAO extends DBContext {
     public static void main(String[] args) {
         CourseDAO dao = new CourseDAO();
         CourseCategoryDAO daoCC = new CourseCategoryDAO();
-        int count = dao.findTotalRecordOrderByNumberOfMentee();
-//        List<Integer> in = new ArrayList<>();
-//        in.add(1);
-//        in.add(3);
-//        List<Integer> sameCategoryId = daoCC.getCategoryIdByCourseId(5);
-//        List<Course> list = dao.getAllCoursesByUsernameOfMentor("anmentor");
-//        List<Course> otherlist = dao.getOtherCourses(list);
-//        for (Course course : otherlist) {
-//            System.out.println(course);
-//        }
-        List<String> string = dao.getUserByCourse(1, 1, "huyenmentor");
-        for (String string1 : string) {
-            System.out.println(string1);
-        }
-        int num = dao.getTotalParticipants(1, 1, "huyenmentor");
-        System.out.println(num);
-//        int totalRecord = dao.findTotalRecordEachCategoryLessThan2Courses();
-//        System.out.println(totalRecord);
+        dao.setMenteeStatus(1, "dungbt", 1, "huyenmentor");
     }
 
     public List<Category> getAllCategories() {
@@ -1497,5 +1480,22 @@ public class CourseDAO extends DBContext {
         }
 
         return usernames;
+    }
+    
+    public void setMenteeStatus(int courseId, String username, int status, String mentorName) {
+        String sql = "UPDATE Participate SET statusId = ? WHERE courseId = ? AND username = ? AND mentorUsername = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, status);     // Trạng thái muốn cập nhật, ví dụ: -1
+            statement.setInt(2, courseId);   // ID của khóa học
+            statement.setString(3, username); // Tên tài khoản của mentee
+            statement.setString(4, mentorName); // Tên tài khoản của mentee
+
+            // Thực thi câu lệnh update
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

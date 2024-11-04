@@ -564,7 +564,7 @@
                                                 <td>
                                                     <form action="manageMentee" method="get">
                                                         <input type="hidden" name="courseId" value="${course.courseId}">
-                                                        <input type="hidden" name="username" value="${user.username}">
+                                                        <input type="hidden" name="username" value="${requesto.username}">
                                                         <input type="hidden" name="mentorName" value="${mentorName}">
                                                         <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
                                                             <i class="fas fa-check"></i>
