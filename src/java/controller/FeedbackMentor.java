@@ -75,8 +75,14 @@ public class FeedbackMentor extends HttpServlet {
                 int numS = Integer.parseInt(request.getParameter("noStar"));
                 ratingList = rateDAO.getRateByNoStar3(numS, ratedID);
                 break;
+            case "rate-by-course":
+
+                int courseID = Integer.parseInt(request.getParameter("courseid"));
+                int ratedID4 = Integer.parseInt(request.getParameter("ratedId"));
+                ratingList = rateDAO.getRateByCourse(courseID, ratedID4);
+                break;
             default:
-                ratingList = rateDAO.getRateByUserId(ratedID);
+                ratingList = rateDAO.getMentorsRatingById(ratedID);
         }
         return ratingList;
     }
@@ -134,9 +140,17 @@ public class FeedbackMentor extends HttpServlet {
 
         switch (actioN) {
             case "rate-this-guy":
+
                 int ratedFromID = Integer.parseInt(request.getParameter("userN"));
                 int courssE = Integer.parseInt(request.getParameter("couRseId"));
                 int noS = Integer.parseInt(request.getParameter("rating"));
+                List<User> listMenteeOfMentor = rateDAO.getListMenteeOfMentor(ratedID);
+                for (User user : listMenteeOfMentor) {
+                    if(user.getId() != ratedFromID){
+                        request.setAttribute("message","You have to apply to course of this mentor for leave feedback!" );
+                    }
+                }
+
                 String com = request.getParameter("comment");
                 List<Course> listCourseByBoth = courseDAO.getAll();
                 session.setAttribute("listCourseByBoth", listCourseByBoth);
@@ -149,39 +163,7 @@ public class FeedbackMentor extends HttpServlet {
                 throw new AssertionError();
         }
     }
-// @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        String actioN = request.getParameter("action");
-//
-//        if ("rate-this-guy".equals(actioN)) {
-//            // Lấy các tham số từ request
-//            String ratedID = request.getParameter("ratedId");
-//            String ratedFromId = request.getParameter("userN");
-//            String courseId = request.getParameter("couRseId");
-//            String rating = request.getParameter("rating");
-//            String comment = request.getParameter("comment");
-//
-//            // Tạo chuỗi kết quả
-//            String resultMessage = "Rated ID: " + ratedID + "<br>"
-//                    + "Rated From: " + ratedFromId + "<br>"
-//                    + "Course ID: " + courseId + "<br>"
-//                    + "Rating: " + rating + "<br>"
-//                    + "Comment: " + comment;
-//
-//            // Set chuỗi kết quả vào request
-//            request.setAttribute("resultMessage", resultMessage);
-//        } 
-//
-//        // Chuyển hướng đến result.jsp
-//        request.getRequestDispatcher("result.jsp").forward(request, response);
-//    }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
