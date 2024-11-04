@@ -160,7 +160,7 @@
                             </form>
                         </c:if>
                         <c:if test="${sessionScope.user.username == mD.username}">
-                            <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="mentor-course">
+                            <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="button-enroll">
                                 Your Course
                             </a>
                         </c:if>

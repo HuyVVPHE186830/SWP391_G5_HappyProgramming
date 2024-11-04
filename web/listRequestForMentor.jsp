@@ -14,6 +14,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
+        
         <title>List Request For Mentor</title>
         <style>
             .content {
@@ -41,7 +42,7 @@
                 border-radius: 10px 0 0 10px;
                 font-size: 16px;
                 outline: none;
-                background-color: #f2f2f2; 
+                background-color: #f2f2f2;
                 opacity: 2;
             }
 
@@ -121,6 +122,13 @@
             a i.fa-eye:hover {
                 color: #452cbf;
             }
+            .link {
+                color: black;
+            }
+
+            .link:hover {
+                text-decoration: none;
+            }
         </style>
     </head>
     <body>
@@ -135,6 +143,10 @@
 
         <!-- TABLE -->
         <div class="content">
+            <h6>
+                <a href="home" class="link">Home</a> <span>></span> 
+                List Request
+            </h6>
             <h3 class="title">List Request Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
             <form action="#" method="post" class="search-bar">
                 <input type="hidden" name="search" value="searchByName"/>
@@ -175,11 +187,11 @@
                                 <td>
                                     <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}">                                  
                                         <i class="fas fa-eye">
-                                           </i>
-                                        </a>
-                                    </td>
-                                    <th>
-                                        <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" onclick="confirm('Are you sure to cancel this request!')"
+                                        </i>
+                                    </a>
+                                </td>
+                                <th>
+                                    <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" onclick="confirm('Are you sure to cancel this request!')"
                                        <c:if test="${req.requestStatus != 0}">
                                            style="color: gray; pointer-events: none;" 
                                        </c:if>>                                  
