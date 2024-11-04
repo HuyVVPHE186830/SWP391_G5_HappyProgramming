@@ -29,7 +29,7 @@
                 width: 800px;
                 box-shadow: 0 0 10px #888;
                 overflow: hidden;
-                height: 50vh;
+                height: 590px;
                 padding: 10px;
             }
 
@@ -154,7 +154,7 @@
                         <input type="hidden" value="${req.courseId}" name="oldCourseId">
                         <input type="hidden" value="${req.requestStatus}" name="requestStatus">
                         <div class="input">
-                            <label>Fullname</label>
+                            <label>Full Name</label>
                             <input type="text" name="name" value="${user.lastName} ${user.firstName}" disabled>
                         </div>
                         <div class="input">
