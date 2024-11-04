@@ -25,7 +25,7 @@
             </a>
             <a href="<%= request.getContextPath() %>/MangeRequest" class="list-group-item list-group-item-action" style="margin-top: 10px">
                 <i style="margin-right: 10px; font-size: 18px" class="newsletter_content"></i>
-                <span style="font-size: 16px; font-weight: 600">Request</span>
+                <span style="font-size: 16px; font-weight: 600">Mentor Request</span>
             </a>
             <a href="<%= request.getContextPath() %>/ManageReport" class="list-group-item list-group-item-action" style="margin-top: 10px">
                 <i style="margin-right: 10px; font-size: 18px" class="fa-solid fa-circle-exclamation"></i>

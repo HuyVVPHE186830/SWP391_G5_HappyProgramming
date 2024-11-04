@@ -988,7 +988,7 @@ public class CourseDAO extends DBContext {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 2 AND c.courseName LIKE ? "
+                + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 AND c.courseName LIKE ? "
                 + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1008,7 +1008,7 @@ public class CourseDAO extends DBContext {
     public int countMentoringCoursesByName(String userName, String keyword) {
         String sql = "SELECT COUNT(*) FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 2 AND c.courseName LIKE ?";
+                + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 AND c.courseName LIKE ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
@@ -1028,7 +1028,7 @@ public class CourseDAO extends DBContext {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 2 "
+                + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 "
                 + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1047,7 +1047,7 @@ public class CourseDAO extends DBContext {
     public int countMentoringCoursesByUser(String userName) {
         String sql = "SELECT COUNT(*) FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 2";
+                + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
@@ -1066,7 +1066,7 @@ public class CourseDAO extends DBContext {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 3 AND c.courseName LIKE ? "
+                + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 AND c.courseName LIKE ? "
                 + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1086,7 +1086,7 @@ public class CourseDAO extends DBContext {
     public int countStudyingCoursesByName(String userName, String keyword) {
         String sql = "SELECT COUNT(*) FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 3 AND c.courseName LIKE ?";
+                + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 AND c.courseName LIKE ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
@@ -1106,7 +1106,7 @@ public class CourseDAO extends DBContext {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 3 "
+                + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 "
                 + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1125,7 +1125,7 @@ public class CourseDAO extends DBContext {
     public int countStudyingCoursesByUser(String userName) {
         String sql = "SELECT COUNT(*) FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 3";
+                + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
@@ -1182,7 +1182,7 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "INNER JOIN Course_Category cc ON c.courseId = cc.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 2 AND cc.categoryId = ? "
+                + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 AND cc.categoryId = ? "
                 + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1203,7 +1203,7 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT COUNT(*) FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "INNER JOIN Course_Category cc ON c.courseId = cc.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 2 AND cc.categoryId = ?";
+                + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 AND cc.categoryId = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
@@ -1224,7 +1224,7 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "INNER JOIN Course_Category cc ON c.courseId = cc.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 3 AND cc.categoryId = ? "
+                + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 AND cc.categoryId = ? "
                 + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1245,7 +1245,7 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT COUNT(*) FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "INNER JOIN Course_Category cc ON c.courseId = cc.courseId "
-                + "WHERE p.userName = ? AND p.participateRole = 3 AND cc.categoryId = ?";
+                + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 AND cc.categoryId = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);

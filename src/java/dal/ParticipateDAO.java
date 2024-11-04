@@ -31,7 +31,8 @@ public class ParticipateDAO extends DBContext {
                 String username = rs.getString("username");
                 int participateRole = rs.getInt("participateRole");
                 int statusId = rs.getInt("statusId");
-                Participate p = new Participate(courseId, username, participateRole, statusId);
+                String mentorUsername = rs.getString("mentorUsername");
+                Participate p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
 
                 list.add(p);
             }
@@ -52,7 +53,8 @@ public class ParticipateDAO extends DBContext {
                 int courseId = rs.getInt("courseId");
                 int participateRole = rs.getInt("participateRole");
                 int statusId = rs.getInt("statusId");
-                Participate p = new Participate(courseId, username, participateRole, statusId);
+                String mentorUsername = rs.getString("mentorUsername");
+                Participate p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
 
                 list.add(p);
             }
@@ -63,13 +65,14 @@ public class ParticipateDAO extends DBContext {
     }
 
     public void addParticipate(Participate participate) {
-        String sql = "INSERT INTO [Participate] (courseId, username, ParticipateRole, statusId) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO [Participate] (courseId, username, ParticipateRole, statusId, mentorUsername) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, participate.getCourseId());
             st.setString(2, participate.getUsername());
             st.setInt(3, participate.getParticipateRole());
             st.setInt(4, participate.getStatusId());
+            st.setString(5, participate.getMentorUsername());
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -94,9 +97,27 @@ public class ParticipateDAO extends DBContext {
         return f;
     }
 
+    public boolean updateParticipateStatus(int courseId, String username, int statusId) {
+        boolean f = false;
+        try {
+            String sql = "Update Participate Set statusId = ? Where username = ? and courseId = ? and statusId = 0";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, statusId);
+            ps.setString(2, username);
+            ps.setInt(3, courseId);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+
     public boolean deleteParticipate(int courseId, String username) {
         boolean f = false;
-        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ?";
+        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ? and statusId != 1";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, courseId);
@@ -163,13 +184,34 @@ public class ParticipateDAO extends DBContext {
                 int courseId = rs.getInt("courseId");
                 int participateRole = rs.getInt("participateRole");
                 int statusId = rs.getInt("statusId");
-                Participate p = new Participate(courseId, username, participateRole, statusId);
+                String mentorUsername = rs.getString("mentorUsername");
+                Participate p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
                 list.add(p);
             }
         } catch (SQLException ex) {
             System.out.println(ex);
         }
         return list;
+    }
+    
+    public Participate getParticipateByUsernameAndCourseId(int courseId, String username) {
+        Participate p = new Participate();
+        String sql = "SELECT * FROM [Participate] where courseId = ? and username = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, courseId);
+            st.setString(2, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int participateRole = rs.getInt("participateRole");
+                int statusId = rs.getInt("statusId");
+                String mentorUsername = rs.getString("mentorUsername");
+                p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return p;
     }
 
 }

@@ -1,8 +1,10 @@
+package controller;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+
 
 import dal.CourseDAO;
 import dal.RequestDAO;
@@ -75,7 +77,7 @@ public class ListRequestForMentor extends HttpServlet {
         try {
             int userId = Integer.parseInt(userId_str);
             User user = daoU.getUserById(userId);
-            List<Request> requests = daoR.getAllRequestByUsername(user.getUsername());
+            List<Request> requests = daoR.getAllRequestByUsernameForList(user.getUsername());
             List<Course> courses = daoC.getAll();
             List<Status> status = daoS.getAll();
             request.setAttribute("requests", requests);

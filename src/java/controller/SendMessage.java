@@ -24,8 +24,8 @@ import model.User;
 public class SendMessage extends HttpServlet {
 
     private MessageDAO messageDAO = new MessageDAO();
-    UserDAO uDAO = new  UserDAO();
-    
+    UserDAO uDAO = new UserDAO();
+
     private ConversationDAO conversationDAO = new ConversationDAO();
     CourseDAO courseDAO = new CourseDAO();
     ParticipateDAO pDAO = new ParticipateDAO();
@@ -35,8 +35,10 @@ public class SendMessage extends HttpServlet {
         String username = request.getParameter("username");
         String conversationIdParam = request.getParameter("conversationId");
         List<Course> listCourse4 = courseDAO.getAll();
-        List<User> listUser4= uDAO.getAllUserByRoleId(2);
-        List<Participate> listParticipate4= pDAO.getAll();
+        List<User> listUser4 = uDAO.getAllUserByRoleId(2);
+        List<Participate> listParticipate4 = pDAO.getAll();
+        User oldestAdmin = uDAO.getOldestAdmin();
+        request.getSession().setAttribute("oldestAdmin", oldestAdmin);
         request.getSession().setAttribute("listUser4", listUser4);
         request.getSession().setAttribute("listParticipate4", listParticipate4);
         request.getSession().setAttribute("listCourse4", listCourse4);

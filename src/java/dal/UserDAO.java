@@ -724,6 +724,35 @@ public class UserDAO extends DBContext {
         return newCode;
     }
 
+    public User getOldestAdmin() {
+        String sql = "SELECT TOP 1 * FROM [User] WHERE roleId = 1 ORDER BY id ASC";
+        try (PreparedStatement pre = connection.prepareStatement(sql)) {
+            ResultSet rs = pre.executeQuery();
+
+            if (rs.next()) { 
+                int id = rs.getInt("id");
+                String usernamE = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
+
+                return new User(id, usernamE, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         UserDAO dao = new UserDAO();
         User user = dao.getUserById(31);
