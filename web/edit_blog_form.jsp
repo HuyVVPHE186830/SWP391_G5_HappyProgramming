@@ -74,8 +74,9 @@
                 <a href="viewBlogDetail?id=<%= ((Blog) request.getAttribute("blog")).getBlogId() %>" class="btn btn-secondary mt-3">Cancel</a>
             </form>
         </div>
+        <jsp:include page="chat.jsp"></jsp:include>
 
-        <!-- Footer -->
+            <!-- Footer -->
         <jsp:include page="footer.jsp"/>
 
         <!-- Bootstrap JS -->

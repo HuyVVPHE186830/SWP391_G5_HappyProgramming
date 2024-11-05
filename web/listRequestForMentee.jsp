@@ -1,13 +1,12 @@
 <%-- 
-    Document   : ListRequestForMentor
-    Created on : Oct 23, 2024, 9:54:14 PM
-    Author     : Thuan
+    Document   : listRequestForMentee
+    Created on : Nov 5, 2024, 2:33:47 PM
+    Author     : Admin
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +14,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
 
-        <title>List Request For Mentor</title>
+        <title>List Request For Mentee</title>
         <style>
             .content {
                 text-align: center;
@@ -148,7 +147,7 @@
                 <a href="home" class="link" style="margin-left: 30px">Home</a> <span>></span> <a href="viewMyCourses" class="link">My Courses</a> <span>></span> List Request   
             </h6>
             <h3 class="title">List Request Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
-            <form action="#" method="post" class="search-bar">
+            <form action="listRequestForMentee" method="post" class="search-bar">
                 <input type="hidden" name="search" value="searchByName"/>
                 <input type="text" class="input-submit" placeholder="Search" name="keyword" id="keyword" oninput="checkInput()">
                 <input type="submit" class="button-submit" value="Search">
@@ -157,54 +156,41 @@
                 <thead>
                     <tr>
                         <th>Course</th>
-                        <th>Request Time</th>
+                        <th>Mentor</th>
                         <th>Status</th>
-                        <th>Request Reason</th>
-                        <th>View</th>
                         <th>Cancel</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:if test="${not empty requestScope.requests}">
-                        <c:forEach var="req" items="${requestScope.requests}">
+                    <c:if test="${not empty requestScope.participates}">
+                        <c:forEach var="p" items="${requestScope.participates}">
                             <tr>
                                 <td>
                                     <c:forEach var="c" items="${requestScope.courses}">
-                                        <c:if test="${c.courseId == req.courseId}">
+                                        <c:if test="${c.courseId == p.courseId}">
                                             ${c.courseName}
                                         </c:if>
                                     </c:forEach>
                                 </td>
                                 <td>
-                                    <fmt:formatDate value="${req.requestTime}" pattern="dd-MM-yyyy" />
+                                    ${p.mentorUsername}
                                 </td>
                                 <td style="text-transform: capitalize"><c:forEach var="s" items="${requestScope.status}">
-                                        <c:if test="${s.statusId == req.requestStatus}">
+                                        <c:if test="${s.statusId == p.statusId}">
                                             ${s.statusName}
                                         </c:if>
                                     </c:forEach></td>
-                                <td style="word-wrap: break-word; white-space: normal; max-width: 300px;">${req.requestReason}</td>
-                                <td>
-                                    <a href="editRequestForMentor?username=${req.username}&courseId=${req.courseId}">                                  
-                                        <i class="fas fa-eye">
-                                        </i>
-                                    </a>
-                                </td>
                                 <th>
-                                    <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" onclick="confirm('Are you sure to cancel this request!')"
-                                       <c:if test="${req.requestStatus != 0}">
-                                           style="color: gray; pointer-events: none;" 
-                                       </c:if>>                                  
+                                    <a href="deleteRequestForMentee?username=${p.username}&courseId=${p.courseId}" onclick="confirm('Are you sure to cancel this request!')"    >                                  
                                         <i class="fas fa-trash" 
-                                           style="<c:if test='${req.requestStatus != 0}'>color: black;</c:if><c:if test='${req.requestStatus == 0}'>color: red;</c:if>">
+                                           style="<c:if test='${p.statusId != 0}'>color: black;</c:if><c:if test='${p.statusId == 0}'>color: red;</c:if>">
                                            </i>
-                                        </a>
                                         </a>
                                     </th>
                                 </tr>
                         </c:forEach>
                     </c:if>
-                    <c:if test="${empty requestScope.requests}">
+                    <c:if test="${empty requestScope.participates}">
                         <tr>
                             <td colspan="5" class="text-center">No request found.</td>
                         </tr>

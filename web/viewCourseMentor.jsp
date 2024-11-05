@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>List Mentor Of A Course</title>
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
         <link href="CSS/viewcourse.css" rel="stylesheet">
         <style>
