@@ -212,7 +212,13 @@
                 </a>
             </div>
         </c:if>
-
+        <c:if test="${sessionScope.user.roleId == 3}">
+            <div class="applyCourse">
+                <a href="listRequestForMentee?userId=${sessionScope.user.id}">
+                    <i class="fa fa-list"></i>
+                </a>
+            </div>
+        </c:if>
         <!-- Mentoring Section -->
         <c:if test="${sessionScope.user.roleId == 2}">
             <section class="featured-product2">

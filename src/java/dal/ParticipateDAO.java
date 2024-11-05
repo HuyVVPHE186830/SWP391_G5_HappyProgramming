@@ -142,7 +142,7 @@ public class ParticipateDAO extends DBContext {
 //        Request req1 = daoR.getRequestByUsername("anmentor", 1);
 ////        dao.addParticipate(new Participate(4, req1.getUsername(), 2, req1.getRequestStatus()));
 ////        daoR.updateRequest(4, 1, "anmentor", "hel");
-        dao.deleteParticipate(20, "ducmentor");
+        dao.deleteParticipate(2, "chauntm");
     }
 
     public void changeParticipate(String menId, int couId, int i) {
