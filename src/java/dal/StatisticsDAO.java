@@ -141,4 +141,43 @@ public class StatisticsDAO extends DBContext {
         return users;
     }
 
+    public Map<String, Integer> getRequestStats(String createdDate, String username, Integer status) {
+        Map<String, Integer> requestStats = new HashMap<>();
+        StringBuilder sql = new StringBuilder("SELECT requestStatus, COUNT(*) AS count FROM Request WHERE 1=1 ");
+
+        // Dynamically add filters
+        if (createdDate != null && !createdDate.isEmpty()) {
+            sql.append("AND CAST(requestTime AS DATE) = ? ");
+        }
+        if (username != null && !username.isEmpty()) {
+            sql.append("AND username = ? ");
+        }
+        if (status != null) {
+            sql.append("AND requestStatus = ? ");
+        }
+        sql.append("GROUP BY requestStatus");
+
+        try (PreparedStatement st = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (createdDate != null && !createdDate.isEmpty()) {
+                st.setString(paramIndex++, createdDate);
+            }
+            if (username != null && !username.isEmpty()) {
+                st.setString(paramIndex++, username);
+            }
+            if (status != null) {
+                st.setInt(paramIndex, status);
+            }
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                requestStats.put(rs.getString("requestStatus"), rs.getInt("count"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return requestStats;
+    }
+
 }
