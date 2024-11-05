@@ -164,6 +164,19 @@
                     });
                 });
             });
+
+            document.getElementById('editPostForm_${post.postId}').onsubmit = function (event) {
+                var input = document.getElementById('editFile_${post.postId}');
+                var oldFileContent = document.querySelector('input[name="oldFileContent"]').value;
+
+                if (input.files.length === 0) {
+                    var oldFileInput = document.createElement('input');
+                    oldFileInput.type = 'hidden';
+                    oldFileInput.name = 'addFile';
+                    oldFileInput.value = oldFileContent;
+                    this.appendChild(oldFileInput);
+                }
+            };
         </script>
         <c:set var="user" value="${sessionScope.user}"/>
         <jsp:include page="header.jsp"/>
@@ -226,6 +239,13 @@
                                                     <c:otherwise>Unknown Type</c:otherwise>
                                                 </c:choose>
                                             </p>
+                                            <c:if test="${not empty post.fileContent}">
+                                                <p><strong>File:</strong> 
+                                                    <a href="addMentorPost?postId=${post.postId}" download="${post.fileName}">
+                                                        ${post.fileName}
+                                                    </a>
+                                                </p>
+                                            </c:if>
                                             <c:if test="${not empty post.deadline}">
                                                 <p><strong>Deadline:</strong> 
                                                     <fmt:formatDate value="${post.deadline}" pattern="dd/MM/yyyy, HH:mm" />
@@ -405,10 +425,14 @@
                                         </div>
                                         <p class="modal-title" style="margin: 10px 0 0 20px">Last change: <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" /></p>
                                         <div class="modal-body">
-                                            <form id="editPostForm_${post.postId}" action="editMentorPost" method="POST">
+                                            <form id="editPostForm_${post.postId}" action="editMentorPost" method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="postId" value="${post.postId}">
                                                 <input type="hidden" name="courseId" value="${course.courseId}">
                                                 <input type="hidden" name="mentorName" value="${mentorName}">
+                                                <input type="hidden" name="oldFileContent" value="${post.fileContent}">
+                                                <input type="hidden" name="oldFileName" value="${post.fileName}">
+                                                <input type="hidden" name="oldFileType" value="${post.fileType}">
+                                                <input type="file" style="display:none" name="oldFileContent" value="${post.fileContent}">
                                                 <div class="form-group">
                                                     <label for="postTitle">Title</label>
                                                     <input type="text" class="form-control" id="editTitle_${post.postId}" name="editTitle" value="${post.postTitle}" required>
@@ -424,6 +448,19 @@
                                                         <option value="Exercise" ${post.postTypeId == 2 ? 'selected' : ''}>Exercise</option>
                                                         <option value="Test" ${post.postTypeId == 3 ? 'selected' : ''}>Test</option>
                                                     </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="postTitle">File</label>
+                                                    <c:choose>
+                                                        <c:when test="${not empty post.fileName}">
+                                                            <input text="text" class="form-control" id="editFile" onfocus="(this.type = 'file')" name="addFile" placeholder="${post.fileName}">
+                                                            <input type="file" id="editFile_${post.postId}" name="addFile" style="display: none;" onchange="updateFileName(${post.postId})">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <input text="text" class="form-control" id="editFile" onfocus="(this.type = 'file')" name="addFile" placeholder="No File Chosen">
+                                                            <input type="file" id="editFile_${post.postId}" name="addFile" style="display: none;" onchange="updateFileName(${post.postId})">
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </div>
                                                 <div class="form-group" id="deadlineContainer_${post.postId}">
                                                     <label for="deadline">Deadline</label>
@@ -484,7 +521,7 @@
                             <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
                         </div>
                         <div class="modal-body">
-                            <form id="mentorPostForm" action="addMentorPost" method="POST">
+                            <form id="mentorPostForm" action="addMentorPost" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="courseId" value="${course.courseId}">
                                 <input type="hidden" name="mentorName" value="${mentorName}">
                                 <input type="hidden" name="username" value="${user.username}">
@@ -503,6 +540,10 @@
                                         <option value="Exercise">Exercise</option>
                                         <option value="Test">Test</option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postTitle">File</label>
+                                    <input type="file" class="form-control" id="addFile" name="addFile">
                                 </div>
                                 <div class="form-group" id="deadlineContainer" style="display: none;">
                                     <label for="deadline">Deadline</label>
