@@ -51,6 +51,7 @@
             </form>
         </div>
                 <jsp:include page="chat.jsp"></jsp:include>
+        <jsp:include page="footer.jsp"/>
 
         <!-- Bootstrap JS and dependencies -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
