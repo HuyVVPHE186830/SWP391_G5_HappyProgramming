@@ -102,16 +102,16 @@ public class ListRequestForMentee extends HttpServlet {
         HttpSession session = request.getSession();
         User u = (User) session.getAttribute("user");
         String keyword = request.getParameter("keyword");
-        RequestDAO daoR = new RequestDAO();
+        ParticipateDAO daoP = new ParticipateDAO();
         CourseDAO daoC = new CourseDAO();
         StatusDAO daoS = new StatusDAO();
-        List<Request> requests = daoR.getAllRequestOfMentorByKeyword(keyword, u.getUsername());
+        List<Participate> participate = daoP.getAllParticipateOfMenteeByKeyword(keyword, u.getUsername());
         List<Course> courses = daoC.getAll();
         List<Status> status = daoS.getAll();
-        request.setAttribute("requests", requests);
+        request.setAttribute("participates", participate);
         request.setAttribute("courses", courses);
         request.setAttribute("status", status);
-        request.getRequestDispatcher("listRequestForMentor.jsp").forward(request, response);
+        request.getRequestDispatcher("listRequestForMentee.jsp").forward(request, response);
     }
 
     /**

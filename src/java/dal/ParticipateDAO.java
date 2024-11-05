@@ -135,14 +135,14 @@ public class ParticipateDAO extends DBContext {
     public static void main(String[] args) {
         ParticipateDAO dao = new ParticipateDAO();
         RequestDAO daoR = new RequestDAO();
-//        List<Participate> list = dao.getAll();
-//        for (Participate l : list) {
-//            System.out.println(l);
-//        }
+        List<Participate> list = dao.getAllParticipateOfMenteeByKeyword("", "chauntm");
+        for (Participate l : list) {
+            System.out.println(l);
+        }
 //        Request req1 = daoR.getRequestByUsername("anmentor", 1);
 ////        dao.addParticipate(new Participate(4, req1.getUsername(), 2, req1.getRequestStatus()));
 ////        daoR.updateRequest(4, 1, "anmentor", "hel");
-        dao.deleteParticipate(2, "chauntm");
+//        dao.deleteParticipate(2, "chauntm");
     }
 
     public void changeParticipate(String menId, int couId, int i) {
@@ -187,6 +187,29 @@ public class ParticipateDAO extends DBContext {
                 String mentorUsername = rs.getString("mentorUsername");
                 Participate p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
                 list.add(p);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+    
+    public List<Participate> getAllParticipateOfMenteeByKeyword(String keyword, String username) {
+        List<Participate> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Participate] JOIN Course ON Participate.CourseId = Course.CourseId WHERE username = ? and ParticipateRole = 3 AND (Course.CourseName LIKE ? OR Participate.mentorUsername LIKE ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            st.setString(2, "%" + keyword + "%");
+            st.setString(3, "%" + keyword + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("CourseId");
+                int statusId = rs.getInt("statusId");
+                int participateRole = rs.getInt("ParticipateRole");
+                String mentorUsername = rs.getString("mentorUsername");
+                Participate r = new Participate(courseId, username, participateRole, statusId, mentorUsername);
+                list.add(r);
             }
         } catch (SQLException ex) {
             System.out.println(ex);

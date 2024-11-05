@@ -147,9 +147,9 @@
                 <a href="home" class="link" style="margin-left: 30px">Home</a> <span>></span> <a href="viewMyCourses" class="link">My Courses</a> <span>></span> List Request   
             </h6>
             <h3 class="title">List Request Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
-            <form action="#" method="post" class="search-bar">
+            <form action="listRequestForMentee" method="post" class="search-bar">
                 <input type="hidden" name="search" value="searchByName"/>
-                <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="keyword" oninput="checkInput()">
+                <input type="text" class="input-submit" placeholder="Search" name="keyword" id="keyword" oninput="checkInput()">
                 <input type="submit" class="button-submit" value="Search">
             </form>
             <table class="table table-bordered">
