@@ -95,12 +95,12 @@ public class ManageCourse extends HttpServlet {
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
         List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), mentorName);
         Map<Integer, List<MentorPostComment>> postComments = new HashMap<>();
-        Map<Integer, List<Submission>> postSubmissions = new HashMap<>();
+        Map<Integer, List<Submission>> menteeSubmission = new HashMap<>();
         for (MentorPost post : posts) {
             List<MentorPostComment> comments = mentorPostDAO.getAllCommentsByPostId(post.getPostId());
-            List<Submission> submissions = mentorPostDAO.getSubmissionsByPostId(post.getPostId());
-            postSubmissions.put(post.getPostId(), submissions);
+            List<Submission> menteeSubmissionsInfo = mentorPostDAO.getMenteeSubmissionsInfo(post.getPostId(), courseId, mentorName);
             postComments.put(post.getPostId(), comments);
+            menteeSubmission.put(post.getPostId(), menteeSubmissionsInfo);
         }
         List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1, mentorName);
         List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0, mentorName);
@@ -121,8 +121,8 @@ public class ManageCourse extends HttpServlet {
         session.setAttribute("listRequest", listRequest);
         session.setAttribute("listUser", listUser);
         session.setAttribute("postComments", postComments);
-        session.setAttribute("postSubmissions", postSubmissions);
         session.setAttribute("mentorName", mentorName);
+        request.setAttribute("menteeSubmission", menteeSubmission);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 

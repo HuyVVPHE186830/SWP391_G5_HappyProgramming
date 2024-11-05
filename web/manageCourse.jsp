@@ -286,7 +286,7 @@
                                 </div>
                             </div>
                             <div class="modal fade" id="viewSubmit_${post.postId}" tabindex="-1" aria-labelledby="viewSubmit_${post.postId}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 700px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="viewSubmitModalLabel_${post.postId}">Submission</h5>
@@ -297,37 +297,50 @@
                                                     <tr>
                                                         <th style="width: 6.25%">Avatar</th>
                                                         <th>Name</th>
-                                                        <th style="width: 26%">Submitted At</th>
+                                                        <th style="width: 25%">Submitted At</th>
                                                         <th style="width: 6.25%">Status</th>
                                                         <th style="width: 6.25%">Download</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <c:forEach var="submission" items="${postSubmissions[post.postId]}">
+                                                    <c:forEach var="submission" items="${menteeSubmission[post.postId]}">
                                                         <tr>
                                                             <td style="text-align: center; vertical-align: middle;">
-                                                                <img src="data:image/jpeg;base64,${submission.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%;object-fit: cover;">
+                                                                <img src="data:image/jpeg;base64,${submission.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                             </td>
                                                             <td>${submission.fullName}</td>
-                                                            <td><fmt:formatDate value="${submission.submittedAt}" pattern="dd-MM-yyyy, HH:mm" /></td>
-                                                            <td>
-                                                                <c:choose>
-                                                                    <c:when test="${submission.isLate}">
-                                                                        <span style="color: red; font-weight: bold;">LATE</span>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span style="color: green; font-weight: bold;">ON TIME</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </td>
-                                                            <td>
-                                                                <a href="Submit?submissionId=${submission.submissionId}" class="btn btn-primary">
-                                                                    <i class="fas fa-download"></i>
-                                                                </a>
-                                                            </td>
+                                                            <c:choose>
+                                                                <c:when test="${submission.submittedAt == null}">
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                    <td>
+                                                                        <a class="btn btn-secondary" disabled>
+                                                                            <i class="fas fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <td><fmt:formatDate value="${submission.submittedAt}" pattern="dd-MM-yyyy, HH:mm" /></td>
+                                                                    <td>
+                                                                        <c:choose>
+                                                                            <c:when test="${submission.isLate}">
+                                                                                <span style="color: red; font-weight: bold;">LATE</span>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <span style="color: green; font-weight: bold;">ON TIME</span>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="Submit?submissionId=${submission.submissionId}" class="btn btn-primary">
+                                                                            <i class="fas fa-download"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </tr>
                                                     </c:forEach>
-                                                    <c:if test="${empty postSubmissions[post.postId]}">
+                                                    <c:if test="${empty menteeSubmission[post.postId]}">
                                                         <tr>
                                                             <td colspan="5" class="text-center">No submission found.</td>
                                                         </tr>
@@ -338,6 +351,9 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
 
                             <div class="modal fade" id="submitFormModal_${post.postId}" tabindex="-1" aria-labelledby="submitFormModalLabel_${post.postId}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">

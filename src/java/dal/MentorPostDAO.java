@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import model.MentorPost;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import model.MentorPostComment;
 import model.Submission;
 import model.User;
@@ -303,11 +306,42 @@ public class MentorPostDAO extends DBContext {
         return submission; // Trả về null nếu không tìm thấy
     }
 
+    public List<Submission> getMenteeSubmissionsInfo(int postId, int courseId, String mentorName) {
+        List<Submission> menteeSubmissions = new ArrayList<>();
+        List<User> mentees = getMenteeList(courseId, 1, mentorName);
+        List<Submission> submissions = getSubmissionsByPostId(postId);
+        Map<String, Submission> submissionMap = new HashMap<>();
+        for (Submission submission : submissions) {
+            submissionMap.put(submission.getSubmittedBy(), submission);
+        }
+        for (User mentee : mentees) {
+            Submission submission = submissionMap.get(mentee.getUsername());
+            if (submission != null) {
+                menteeSubmissions.add(submission);
+            } else {
+                Submission emptySubmission = new Submission();
+                emptySubmission.setFullName(mentee.getLastName() + " " + mentee.getFirstName());
+                emptySubmission.setAvatarPath(mentee.getAvatarPath());
+                emptySubmission.setSubmittedAt(null); 
+                emptySubmission.setLate(false);
+                emptySubmission.setFileName("-");
+                emptySubmission.setFileType("-");
+                menteeSubmissions.add(emptySubmission);
+            }
+        }
+
+        return menteeSubmissions;
+    }
+
     public static void main(String[] args) {
         MentorPostDAO dao = new MentorPostDAO();
         List<User> string = dao.getMenteeList(1, 1, "huyenmentor");
         for (User string1 : string) {
             System.out.println(string1.toString());
+        }
+        List<Submission> list = dao.getMenteeSubmissionsInfo(1, 3, "huyenmentor");
+        for (Submission submission : list) {
+            System.out.println(submission.toString());
         }
     }
 
