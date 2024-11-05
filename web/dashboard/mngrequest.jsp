@@ -192,7 +192,7 @@
                                                 <td class="text_page" style="font-weight: 500">${t.dob}</td>
                                                 <td class="text_page" style="font-weight: 500">${tCVPath}</td>
                                                 <td>
-                                                    <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;">View</a>
+                                                    <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;"> <i class="fa-solid fa-eye"></i></a>
                                                 </td>
                                             </tr>
 
@@ -291,12 +291,16 @@
                                                         <form action="MangeRequest?action=Approve" method="post" style="display:inline;">
                                                             <input type="hidden" name="mentorId" value="${mentor.username}">
                                                             <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
-                                                            <input type="submit" class="btn btn-success" value="Approve">
+                                                            <button type="submit" class="btn btn-success" title="Approve">
+                                                                <i class="fa-solid fa-check"></i> <!-- Thay đổi thành biểu tượng dấu tick -->
+                                                            </button>
                                                         </form>
                                                         <form action="MangeRequest?action=Reject" method="post" style="display:inline;">
                                                             <input type="hidden" name="mentorId" value="${mentor.username}">
-                                                            <input type="hidden" name="courseId" value="${request.courseId}"> <!-- Đảm bảo rằng courseId thuộc về request -->
-                                                            <input type="submit" class="btn btn-danger" value="Reject">
+                                                            <input type="hidden" name="courseId" value="${request.courseId}">
+                                                            <button type="submit" class="btn btn-danger" title="Reject">
+                                                                <i class="fa-solid fa-times"></i>
+                                                            </button>
                                                         </form>
                                                     </td>
                                                 </tr>

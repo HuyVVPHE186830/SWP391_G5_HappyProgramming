@@ -493,7 +493,14 @@ public class RatingDAO extends DBContext {
 
     public List<Rating> getRateByNoStar3(int numS, int ratedID) {
         List<Rating> ratings = new ArrayList<>();
-        String query = "SELECT * FROM [Rating] WHERE noStar = ? AND ratedToUser = (SELECT username FROM [User] WHERE id = ?)";
+        String query = "SELECT r.*, u1.avatarPath AS ratedFromAvatarPath,\n"
+                + "       c.courseName \n"
+                + "FROM [Rating] r\n"
+                + "JOIN [User] u1 ON r.ratedFromUser = u1.username \n"
+                + "JOIN [User] u2 ON r.ratedToUser = u2.username    \n"
+                + "JOIN [Course] c ON r.courseId = c.courseId \n"
+                + "WHERE r.noStar = ? \n"
+                + "AND u2.id = ?; ";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, numS); // Set the noStar value
@@ -506,9 +513,11 @@ public class RatingDAO extends DBContext {
                     int noStar = rs.getInt("noStar");
                     int courseId = rs.getInt("courseId");
                     String ratingComment = rs.getString("ratingComment");
+                    String avatarPath = rs.getString("ratedFromAvatarPath"); // Lấy avatarPath
+                    String courseName = rs.getString("courseName"); // Lấy courseName
 
                     // Create a Rating object and add it to the list
-                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment);
+                    Rating rating = new Rating(ratedFromUser, ratedToUser, noStar, courseId, ratingComment, courseName, avatarPath);
                     ratings.add(rating);
                 }
             }
@@ -619,10 +628,10 @@ public class RatingDAO extends DBContext {
                 + "       u.activeStatus, u.isVerified, u.verification_code, u.roleId \n"
                 + "FROM [Participate] p \n"
                 + "JOIN [User] u ON u.username = p.username\n"
-                + "WHERE p.courseId = "+courseId+"\n"
+                + "WHERE p.courseId = " + courseId + "\n"
                 + "AND p.participateRole = 3 \n"
                 + "AND p.statusId = 1 \n"
-                + "AND p.mentorUsername = (SELECT username FROM [User] WHERE id = "+mentorId+");";
+                + "AND p.mentorUsername = (SELECT username FROM [User] WHERE id = " + mentorId + ");";
 
         try {
             PreparedStatement st = connection.prepareStatement(query);
@@ -654,7 +663,7 @@ public class RatingDAO extends DBContext {
 
     public static void main(String[] args) {
         RatingDAO dao = new RatingDAO();
-        List<User> ratings = dao.getListMenteeOfMentorOfCourse(29,3); // Gọi phương thức với mentorId và courseId
+        List<User> ratings = dao.getListMenteeOfMentorOfCourse(29, 3); // Gọi phương thức với mentorId và courseId
         for (User rating : ratings) {
             System.out.println(rating);
         }
