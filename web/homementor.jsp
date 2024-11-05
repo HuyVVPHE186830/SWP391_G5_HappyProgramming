@@ -14,7 +14,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
         <link href="CSS/home.css" rel="stylesheet">
-        <title>JSP Page</title>
+        <title>Home</title>
     </head>
     <body>
         <!-- HEADER -->
