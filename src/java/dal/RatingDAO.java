@@ -47,18 +47,6 @@ public class RatingDAO extends DBContext {
 
     }
 
-    public static void main(String[] args) {
-        RatingDAO dao = new RatingDAO();
-//        int o = dao.getTurnStar(3, 29);
-//        System.out.println(o);
-        List<User> ratings = new ArrayList<>();
-        ratings = dao.getListMenteeOfMentor( 29);
-        for (User rating : ratings) {
-            System.out.println(rating);
-        }
-//        dao.addFeedback("ducmentor", "anmentor", 4, 1, "non2");
-    }
-
     public List<Rating> getAll() {
         List<Rating> ratings = new ArrayList<>();
         String query = "SELECT * FROM [Rating]";
@@ -622,6 +610,54 @@ public class RatingDAO extends DBContext {
         }
 
         return mentees;
+    }
+
+    public List<User> getListMenteeOfMentorOfCourse(int mentorId, int courseId) {
+        List<User> mentees = new ArrayList<>();
+        String query = "SELECT u.id, u.username, u.password, u.firstName, u.lastName, \n"
+                + "       u.dob, u.mail, u.createdDate, u.avatarPath, u.cvPath, \n"
+                + "       u.activeStatus, u.isVerified, u.verification_code, u.roleId \n"
+                + "FROM [Participate] p \n"
+                + "JOIN [User] u ON u.username = p.username\n"
+                + "WHERE p.courseId = "+courseId+"\n"
+                + "AND p.participateRole = 3 \n"
+                + "AND p.statusId = 1 \n"
+                + "AND p.mentorUsername = (SELECT username FROM [User] WHERE id = "+mentorId+");";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                Date dob = rs.getDate("dob");
+                String mail = rs.getString("mail");
+                Date createdDate = rs.getDate("createdDate");
+                String avatarPath = rs.getString("avatarPath");
+                String cvPath = rs.getString("cvPath");
+                boolean activeStatus = rs.getBoolean("activeStatus");
+                boolean isVerified = rs.getBoolean("isVerified");
+                String verificationCode = rs.getString("verification_code");
+                int roleId = rs.getInt("roleId");
+                User u = new User(id, username, password, firstName, lastName, dob, mail, createdDate, avatarPath, cvPath, activeStatus, isVerified, verificationCode, roleId);
+                mentees.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return mentees;
+    }
+
+    public static void main(String[] args) {
+        RatingDAO dao = new RatingDAO();
+        List<User> ratings = dao.getListMenteeOfMentorOfCourse(29,3); // Gọi phương thức với mentorId và courseId
+        for (User rating : ratings) {
+            System.out.println(rating);
+        }
     }
 
 }
