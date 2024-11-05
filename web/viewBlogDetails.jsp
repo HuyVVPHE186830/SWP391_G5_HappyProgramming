@@ -634,23 +634,23 @@
                 </div>
             </div>
         </div>
-                <jsp:include page="chat.jsp"></jsp:include>
+        <jsp:include page="chat.jsp"></jsp:include>
 
-        <!-- Bootstrap JS and dependencies -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-        <script>
-            // Set the clicked image in the modal
-            const imageModal = document.getElementById('imageModal');
-            imageModal.addEventListener('show.bs.modal', event => {
-                const button = event.relatedTarget; // Button that triggered the modal
-                const imageUrl = button.getAttribute('data-bs-img'); // Extract info from data-* attributes
-                const modalImage = document.getElementById('modal-image'); // Find the modal image element
-                modalImage.src = imageUrl; // Update the modal's image source
-            });
-        </script>
+            <!-- Bootstrap JS and dependencies -->
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+            <script>
+                // Set the clicked image in the modal
+                const imageModal = document.getElementById('imageModal');
+                imageModal.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget; // Button that triggered the modal
+                    const imageUrl = button.getAttribute('data-bs-img'); // Extract info from data-* attributes
+                    const modalImage = document.getElementById('modal-image'); // Find the modal image element
+                    modalImage.src = imageUrl; // Update the modal's image source
+                });
+            </script>
 
-        <!-- FOOTER -->
+            <!-- FOOTER -->
         <jsp:include page="footer.jsp"/>
     </body>
 </html>

@@ -50,7 +50,7 @@
                 <button type="submit" class="btn btn-primary">Publish Blog</button>
             </form>
         </div>
-                <jsp:include page="chat.jsp"></jsp:include>
+        <jsp:include page="chat.jsp"></jsp:include>
         <jsp:include page="footer.jsp"/>
 
         <!-- Bootstrap JS and dependencies -->
