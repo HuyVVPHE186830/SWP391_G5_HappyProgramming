@@ -86,7 +86,7 @@
                 border-radius: 10px;
                 padding: 15px 60px;
                 margin: 30px 0;
-                max-width: 300px;
+                max-width: 200px;
                 text-align: center;
                 color: #333;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -98,6 +98,10 @@
             .rating-container:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                text-decoration: none;
+            }
+            
+            .rate:hover {
                 text-decoration: none;
             }
 
@@ -142,14 +146,17 @@
 
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
-                        <a href="rating?ratedId=${mentorDetail.id}" class="rating-container"> 
-                            <span class="avg">${requestScope.avg}</span> 
-                            <span class="star">★</span> 
+                        <a href="rating?ratedId=${mentorDetail.id}" class="rate"> 
+                            <div class="rating-container">
+                                <span class="avg">${requestScope.avg}</span> 
+                                <span class="star">★</span> 
+                            </div>
+
                         </a>
-                        <c:if test="${empty session.user}">
-                            <h3 style="font-style: italic; color: #929292; font-weight: 400; margin-top: 25px;">You must sign in to enroll this course</h3>
+                        <c:if test="${empty sessionScope.user}">
+                            <h3 style="font-style: italic; color: #656565; font-weight: 400; margin-top: 25px;">You must sign in to enroll this course</h3>
                         </c:if>    
-                        <c:if test="${sessionScope.user.username != mD.username && not empty session.user}">
+                        <c:if test="${sessionScope.user.username != mD.username && not empty sessionScope.user}">
                             <form action="requestScreen" method="post">
                                 <input type="hidden" name="courseId" value="${cM.courseId}">
                                 <input type="hidden" name="mentorUsername" value="${mD.username}">
@@ -157,7 +164,7 @@
                                 <button type="submit" class="button-enroll">Enroll</button>
                             </form>
                         </c:if>
-                        <c:if test="${sessionScope.user.username == mD.username && not empty session.user}">
+                        <c:if test="${sessionScope.user.username == mD.username && not empty sessionScope.user}">
                             <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="button-enroll">
                                 Your Course
                             </a>
