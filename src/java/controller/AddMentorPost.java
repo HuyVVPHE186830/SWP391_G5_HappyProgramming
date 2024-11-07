@@ -8,20 +8,25 @@ import dal.MentorPostDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 import java.util.Date;
 import model.MentorPost;
+import model.Submission;
 
 /**
  *
  * @author Huy Võ
  */
+@MultipartConfig
 public class AddMentorPost extends HttpServlet {
 
     /**
@@ -62,7 +67,16 @@ public class AddMentorPost extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        MentorPostDAO daoM = new MentorPostDAO();
+        int postId = Integer.parseInt(request.getParameter("postId"));
+        MentorPost post = daoM.getPostById(postId);
+        if (post != null && post.getFileContent() != null) {
+            response.setContentType(post.getFileType());
+            response.setHeader("Content-Disposition", "attachment;filename=" + post.getFileName());
+            response.getOutputStream().write(post.getFileContent());
+        } else {
+            response.getWriter().println("File not found or submission is empty.");
+        }
     }
 
     /**
@@ -82,7 +96,7 @@ public class AddMentorPost extends HttpServlet {
         String postContent = request.getParameter("addContent");
         String postType = request.getParameter("addType");
         int postTypeId = mentorPostDAO.getPostTypeId(postType);
-        
+
         String deadlineStr = request.getParameter("deadline");
         String courseIdStr = request.getParameter("courseId");
         String mentorName = request.getParameter("mentorName");
@@ -97,7 +111,21 @@ public class AddMentorPost extends HttpServlet {
         } catch (ParseException e) {
             System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
         }
+        Part filePart = request.getPart("addFile");
         MentorPost mentorPost = new MentorPost();
+        byte[] fileContent = null;
+        if (filePart != null && filePart.getSize() > 0) {
+            // Có file được tải lên
+            String fileName = filePart.getSubmittedFileName();
+            String fileType = filePart.getContentType();
+            InputStream inputStream = filePart.getInputStream();
+            fileContent = inputStream.readAllBytes();
+
+            // Đặt thông tin file cho đối tượng mentorPost
+            mentorPost.setFileName(fileName);
+            mentorPost.setFileType(fileType);
+        }
+        mentorPost.setFileContent(fileContent);
         mentorPost.setPostTitle(postTitle);
         mentorPost.setPostContent(postContent);
         mentorPost.setPostTypeId(postTypeId);

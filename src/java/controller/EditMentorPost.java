@@ -8,10 +8,13 @@ import dal.MentorPostDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,8 +24,9 @@ import model.MentorPost;
 /**
  *
  * @author Huy Võ
- * 
+ *
  */
+@MultipartConfig
 public class EditMentorPost extends HttpServlet {
 
     /**
@@ -89,6 +93,23 @@ public class EditMentorPost extends HttpServlet {
         int postTypeId = mentorPostDAO.getPostTypeId(type);
         String deadlineStr = request.getParameter("editDeadline");
 
+        String fileName = null;
+        String fileType = null;
+        byte[] fileContent = null;
+        Part filePart = request.getPart("addFile");
+        String oldFileContentStr = request.getParameter("oldFileContent");
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName1 = filePart.getSubmittedFileName();
+            String fileType1 = filePart.getContentType();
+            InputStream inputStream = filePart.getInputStream();
+            fileContent = inputStream.readAllBytes();
+            fileName = fileName1;
+            fileType = fileType1;
+        } else {
+            fileContent = oldFileContentStr.getBytes();
+            fileName = request.getParameter("oldFileName");
+            fileType = request.getParameter("oldFileType");
+        }
         Timestamp deadline = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         try {
@@ -98,7 +119,7 @@ public class EditMentorPost extends HttpServlet {
             System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
         }
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        MentorPost mp = new MentorPost(title, content, postTypeId, deadline, time);
+        MentorPost mp = new MentorPost(title, content, postTypeId, deadline, time, fileContent, fileName, fileType);
         mentorPostDAO.updateMentorPost(mp, postId);
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }
