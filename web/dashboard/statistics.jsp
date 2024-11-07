@@ -52,50 +52,48 @@
         <!-- Sidebar -->
         <jsp:include page="leftadmin.jsp"></jsp:include>
 
-            <!-- Main Content Area -->
-            <div class="content">
-                <main>
-                    <div class="container pt-4">
-                        <section class="mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h3 class="text-center mb-4"><strong>System Statistics</strong></h3>
+        <!-- Main Content Area -->
+        <div class="content">
+            <main>
+                <div class="container pt-4">
+                    <section class="mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="text-center mb-4"><strong>System Statistics</strong></h3>
 
-                                    <!-- User Roles Breakdown -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="text_page_head">User Roles Breakdown</h4>
-                                            <div class="chart-container">
-                                                <canvas id="userRolesChart"></canvas>
-                                            </div>
+                                <!-- User Roles Breakdown -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="text_page_head">User Roles Breakdown</h4>
+                                        <div class="chart-container">
+                                            <canvas id="userRolesChart"></canvas>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <!-- Courses and Participants -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="text_page_head">Courses and Participants</h4>
-                                            <div class="chart-container">
-                                                <canvas id="coursesChart"></canvas>
-                                            </div>
+                                <!-- Courses and Participants -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="text_page_head">Courses and Participants</h4>
+                                        <div class="chart-container">
+                                            <canvas id="coursesChart"></canvas>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <!-- Blog Posts by User with Filters -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="text_page_head">Blog Posts by User</h4>
+                                <!-- Blog Posts by User with Filters -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="text_page_head">Blog Posts by User</h4>
 
-                                            <!-- Filters for Time Range and User -->
-                                            <form action="<%= request.getContextPath() %>/StatisticsController" method="get" class="form-inline">
-                                            <!-- Date Range Filter -->
+                                        <!-- Filters for Time Range and User -->
+                                        <form action="<%= request.getContextPath() %>/StatisticsController" method="get" class="form-inline">
                                             <label for="startDate" class="mr-2">From:</label>
                                             <input type="date" id="startDate" name="startDate" class="form-control mr-2">
 
                                             <label for="endDate" class="mr-2">To:</label>
                                             <input type="date" id="endDate" name="endDate" class="form-control mr-2">
 
-                                            <!-- User Filter -->
                                             <label for="user" class="mr-2">User:</label>
                                             <select id="user" name="user" class="form-control mr-2">
                                                 <option value="">All Users</option>
@@ -104,18 +102,49 @@
                                                 </c:forEach>
                                             </select>
 
-
-                                            <!-- Filter Button -->
                                             <button type="submit" class="btn btn-primary">Filter</button>
                                         </form>
 
-                                        <!-- Blog Posts Chart -->
                                         <div class="chart-container mt-4">
                                             <canvas id="blogPostsChart"></canvas>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Requests Chart with Filters -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="text_page_head">Requests Statistics</h4>
+
+                                        <!-- Filters for Request Stats -->
+                                        <form action="<%= request.getContextPath() %>/StatisticsController" method="get" class="form-inline">
+                                            <label for="createdDate" class="mr-2">Created Date:</label>
+                                            <input type="date" id="createdDate" name="createdDate" class="form-control mr-2">
+
+                                            <label for="username" class="mr-2">Username:</label>
+                                            <select id="username" name="username" class="form-control mr-2">
+                                                <option value="">All Users</option>
+                                                <c:forEach var="user" items="${allUsers}">
+                                                    <option value="${user}">${user}</option>
+                                                </c:forEach>
+                                            </select>
+
+                                            <label for="status" class="mr-2">Status:</label>
+                                            <select id="status" name="status" class="form-control mr-2">
+                                                <option value="">All Statuses</option>
+                                                <option value="1">Approved</option>
+                                                <option value="0">Pending</option>
+                                                <option value="-1">Rejected</option>
+                                            </select>
+
+                                            <button type="submit" class="btn btn-primary">Filter</button>
+                                        </form>
+
+                                        <div class="chart-container mt-4">
+                                            <canvas id="requestsChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -131,110 +160,113 @@
             // User Roles Breakdown Chart
             const userRolesCtx = document.getElementById('userRolesChart').getContext('2d');
             const userRolesChart = new Chart(userRolesCtx, {
-            type: 'pie',
-                    data: {
+                type: 'pie',
+                data: {
                     labels: [
-            <c:forEach var="entry" items="${userRolesStats}">
-                    "${entry.key}",
-            </c:forEach>
+                        <c:forEach var="entry" items="${userRolesStats}">
+                            "${entry.key}",
+                        </c:forEach>
                     ],
-                            datasets: [{
-                            data: [
-            <c:forEach var="entry" items="${userRolesStats}">
-                ${entry.value},
-            </c:forEach>
-                            ],
-                                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                            }]
-                    },
-                    options: {
+                    datasets: [{
+                        data: [
+                            <c:forEach var="entry" items="${userRolesStats}">
+                                ${entry.value},
+                            </c:forEach>
+                        ],
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                    }]
+                },
+                options: {
                     maintainAspectRatio: false,
-                            responsive: true
-                    }
+                    responsive: true
+                }
             });
+
             // Courses and Participants Chart
             const coursesCtx = document.getElementById('coursesChart').getContext('2d');
             const coursesChart = new Chart(coursesCtx, {
-            type: 'bar',
-                    data: {
+                type: 'bar',
+                data: {
                     labels: [
-            <c:forEach var="entry" items="${courseStats}">
-                    "${entry.key}",
-            </c:forEach>
+                        <c:forEach var="entry" items="${courseStats}">
+                            "${entry.key}",
+                        </c:forEach>
                     ],
-                            datasets: [{
-                            label: 'Participants',
-                                    data: [
-            <c:forEach var="entry" items="${courseStats}">
-                ${entry.value},
-            </c:forEach>
-                                    ],
-                                    backgroundColor: '#36A2EB'
-                            }]
-                    },
-                    options: {
+                    datasets: [{
+                        label: 'Participants',
+                        data: [
+                            <c:forEach var="entry" items="${courseStats}">
+                                ${entry.value},
+                            </c:forEach>
+                        ],
+                        backgroundColor: '#36A2EB'
+                    }]
+                },
+                options: {
                     maintainAspectRatio: false,
-                            responsive: true,
-                            scales: {
-                            y: { beginAtZero: true }
-                            }
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
                     }
+                }
             });
+
             // Blog Posts by User Chart
             const blogPostsCtx = document.getElementById('blogPostsChart').getContext('2d');
             const blogPostsChart = new Chart(blogPostsCtx, {
-            type: 'bar',
-                    data: {
+                type: 'bar',
+                data: {
                     labels: [
-            <c:forEach var="entry" items="${userBlogStats}">
-                    "${entry.key}",
-            </c:forEach>
+                        <c:forEach var="entry" items="${userBlogStats}">
+                            "${entry.key}",
+                        </c:forEach>
                     ],
-                            datasets: [{
-                            label: 'Blog Posts',
-                                    data: [
-            <c:forEach var="entry" items="${userBlogStats}">
-                ${entry.value},
-            </c:forEach>
-                                    ],
-                                    backgroundColor: '#FF6384'
-                            }]
-                    },
-                    options: {
+                    datasets: [{
+                        label: 'Blog Posts',
+                        data: [
+                            <c:forEach var="entry" items="${userBlogStats}">
+                                ${entry.value},
+                            </c:forEach>
+                        ],
+                        backgroundColor: '#FF6384'
+                    }]
+                },
+                options: {
                     maintainAspectRatio: false,
-                            responsive: true,
-                            scales: {
-                            y: { beginAtZero: true }
-                            }
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
                     }
+                }
             });
-            // Messages in Conversations Chart
-            const messagesCtx = document.getElementById('messagesChart').getContext('2d');
-            const messagesChart = new Chart(messagesCtx, {
-            type: 'bar',
-                    data: {
+
+            // Requests Statistics Chart
+            const requestsCtx = document.getElementById('requestsChart').getContext('2d');
+            const requestsChart = new Chart(requestsCtx, {
+                type: 'bar',
+                data: {
                     labels: [
-            <c:forEach var="entry" items="${messageStats}">
-                    "${entry.key}",
-            </c:forEach>
+                        <c:forEach var="entry" items="${requestStats}">
+                            "${entry.key}",
+                        </c:forEach>
                     ],
-                            datasets: [{
-                            label: 'Messages',
-                                    data: [
-            <c:forEach var="entry" items="${messageStats}">
-                ${entry.value},
-            </c:forEach>
-                                    ],
-                                    backgroundColor: '#4BC0C0'
-                            }]
-                    },
-                    options: {
+                    datasets: [{
+                        label: 'Requests',
+                        data: [
+                            <c:forEach var="entry" items="${requestStats}">
+                                ${entry.value},
+                            </c:forEach>
+                        ],
+                        backgroundColor: '#FFCE56'
+                    }]
+                },
+                options: {
                     maintainAspectRatio: false,
-                            responsive: true,
-                            scales: {
-                            y: { beginAtZero: true }
-                            }
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
                     }
+                }
             });
         </script>
     </body>

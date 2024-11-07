@@ -41,9 +41,13 @@ public class MentorPostDAO extends DBContext {
                 int postType = rs.getInt("postTypeId");
                 Timestamp deadline = rs.getTimestamp("deadline");
                 Timestamp createdAt = rs.getTimestamp("createdAt");
+                byte[] fileContent = rs.getBytes("fileContent");
+                String fileName = rs.getString("fileName");
+                String fileType = rs.getString("fileType");
+                
 
                 // Tạo đối tượng MentorPost từ dữ liệu trong cơ sở dữ liệu
-                MentorPost mentorPost = new MentorPost(id, postTitle, postContent, postType, deadline, courseId, createdBy, createdAt); // Điều chỉnh constructor nếu cần
+                MentorPost mentorPost = new MentorPost(id, postTitle, postContent, postType, deadline, courseId, createdBy, createdAt, fileContent, fileName, fileType); // Điều chỉnh constructor nếu cần
                 list.add(mentorPost); // Thêm bài viết vào danh sách
             }
         } catch (SQLException ex) {
@@ -51,9 +55,33 @@ public class MentorPostDAO extends DBContext {
         }
         return list; // Trả về danh sách các bài viết
     }
+    
+    public MentorPost getPostById(int postId) {
+        MentorPost mp = new MentorPost();
+        String sql = " Select * from [dbo].[MentorPosts] where [postId] = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, postId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                mp.setPostId(postId);
+                mp.setPostTitle(rs.getString("postTitle"));
+                mp.setPostContent(rs.getString("postContent"));
+                mp.setPostTypeId(rs.getInt("postTypeId"));
+                mp.setDeadline(rs.getTimestamp("deadline"));
+                mp.setCreatedAt( rs.getTimestamp("createdAt"));
+                mp.setFileContent(rs.getBytes("fileContent"));
+                mp.setFileName(rs.getString("fileName"));
+                mp.setFileType(rs.getString("fileType"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return mp;
+    }
 
     public void addMentorPost(MentorPost mentorPost) {
-        String sql = "INSERT INTO MentorPosts (postTitle, postContent, postTypeId, deadline, createdAt, courseId, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MentorPosts (postTitle, postContent, postTypeId, deadline, createdAt, courseId, createdBy, fileContent, fileName, fileType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, mentorPost.getPostTitle());
@@ -63,6 +91,9 @@ public class MentorPostDAO extends DBContext {
             st.setTimestamp(5, new Timestamp(System.currentTimeMillis())); // Lưu createdAt với thời gian hiện tại
             st.setInt(6, mentorPost.getCourseId());
             st.setString(7, mentorPost.getCreatedBy());
+            st.setBytes(8, mentorPost.getFileContent());
+            st.setString(9, mentorPost.getFileName());
+            st.setString(10, mentorPost.getFileType());
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -123,14 +154,17 @@ public class MentorPostDAO extends DBContext {
     }
 
     public void updateMentorPost(MentorPost mentorPost, int postId) {
-        String sql = "UPDATE MentorPosts SET postTitle = ?, postContent = ?, postTypeId = ?, deadline = ? WHERE postId = ?";
+        String sql = "UPDATE MentorPosts SET postTitle = ?, postContent = ?, postTypeId = ?, deadline = ?, fileContent = ?, fileName = ?, fileType =? WHERE postId = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, mentorPost.getPostTitle());
             st.setString(2, mentorPost.getPostContent());
             st.setInt(3, mentorPost.getPostTypeId());
             st.setTimestamp(4, mentorPost.getDeadline());
-            st.setInt(5, postId);
+            st.setBytes(5, mentorPost.getFileContent());
+            st.setString(6, mentorPost.getFileName());
+            st.setString(7, mentorPost.getFileType());
+            st.setInt(8, postId);
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);

@@ -183,7 +183,7 @@
                 <form action="viewMyCourses" id="search-form">
                     <input type="hidden" name="search" value="searchByName"/>
                     <input type="text" placeholder="Search course" name="keyword" id="search-input" required/>
-                    <button type="submit" title="Search"><i class="fa fa-search"></i> Search</button>
+                    <button type="submit" title="Search" class="btn-sm" style="height: 34px; margin-left: 5px"><i class="fa fa-search"></i> Search</button>
                 </form>
             </div>
             <div>
@@ -212,7 +212,13 @@
                 </a>
             </div>
         </c:if>
-
+        <c:if test="${sessionScope.user.roleId == 3}">
+            <div class="applyCourse">
+                <a href="listRequestForMentee?userId=${sessionScope.user.id}">
+                    <i class="fa fa-list"></i>
+                </a>
+            </div>
+        </c:if>
         <!-- Mentoring Section -->
         <c:if test="${sessionScope.user.roleId == 2}">
             <section class="featured-product2">

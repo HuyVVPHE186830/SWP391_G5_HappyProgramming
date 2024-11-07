@@ -163,9 +163,9 @@
                     <h2>Change Password</h2>
                     <form action="changePass" method="post" onsubmit="return validateChangePassword()">
                         <input type="hidden" value="${user.id}" name="id">
-                        <input type="password" placeholder="Current password" id="curPass" name="curPass" required>
-                        <input type="password" placeholder="New password" id="newPass" name="newPass" required>
-                        <input type="password" placeholder="Confirm new password" id="confirmPass" name="confirmPass" required>
+                        <input type="password" placeholder="Current password" id="curPass" name="curPass" style="margin-left: 70px;" required>
+                        <input type="password" placeholder="New password" id="newPass" name="newPass" style="margin-left: 70px;" required>
+                        <input type="password" placeholder="Confirm new password" id="confirmPass" name="confirmPass" style="margin-left: 70px;" required>
                         <a href="forgetPass.jsp" class="forgot">Forgot Your Password?</a>
 
                         <c:if test="${not empty succMsg}">

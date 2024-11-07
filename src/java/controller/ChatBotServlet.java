@@ -49,7 +49,7 @@ public class ChatBotServlet extends HttpServlet {
 
         // Prepare the request body with the user message
         JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("model", "gpt-4o-mini");
+        requestBody.addProperty("model", "gpt-4o");
         JsonArray messages = new JsonArray();
         JsonObject userMessageObj = new JsonObject();
         userMessageObj.addProperty("role", "user");

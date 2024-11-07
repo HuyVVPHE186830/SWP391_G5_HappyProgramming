@@ -4,30 +4,30 @@
  */
 package controller;
 
-import dal.MentorPostDAO;
+import dal.CourseDAO;
+import dal.ParticipateDAO;
+import dal.RequestDAO;
+import dal.StatusDAO;
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
-import java.io.InputStream;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import model.MentorPost;
+import java.util.List;
+import model.Course;
+import model.Participate;
+import model.Request;
+import model.Status;
+import model.User;
 
 /**
  *
- * @author Huy Võ
- *
+ * @author Admin
  */
-@MultipartConfig
-public class EditMentorPost extends HttpServlet {
+public class ListRequestForMentee extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +46,10 @@ public class EditMentorPost extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet editMentorPost</title>");
+            out.println("<title>Servlet ListRequestForMentee</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet editMentorPost at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ListRequestForMentee at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,6 +67,25 @@ public class EditMentorPost extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String userId_str = request.getParameter("userId");
+        RequestDAO daoR = new RequestDAO();
+        UserDAO daoU = new UserDAO();
+        CourseDAO daoC = new CourseDAO();
+        StatusDAO daoS = new StatusDAO();
+        ParticipateDAO daoP = new ParticipateDAO();
+        try {
+            int userId = Integer.parseInt(userId_str);
+            User user = daoU.getUserById(userId);
+            List<Course> courses = daoC.getAll();
+            List<Status> status = daoS.getAll();
+            List<Participate> participate = daoP.getAllByUsername(user.getUsername());
+            request.setAttribute("participates", participate);
+            request.setAttribute("courses", courses);
+            request.setAttribute("status", status);
+            request.getRequestDispatcher("listRequestForMentee.jsp").forward(request, response);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -81,47 +100,18 @@ public class EditMentorPost extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        String courseIdStr = request.getParameter("courseId");
-        int courseId = Integer.parseInt(courseIdStr);
-        String mentorName = request.getParameter("mentorName");
-        String postIdStr = request.getParameter("postId");
-        int postId = Integer.parseInt(postIdStr);
-        String title = request.getParameter("editTitle");
-        String content = request.getParameter("editContent");
-        String type = request.getParameter("editType");
-        int postTypeId = mentorPostDAO.getPostTypeId(type);
-        String deadlineStr = request.getParameter("editDeadline");
-
-        String fileName = null;
-        String fileType = null;
-        byte[] fileContent = null;
-        Part filePart = request.getPart("addFile");
-        String oldFileContentStr = request.getParameter("oldFileContent");
-        if (filePart != null && filePart.getSize() > 0) {
-            String fileName1 = filePart.getSubmittedFileName();
-            String fileType1 = filePart.getContentType();
-            InputStream inputStream = filePart.getInputStream();
-            fileContent = inputStream.readAllBytes();
-            fileName = fileName1;
-            fileType = fileType1;
-        } else {
-            fileContent = oldFileContentStr.getBytes();
-            fileName = request.getParameter("oldFileName");
-            fileType = request.getParameter("oldFileType");
-        }
-        Timestamp deadline = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        try {
-            Date date = dateFormat.parse(deadlineStr);
-            deadline = new Timestamp(date.getTime());
-        } catch (ParseException e) {
-            System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
-        }
-        Timestamp time = new Timestamp(System.currentTimeMillis());
-        MentorPost mp = new MentorPost(title, content, postTypeId, deadline, time, fileContent, fileName, fileType);
-        mentorPostDAO.updateMentorPost(mp, postId);
-        response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
+        User u = (User) session.getAttribute("user");
+        String keyword = request.getParameter("keyword");
+        ParticipateDAO daoP = new ParticipateDAO();
+        CourseDAO daoC = new CourseDAO();
+        StatusDAO daoS = new StatusDAO();
+        List<Participate> participate = daoP.getAllParticipateOfMenteeByKeyword(keyword, u.getUsername());
+        List<Course> courses = daoC.getAll();
+        List<Status> status = daoS.getAll();
+        request.setAttribute("participates", participate);
+        request.setAttribute("courses", courses);
+        request.setAttribute("status", status);
+        request.getRequestDispatcher("listRequestForMentee.jsp").forward(request, response);
     }
 
     /**

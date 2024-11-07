@@ -148,6 +148,10 @@
         <servlet-name>MangeRequest</servlet-name>
         <servlet-class>admin.MangeRequest</servlet-class>
     </servlet>
+        <servlet>
+        <servlet-name>ManagerBlog</servlet-name>
+        <servlet-class>admin.ManagerBlog</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>ListRequestForMentor</servlet-name>
         <servlet-class>controller.ListRequestForMentor</servlet-class>
@@ -183,6 +187,14 @@
     <servlet>
         <servlet-name>FeedbackMentor</servlet-name>
         <servlet-class>controller.FeedbackMentor</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListRequestForMentee</servlet-name>
+        <servlet-class>controller.ListRequestForMentee</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteRequestForMentee</servlet-name>
+        <servlet-class>DeleteRequestForMentee</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
@@ -367,6 +379,18 @@
     <servlet-mapping>
         <servlet-name>FeedbackMentor</servlet-name>
         <url-pattern>/rating</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListRequestForMentee</servlet-name>
+        <url-pattern>/listRequestForMentee</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteRequestForMentee</servlet-name>
+        <url-pattern>/deleteRequestForMentee</url-pattern>
+    </servlet-mapping>
+        <servlet-mapping>
+        <servlet-name>ManagerBlog</servlet-name>
+        <url-pattern>/managerBlog</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

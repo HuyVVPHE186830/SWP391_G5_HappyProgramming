@@ -96,11 +96,14 @@ public class ManageCourse extends HttpServlet {
         List<MentorPost> posts = mentorPostDAO.getAllPost(course.getCourseId(), mentorName);
         Map<Integer, List<MentorPostComment>> postComments = new HashMap<>();
         Map<Integer, List<Submission>> menteeSubmission = new HashMap<>();
+        Map<Integer, List<Submission>> postSubmissions = new HashMap<>();
         for (MentorPost post : posts) {
             List<MentorPostComment> comments = mentorPostDAO.getAllCommentsByPostId(post.getPostId());
             List<Submission> menteeSubmissionsInfo = mentorPostDAO.getMenteeSubmissionsInfo(post.getPostId(), courseId, mentorName);
             postComments.put(post.getPostId(), comments);
             menteeSubmission.put(post.getPostId(), menteeSubmissionsInfo);
+            List<Submission> submissions = mentorPostDAO.getSubmissionsByPostId(post.getPostId());
+            postSubmissions.put(post.getPostId(), submissions);
         }
         List<String> menteeUsername = daoC.getMenteeByCourse(courseId, 1, mentorName);
         List<String> requestUsername = daoC.getMenteeByCourse(courseId, 0, mentorName);
@@ -123,6 +126,7 @@ public class ManageCourse extends HttpServlet {
         session.setAttribute("postComments", postComments);
         session.setAttribute("mentorName", mentorName);
         request.setAttribute("menteeSubmission", menteeSubmission);
+        session.setAttribute("postSubmissions", postSubmissions);
         request.getRequestDispatcher("manageCourse.jsp").forward(request, response);
     }
 
