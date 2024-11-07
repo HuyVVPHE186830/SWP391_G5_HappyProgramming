@@ -14,7 +14,7 @@
         <link href="CSS/viewcourse.css" rel="stylesheet">
         <style>
             .mentor-cards {
-                gap: 20px;
+                gap: 30px;
                 margin-bottom: 30px;
             }
 
@@ -170,17 +170,19 @@
                 <h2 class="list-mentor">Mentor Of This Course</h2>
 
                 <!-- CONTENT MENTOR -->
-                <div class="mentor-cards row">
-                    <c:forEach items="${requestScope.mentorThisCourse}" var="m">
-                        <a href="viewMentor?userId=${m.id}&courseId=${cM.courseId}" class="mentor-card">
-                            <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
-                            <div class="mentor-body">
-                                <div class="mentor-text">
-                                    <div style="color: black">${m.lastName} ${m.firstName}</div>
+                <div style="margin-left: 30px;">
+                    <div class="mentor-cards row">
+                        <c:forEach items="${requestScope.mentorThisCourse}" var="m">
+                            <a href="viewMentor?userId=${m.id}&courseId=${cM.courseId}" class="mentor-card">
+                                <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
+                                <div class="mentor-body">
+                                    <div class="mentor-text">
+                                        <div style="color: black">${m.lastName} ${m.firstName}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </c:forEach>
+                            </a>
+                        </c:forEach>
+                    </div>
                 </div>
 
 
