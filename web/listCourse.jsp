@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
-            background-image: url('img/7657047.jpg'); /* Sử dụng hình ảnh banner làm background cho toàn trang */
+            background-image: url('img/7657047.jpg');
             background-size: cover;
             background-position: center;
         }
@@ -23,7 +23,6 @@
             align-items: center;
             position: relative;
             padding-left: 20px;
-            /* Xóa background-image từ đây */
         }
         .search-container {
             width: 100%;
@@ -61,16 +60,16 @@
             margin-left: 15px;
             color: white;
             cursor: pointer;
+            z-index: 10; /* Đưa dropdown lên trên */
         }
         .dropdown-content {
             display: none;
-            position: absolute;
+            position: absolute; /* Đặt vị trí tuyệt đối cho dropdown-content */
             background-color: white;
             min-width: 160px;
+            /* Không đặt max-height để dropdown có thể kéo dài nếu cần */
             box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-            max-height: 200px;
-            overflow-y: auto;
+            z-index: 20; /* Đảm bảo dropdown-content hiển thị trên các phần tử khác */
             border-radius: 5px;
         }
         .dropdown:hover .dropdown-content {

@@ -18,7 +18,6 @@
                 padding: 20px;
                 font-family: Arial, sans-serif;
             }
-
             .seller-info {
                 display: flex;
                 align-items: center;
@@ -30,18 +29,15 @@
                 border-radius: 10px;
                 color: white;
             }
-
             .seller-info h3 {
                 font-size: 24px;
                 font-weight: bold;
                 margin-bottom: 10px;
             }
-
             .seller-info p {
                 font-size: 16px;
                 margin-bottom: 5px;
             }
-
             .avatar-large {
                 width: 320px;
                 height: 320px;
@@ -49,23 +45,19 @@
                 margin-right: 20px;
                 border: 2px solid white;
             }
-
             .profile-details {
                 display: flex;
                 flex-direction: column;
             }
-
             .review-container {
                 padding-right: 20px;
             }
-
             .review-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 20px;
             }
-
             .review-header h2 {
                 font-size: 24px;
                 font-weight: bold;
@@ -125,34 +117,28 @@
                 margin-right: 5px;
                 color: #fff;
             }
-
             .review-summary-item span {
                 color: #fff;
                 font-weight: bold;
             }
-
             .review-item {
                 border-bottom: 1px solid #ccc;
                 padding: 20px 0;
             }
-
             .review-item .user-info {
                 display: flex;
                 align-items: center;
                 margin-bottom: 10px;
             }
-
             .review-item .user-info img {
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
                 margin-right: 10px;
             }
-
             .review-item .user-info .username {
                 font-weight: bold;
             }
-
             .review-item .review-content {
                 font-size: 16px;
                 line-height: 1.5;
@@ -162,13 +148,10 @@
                 color: white !important; /* Màu chữ */
                 border: 1px solid white !important; /* Đường viền */
             }
-
             .btn-transparent:hover {
                 background-color: rgba(255, 255, 255, 0.4); /* Tăng độ mờ khi hover */
                 color: black; /* Màu chữ khi hover */
             }
-
-
         </style>
     </head>
     <body>
@@ -183,16 +166,12 @@
                 <div class="profile-details">
                     <h3>${ratedUser.username}
                     </h3>
-
-
                     <p>RATING OVERALL: ${userRatedStar}★</p>
                     <p>TOP: ${rankStar}</p>
                     <button type="button" class="btn btn-transparent" data-toggle="modal" data-target="#feedbackModal">
                         Leave Feedback 
                     </button>
                     <p style="color: white">${errorMessage}</p>
-
-
                 </div>
             </div>
             <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
@@ -241,7 +220,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="review-container">
                 <div class="review-header" style="display: flex; align-items: center;">
                     <h2 style="margin-right: 20px;">Mentor Reviews</h2> 
@@ -256,7 +234,6 @@
                             </c:forEach>
                         </select>
                     </div>
-
                     <script>
                         function redirectToCourse(selectElement) {
                             const selectedValue = selectElement.value;
@@ -266,8 +243,6 @@
                             }
                         }
                     </script>
-
-
                 </div>
                 <br/>
                 <style>
@@ -282,7 +257,6 @@
                         margin-bottom: 10px;
                         transition: background-color 0.3s;
                     }
-
                     .review-summary-item:hover {
                         background-color: purple;
                     }
@@ -320,22 +294,61 @@
                 </div>
                 <div class="review-item">
                     <c:forEach items="${ratingList}" var="f">
-                                <div class="user-info">
-                                    <img src="data:image/jpeg;base64,${f.avatarPath}" alt="User Avatar">
-                                    <span class="username">${f.ratedFromUser} To ${f.courseName}</span>
-                                </div>
-                                (${f.noStar}/5.0★)
-                                <br/>
-                                <div class="review-content">
-                                    ${f.ratingComment}
-                                </div>
-                                <hr/>
+                        <div class="user-info">
+                            <img src="data:image/jpeg;base64,${f.avatarPath}" alt="User Avatar">
+                            <span class="username">${f.ratedFromUser} To ${f.courseName}</span>
+                            <i class="fas fa-ellipsis-v" data-toggle="modal" data-target="#exampleModal" style="cursor: pointer; margin-left: 10px;" aria-hidden="true"></i>
+                        </div>
+                        (${f.noStar}/5.0★)
+                        <br/>
+                        <div class="review-content">
+                            ${f.ratingComment}
+                        </div>
+                        <hr/>
                     </c:forEach>
                 </div>
 
+                <!-- Modal for displaying example data -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Example Data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="rating?action=edit-this-guy" method="POST">
+                                    <div class="form-group">
+                                        <label for="rating">rating</label>
+                                        <select class="form-control" name="rating" required>
+                                            <option value="">Select a rating</option>
+                                            <option value="1">1 Star</option>
+                                            <option value="2">2 Stars</option>
+                                            <option value="3">3 Stars</option>
+                                            <option value="4">4 Stars</option>
+                                            <option value="5">5 Stars</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="comment">Comment</label>
+                                        <textarea class="form-control" name="comment" rows="3" required></textarea>
+                                    </div>
+                                    <input type="hidden" name="ratedId" value="${ratedUser.id}">
+                                    <input type="hidden" name="userN" value="${user.id}">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
         <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
     </body>
 </html>
