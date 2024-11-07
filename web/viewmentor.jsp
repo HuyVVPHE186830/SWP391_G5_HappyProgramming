@@ -13,19 +13,30 @@
                 display: flex;
                 justify-content: space-between;
                 margin: 20px 0;
+                flex-wrap: wrap;
             }
 
             .content-left {
-                flex: 0 0 30%;
                 text-align: center;
+                margin: 0 30px 20px 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                width: 400px;
+                height: 400px;
             }
 
             .mentor-image-icon1 {
                 width: 100%;
-                height: auto;
-                max-width: 400px;
-                box-shadow: 1px 1px 5px #ccc;
+                height: 100%;
+                object-fit: cover;
+                box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+                border-radius: 10px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
+
 
             .detailMentor {
                 margin-left: 30px;
@@ -67,6 +78,7 @@
             .content-right {
                 flex: 1;
                 padding-left: 20px;
+                margin-bottom: 20px;
             }
 
             .link-2 {
@@ -100,7 +112,7 @@
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
                 text-decoration: none;
             }
-            
+
             .rate:hover {
                 text-decoration: none;
             }
