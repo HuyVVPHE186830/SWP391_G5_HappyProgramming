@@ -142,15 +142,14 @@
 
                         <h3>Email: ${mD.mail}</h3>
                         <p>Date Of Birth: ${mD.dob}</p>
-                        <a href="rating?ratedId=${mentorDetail.id}"> 
-                            <div class="rating-container">
-                                <div class="rating-display">
-                                    <span class="avg">${requestScope.avg}</span> 
-                                    <span class="star">★</span> 
-                                </div>
-                            </div>
+                        <a href="rating?ratedId=${mentorDetail.id}" class="rating-container"> 
+                            <span class="avg">${requestScope.avg}</span> 
+                            <span class="star">★</span> 
                         </a>
-                        <c:if test="${sessionScope.user.username != mD.username}">
+                        <c:if test="${empty session.user}">
+                            <h3 style="font-style: italic; color: #929292; font-weight: 400; margin-top: 25px;">You must sign in to enroll this course</h3>
+                        </c:if>    
+                        <c:if test="${sessionScope.user.username != mD.username && not empty session.user}">
                             <form action="requestScreen" method="post">
                                 <input type="hidden" name="courseId" value="${cM.courseId}">
                                 <input type="hidden" name="mentorUsername" value="${mD.username}">
@@ -158,7 +157,7 @@
                                 <button type="submit" class="button-enroll">Enroll</button>
                             </form>
                         </c:if>
-                        <c:if test="${sessionScope.user.username == mD.username}">
+                        <c:if test="${sessionScope.user.username == mD.username && not empty session.user}">
                             <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="button-enroll">
                                 Your Course
                             </a>
