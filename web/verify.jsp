@@ -145,9 +145,9 @@
         <div class="changepass-form-left">
             <h2>Change Password</h2>
             <form action="verify" method="post" onsubmit="return validateForm();">
-                <input type="password" placeholder="Enter password you got from email" id="verificationCode" name="passWord" required>
-                <input type="password" placeholder="New password" id="newPass" name="newPass" required>
-                <input type="password" placeholder="Confirm new password" id="confirmPass" name="confirmPass" required>
+                <input type="password" placeholder="Enter password you got from email" id="verificationCode" name="passWord"  style="margin-left: 70px;" required>
+                <input type="password" placeholder="New password" id="newPass" name="newPass"  style="margin-left: 70px;" required>
+                <input type="password" placeholder="Confirm new password" id="confirmPass" name="confirmPass"  style="margin-left: 70px;" required>
                 <button type="submit" class="button-changepass">CHANGE PASSWORD</button>
                 <c:if test="${not empty success}">
                     <div class="success">${success}</div>
