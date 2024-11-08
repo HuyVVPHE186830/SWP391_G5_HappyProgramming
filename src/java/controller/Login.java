@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dal.ConversationDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.User;
 import dal.UserDAO;
+import model.Conversation;
 import model.GoogleAccount;
 
 /**
@@ -59,28 +61,43 @@ public class Login extends HttpServlet {
         String password = request.getParameter("password");
         UserDAO dao = new UserDAO();
         List<User> users = dao.getAll();
-        User user = new User();
         boolean found = false;
         boolean active = true;
+
         for (User u : users) {
             if (username.equals(u.getUsername()) && password.equals(u.getPassword())) {
-                if (u.isActiveStatus() == false) {
+                if (!u.isActiveStatus()) {
                     active = false;
                     break;
                 }
                 found = true;
                 session.setAttribute("user", u);
+
+                // Lấy cuộc hội thoại mới nhất cho người dùng
+                ConversationDAO conversationDAO = new ConversationDAO();
+                Conversation latestConversation = conversationDAO.getLatestConversationWithMessageForUser(u.getUsername());
+
+                // Cập nhật lastConversationId trong session
+                if (latestConversation != null) {
+                    int lastConversationId = latestConversation.getConversationId();
+                    session.setAttribute("lastConversationId", lastConversationId);
+                } else {
+                    // Không có cuộc hội thoại nào
+                    session.setAttribute("lastConversationId", null);
+                }
+
+                // Chuyển hướng đến trang home
                 response.sendRedirect("home");
-                break;
+                return; // Ngừng thực thi sau khi chuyển hướng
             }
         }
-        
+
         if (!active) {
             session.setAttribute("error", "*Your Account Have Been Deactivate");
             response.sendRedirect("login.jsp");
             return;
         }
-        
+
         if (!found) {
             session.setAttribute("error", "*Check Your Username Or Password");
             response.sendRedirect("login.jsp");

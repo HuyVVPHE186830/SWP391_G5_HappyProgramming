@@ -11,10 +11,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.sql.SQLException;
+
 import model.Conversation;
 import model.Course;
 import model.Message;
@@ -22,40 +24,46 @@ import model.Participate;
 import model.User;
 
 public class SendMessage extends HttpServlet {
-
     private MessageDAO messageDAO = new MessageDAO();
-    UserDAO uDAO = new UserDAO();
-
+    private UserDAO uDAO = new UserDAO();
     private ConversationDAO conversationDAO = new ConversationDAO();
-    CourseDAO courseDAO = new CourseDAO();
-    ParticipateDAO pDAO = new ParticipateDAO();
+    private CourseDAO courseDAO = new CourseDAO();
+    private ParticipateDAO pDAO = new ParticipateDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+
+        if (currentUser == null) {
+            response.sendRedirect("homementor.jsp");
+            return;
+        }
+
         String username = request.getParameter("username");
         String conversationIdParam = request.getParameter("conversationId");
+
+        // Lấy danh sách khóa học và người tham gia
         List<Course> listCourse4 = courseDAO.getAll();
         List<User> listUser4 = uDAO.getAllUserByRoleId(2);
         List<Participate> listParticipate4 = pDAO.getAll();
         User oldestAdmin = uDAO.getOldestAdmin();
+
         request.getSession().setAttribute("oldestAdmin", oldestAdmin);
         request.getSession().setAttribute("listUser4", listUser4);
         request.getSession().setAttribute("listParticipate4", listParticipate4);
         request.getSession().setAttribute("listCourse4", listCourse4);
-        User currentUser = (User) session.getAttribute("user");
 
-        if (currentUser == null || (username == null && conversationIdParam == null)) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
+        Conversation latestConversation = conversationDAO.getLatestConversationWithMessageForUser(currentUser.getUsername());
+        int lastConversationId = (latestConversation != null) ? latestConversation.getConversationId() : -1; // Sử dụng -1 nếu không có
 
-        UserDAO userDAO = new UserDAO();
+        request.getSession().setAttribute("lastConversationId", lastConversationId);
+
         User recipient = null;
 
         if (username != null) {
-            recipient = userDAO.getUserByUsernameM(username);
+            recipient = uDAO.getUserByUsernameM(username);
             if (recipient == null) {
-                response.sendRedirect("error.jsp");
+                response.sendRedirect("homementor.jsp");
                 return;
             }
         } else if (conversationIdParam != null) {
@@ -66,7 +74,7 @@ public class SendMessage extends HttpServlet {
                     throw new NumberFormatException("Invalid conversation ID");
                 }
             } catch (NumberFormatException e) {
-                response.sendRedirect("error.jsp");
+                response.sendRedirect("homementor.jsp");
                 return;
             }
 
@@ -75,7 +83,7 @@ public class SendMessage extends HttpServlet {
                 List<String> participantUsernames = conversationDAO.getParticipantsByConversationId(conversationId);
                 for (String participantUsername : participantUsernames) {
                     if (!participantUsername.equals(currentUser.getUsername())) {
-                        recipient = userDAO.getUserByUsernameM(participantUsername);
+                        recipient = uDAO.getUserByUsernameM(participantUsername);
                         break;
                     }
                 }
@@ -83,7 +91,7 @@ public class SendMessage extends HttpServlet {
         }
 
         if (recipient == null) {
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("homementor.jsp");
             return;
         }
 
@@ -101,7 +109,7 @@ public class SendMessage extends HttpServlet {
         session.setAttribute("currentConversationId", conversation.getConversationId());
         session.setAttribute("conversations", conversationDAO.getAllConversationsForUser(currentUser.getUsername()));
         session.setAttribute("userConversation", conversationDAO.getAllUserConversationsForUser());
-        session.setAttribute("userList2", userDAO.getAll());
+        session.setAttribute("userList2", uDAO.getAll());
 
         request.getRequestDispatcher("message.jsp").forward(request, response);
     }
@@ -110,17 +118,22 @@ public class SendMessage extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
 
+        if (currentUser == null) {
+            response.sendRedirect("homementor.jsp");
+            return;
+        }
+
         String messageContent = request.getParameter("message");
         String recipientUsername = request.getParameter("recipient");
 
-        if (currentUser == null || messageContent == null || recipientUsername == null) {
-            response.sendRedirect("error.jsp");
+        if (messageContent == null || recipientUsername == null) {
+            response.sendRedirect("homementor.jsp");
             return;
         }
 
         Conversation conversation = conversationDAO.getConversationBetweenUsers(currentUser.getUsername(), recipientUsername);
         if (conversation == null) {
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("homementor.jsp");
             return;
         }
 
@@ -135,14 +148,14 @@ public class SendMessage extends HttpServlet {
             messageDAO.saveMessage(message);
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("homementor.jsp");
             return;
         }
 
         UserDAO userDAO = new UserDAO();
         User recipient = userDAO.getUserByUsernameM(recipientUsername);
         if (recipient == null) {
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("homementor.jsp");
             return;
         }
 

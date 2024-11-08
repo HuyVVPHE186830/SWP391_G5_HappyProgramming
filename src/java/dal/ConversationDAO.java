@@ -247,4 +247,28 @@ public class ConversationDAO extends DBContext {
             e.printStackTrace();
         }
     }
+    public Conversation getLatestConversationWithMessageForUser(String username) {
+    Conversation conversation = null;
+    String query = "SELECT TOP 1 c.conversationId, c.conversationName "
+                   + "FROM Conversation c "
+                   + "JOIN Message m ON c.conversationId = m.conversationId "
+                   + "JOIN User_Conversation uc ON c.conversationId = uc.conversationId "
+                   + "WHERE uc.username = ? "
+                   + "ORDER BY m.sentAt DESC"; // Giả sử 'sentAt' là thời gian gửi tin nhắn
+
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, username);
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                conversation = new Conversation();
+                conversation.setConversationId(rs.getInt("conversationId"));
+                conversation.setConversationName(rs.getString("conversationName"));
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return conversation;
+}
 }

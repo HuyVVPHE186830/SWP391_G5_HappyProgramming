@@ -198,9 +198,18 @@
                 <li><a href="allCourse">Courses</a></li>
                     <c:if test="${sessionScope.user != null}">
                     <li><a href="viewMyCourses">My Courses</a></li>
-                    <li><a href="sendMessage?username=admin">Chat</a></li>
+                    <li>
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.lastConversationId}">
+                                <a href="sendMessage?conversationId=${sessionScope.lastConversationId}">Chat</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="javascript:void(0);" onclick="alert('No conversations found, join a course to start a conversation with a mentor.');">Chat</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </li>
                     <li><a href="viewblogs">Blog</a></li>
-                </c:if>
+                    </c:if>
             </ul>
 
             <!-- USER AVATAR -->   

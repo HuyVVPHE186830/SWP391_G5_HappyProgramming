@@ -14,6 +14,16 @@
                 height: 100vh;
                 background-color: #f0f2f5;
             }
+            .header {
+                position: fixed; /* Giữ header ở vị trí cố định */
+                top: 0; /* Đặt header ở đầu trang */
+                left: 0;
+                right: 0;
+                background: white;
+                z-index: 1000; /* Đảm bảo header ở trên cùng */
+                padding: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
             .sidebar {
                 width: 25%;
                 background-color: #fff;
@@ -21,6 +31,7 @@
                 border-right: 1px solid #ccc;
                 overflow-y: auto;
                 box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                margin-top: 60px; /* Đẩy xuống dưới header */
             }
             .sidebar h3 {
                 text-align: center;
@@ -72,7 +83,7 @@
                 background-color: #fff;
                 overflow-y: auto;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                position: relative;
+                margin-top: 60px; /* Đẩy xuống dưới header */
             }
             .recipient-header {
                 padding: 10px;
@@ -88,6 +99,7 @@
                 padding: 10px;
                 border-left: 1px solid #ccc;
                 box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+                margin-top: 60px; /* Đẩy xuống dưới header */
             }
             .message {
                 margin: 5px 0;
@@ -181,7 +193,6 @@
             .message:hover .ms-options-menu {
                 display: block;
             }
-
             .ms-options-menu a,
             .cv-options-menu a {
                 display: block;
@@ -229,6 +240,10 @@
         </style>
     </head>
     <body>
+        <div class="header">
+            <jsp:include page="header.jsp"/>
+        </div>
+
         <div class="sidebar">
             <h3>Conversations</h3>
             <div class="search-container">
@@ -262,7 +277,7 @@
         </div>
         <div class="chat-area">
             <div class="recipient-header">
-                <h3>${currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName} </h3>
+                <h3>${sessionScope.currentChatRecipient.lastName} ${currentChatRecipient.firstName} </h3>
             </div>
             <div class="messages">
                 <c:forEach items="${currentChatMessages}" var="message">
@@ -274,16 +289,6 @@
                                 <input type="hidden" name="conversationId" value="${currentConversationId}">
                                 <input type="hidden" name="messageId" value="${message.messageId}"> 
                             </form>
-                            <a href="#" onclick="if (confirm('Are you sure you want to savethis message?')) {
-                                        document.getElementById('editForm-${message.messageId}').submit();
-                                    }">Edit</a>                       
-                            <form action="manageConversation?action=delete-message" method="post" style="display: inline;" id="deleteForm-${message.messageId}">
-                                <input type="hidden" name="conversationId" value="${currentConversationId}">
-                                <input type="hidden" name="messageId" value="${message.messageId}"> 
-                            </form>
-                            <a href="#" onclick="if (confirm('Are you sure you want to delete this message?')) {
-                                        document.getElementById('deleteForm-${message.messageId}').submit();
-                                    }">Delete</a>                       
                         </div>
                     </div>
                 </c:forEach>
@@ -298,10 +303,10 @@
             </div>
         </div>
         <div class="user-info">
-            <h3>Conversation Manage</h3>
+            <h3></h3>
             <div class="user-details">
                 <img src="data:image/jpeg;base64,${sessionScope.currentChatRecipient.avatarPath}" alt="Avatar" class="avatar-image">
-                <p>Name: ${sessionScope.currentChatRecipient.firstName} ${sessionScope.currentChatRecipient.lastName}</p>
+                <p>Name:${sessionScope.currentChatRecipient.lastName} ${currentChatRecipient.firstName} </p>
                 <p>DOB: ${sessionScope.currentChatRecipient.dob}</p>
                 <p>Email: ${sessionScope.currentChatRecipient.mail}</p>
                 <p>Status: ${sessionScope.currentChatRecipient.activeStatus}</p>
@@ -309,45 +314,51 @@
                     ${sessionScope.currentChatRecipient.roleId == 1 ? 'Mentee' : 
                       (sessionScope.currentChatRecipient.roleId == 2 ? 'Mentor' : 'Unknown Role')}
                 </p>    
-                <p>
+
+                <c:if test="${sessionScope.currentChatRecipient.roleId == 2}">
+                    <p>
                         <a href="rating?ratedId=${currentChatRecipient.id}" class="btn" style="background-color: #5e3fd3; color: white;">View Profile</a>
-                    <c:if test="${currentChatRecipient.roleId == 2}">
-                    </c:if>
-                </p> 
+                    </p>
+                </c:if>
 
                 <div class="action-icons">
-                    <input type="checkbox" id="editToggle" style="display:none;">
-                    <label for="editToggle" style="cursor: pointer;">✏️</label>
-                    <form action="manageConversation?action=delete-conversation" method="post" style="display: inline;">
-                        <input type="hidden" name="conversationId" value="${currentConversationId}">
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this conversation?');">🗑️</button>
-                    </form>
+                    <button type="button" class="btn" data-toggle="modal" data-target="#editConversationModal" style="background: none; border: none; cursor: pointer; font-size: 20px;">✏️</button>
+                </div>
+                <!-- Modal sửa cuộc hội thoại -->
+                <div class="modal fade" id="editConversationModal" tabindex="-1" role="dialog" aria-labelledby="editConversationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editConversationModalLabel">New conversation name.</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="manageConversation?action=edit-conversation" method="post">
+                                    <input type="hidden" name="conversationId" value="${currentConversationId}">
+                                    <div class="form-group">
+                                        <label for="newConversationName"></label>
+                                        <input type="text" name="newConversationName" placeholder="New Conversation Name" required class="form-control" id="newConversationName">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <br><br>
-                <div class="edit-form" style="display: none;">
-                    <form action="manageConversation?action=edit-conversation" method="post">
-                        <input type="hidden" name="conversationId" value="${currentConversationId}">
-                        <div class="input-group">
-                            <input type="text" name="newConversationName" placeholder="New Conversation Name" required class="styled-input">
-                            <button type="submit" class="styled-button">Update</button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
-
-      
 
         <!-- Include Bootstrap CSS and JS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
         <script>
-                            document.getElementById('editToggle').addEventListener('change', function () {
-                                const editForm = document.querySelector('.edit-form');
-                                editForm.style.display = this.checked ? 'block' : 'none';
-                            });
+
         </script>
         <script>
             function searchConversations() {
@@ -392,7 +403,5 @@
 
             setInterval(fetchLatestMessages, 2000);
         </script>
-
-
     </body>
 </html>

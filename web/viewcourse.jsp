@@ -148,7 +148,11 @@
                         <div class="mentor-body">
                             <div class="mentor-text">
                                 <div style="color: black">${m.lastName} ${m.firstName}</div>
-                                <a href="sendMessage?username=${m.username}" class="chat-button">Chat</a>
+                                <c:if test="${not empty sessionScope.user}">
+                                    <c:if test="${m.username != sessionScope.user.username}">
+                                        <a href="sendMessage?username=${m.username}" class="chat-button">Chat</a>
+                                    </c:if>
+                                </c:if>
                             </div>
                         </div>
                     </div>

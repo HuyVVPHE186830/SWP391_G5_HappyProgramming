@@ -610,12 +610,7 @@ public class CourseDAO extends DBContext {
 
     public List<Course> findByUsername2(String username) {
         List<Course> courses = new ArrayList<>();
-        String sql = "SELECT *\n"
-                + "FROM Course c\n"
-                + "JOIN Participate p ON c.courseId = p.courseId\n"
-                + "JOIN [User] u ON p.username = u.username\n"
-                + "JOIN Role r ON u.roleId = r.roleId\n"
-                + "WHERE r.roleId = 2 AND u.username = ?;";
+        String sql = "SELECT * FROM Course c JOIN Participate p ON c.courseId = p.courseId WHERE p.mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, username);
