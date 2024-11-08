@@ -128,6 +128,27 @@
             .link:hover {
                 text-decoration: none;
             }
+            /* Notify */
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: green;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 9999;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
@@ -136,7 +157,35 @@
             response.sendRedirect("login.jsp");
             %>
         </c:if>
+        <!-- Notification Container -->
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const sessionMessage = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+            if (sessionMessage) {
+                showNotification(sessionMessage);
+            <% session.removeAttribute("message"); %>
+            }
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
 
+                // Make the notification visible
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100); // Small delay for smooth animation
+
+                // Automatically hide the notification after 3 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500); // Allow animation to finish before hiding
+                }, 3000);
+            }
+        </script>
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
 

@@ -271,7 +271,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     text-align: center;
-    height: 500px;
+    height: 400px;
     overflow: hidden;
 }
 
@@ -313,6 +313,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .mentor-course p{
     margin-bottom: 0;
+}
+
+.rating-stars {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+
+.star {
+    font-size: 18px;
+    margin-right: 2px;
+}
+
+.rating-text {
+    font-size: 16px;
+    color: #555;
+    font-style: italic;
+    margin-top: 5px;
 }
 
 /* COURSE LIST */
@@ -562,6 +580,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .pagination a:hover {
     background-color: #edf2fa;
+    text-decoration: none;
 }
 
 .pagination .active a {

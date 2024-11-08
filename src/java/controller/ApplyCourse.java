@@ -125,7 +125,7 @@ public class ApplyCourse extends HttpServlet {
             int courseId = Integer.parseInt(courseId_str);
             Participate p = daoP.getParticipateByUsernameAndCourseId(courseId, username);
             daoP.addParticipate(new Participate(courseId, username, 2, 0, username));
-            daoR.addRequest(new Request(courseId, username, date, 0, requestReason));
+            daoR.addRequest(new Request(courseId, username, date, 0, requestReason, username));
             List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(username);
             List<Request> requests = daoR.getAllRequestByUsername(username);
             List<Course> additionalCourses = new ArrayList<>();
@@ -145,7 +145,7 @@ public class ApplyCourse extends HttpServlet {
             courses.addAll(additionalCourses);
             List<Course> otherCourses = daoC.getOtherCourses(courses);
             session.setAttribute("otherCourse", otherCourses);
-            session.setAttribute("message", "*Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
+            session.setAttribute("message", "Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
             response.sendRedirect("applyCourse?userId=" + u.getId());
         } catch (Exception e) {
             e.printStackTrace();

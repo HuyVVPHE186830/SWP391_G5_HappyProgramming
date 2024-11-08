@@ -83,6 +83,7 @@ public class DeleteRequestForMentor extends HttpServlet {
             request.setAttribute("requests", requests);
             request.setAttribute("courses", courses);
             request.setAttribute("status", status);
+            session.setAttribute("message", "Delete Successfully");
             request.getRequestDispatcher("listRequestForMentor.jsp").forward(request, response);
         } catch (Exception e) {
         }

@@ -150,9 +150,60 @@
                 text-align: center;
                 font-size: 12px;
             }
+
+            /* Notify */
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: red;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 1000;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
+        <!-- Notification Container -->
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const sessionMessage = '<%= session.getAttribute("error") != null ? session.getAttribute("error") : "" %>';
+            if (sessionMessage) {
+                showNotification(sessionMessage);
+            <% session.removeAttribute("error"); %>
+            }
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+
+                // Make the notification visible
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100); // Small delay for smooth animation
+
+                // Automatically hide the notification after 3 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500); // Allow animation to finish before hiding
+                }, 3000);
+            }
+        </script>
         <div class="signin-form">
             <div class="signin-form-left">
                 <h2>Sign In</h2>
@@ -160,21 +211,18 @@
                     <input type="text" placeholder="Username" name="username" required>
                     <input type="password" placeholder="Password" name="password" required>
                     <a href="forgetPass.jsp" class="forgot">Forgot Your Password?</a>
-                    <c:if test="${sessionScope.error != null}">
-                        <div class="error-message">
-                            ${error}
-                        </div>
-                    </c:if>
+
+
                     <% session.removeAttribute("error"); %>
                     <button type="submit" class="button-signin">SIGN IN</button>
-                                        
+
                     <!-- Social Sign-in Icons -->
                     <div class="social-signin">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/HappyProgramming/login&response_type=code&client_id=281001469062-sdlqscanrn8urvdd8at2540bq0u04mv2.apps.googleusercontent.com&approval_prompt=force">
                             <i class="fa-brands fa-google"></i>
                         </a>
-<!--                        <i class="fa-brands fa-facebook"></i>
-                        <i class="fa-brands fa-apple"></i>-->
+                        <!--                        <i class="fa-brands fa-facebook"></i>
+                                                <i class="fa-brands fa-apple"></i>-->
                     </div>
                 </form>
             </div>

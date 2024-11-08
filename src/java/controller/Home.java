@@ -88,7 +88,7 @@ public class Home extends HttpServlet {
                 .values()
                 .stream()
                 .collect(Collectors.toList());
-
+        
         Map<String, Float> mentorAvgRatingMap = new HashMap<>();
         for (User mentor : mentorRated) {
             float averageStar = daoR.getAverageStar(mentor.getId());
@@ -104,6 +104,7 @@ public class Home extends HttpServlet {
         List<User> mentee = daoU.getAllUserByRoleId(3);
         List<Course> sortedCourse = daoC.getAllCourseOrderByDESCMenteeNum();
         List<Participate> participate = daoP.getAll();
+        List<Rating> ratings = daoR.getAll();
         int countCourse = daoC.countCourse();
         int countMentor = daoU.countUser(2);
         int countMentee = daoU.countUser(3);
@@ -112,6 +113,7 @@ public class Home extends HttpServlet {
         session.setAttribute("countMentee", countMentee);
         session.setAttribute("category", category);
         session.setAttribute("course", course);
+        session.setAttribute("ratings", ratings);
         session.setAttribute("mentee", mentee);
         session.setAttribute("participate", participate);
         session.setAttribute("sortedCourses", sortedCourse);
@@ -136,7 +138,7 @@ public class Home extends HttpServlet {
             response.sendRedirect("homeguest.jsp");
         }
     }
-
+    
     private List<Course> findCourseDoGet(HttpServletRequest request, PageControl pagecontrol) {
         CourseDAO dao = new CourseDAO();
         String pageRaw = request.getParameter("page");
@@ -159,11 +161,11 @@ public class Home extends HttpServlet {
         int totalPage = (totalRecord % 4) == 0
                 ? (totalRecord / 4)
                 : (totalRecord / 4) + 1;
-
+        
         pagecontrol.setPage(page);
         pagecontrol.setTotalPage(totalPage);
         pagecontrol.setTotalRecord(totalRecord);
-
+        
         return listCourse;
     }
 

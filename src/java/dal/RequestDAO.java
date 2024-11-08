@@ -31,7 +31,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -52,7 +53,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -73,7 +75,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -96,7 +99,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -129,7 +133,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -153,7 +158,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
@@ -174,7 +180,8 @@ public class RequestDAO extends DBContext {
                 Date requestTime = rs.getDate("requestTime");
                 int requestStatus = rs.getInt("requestStatus");
                 String requestReason = rs.getString("requestReason");
-                request = new Request(courseId, username, requestTime, requestStatus, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                request = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
             }
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -183,7 +190,7 @@ public class RequestDAO extends DBContext {
     }
 
     public void addRequest(Request request) {
-        String sql = "INSERT INTO [Request] (courseId, username, requestTime, requestStatus, requestReason) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO [Request] (courseId, username, requestTime, requestStatus, requestReason, mentorUsername) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, request.getCourseId());
@@ -191,6 +198,7 @@ public class RequestDAO extends DBContext {
             st.setDate(3, new java.sql.Date(request.getRequestTime().getTime()));
             st.setInt(4, request.getRequestStatus());
             st.setString(5, request.getRequestReason());
+            st.setString(6, request.getMentorUsername());
             st.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -257,8 +265,8 @@ public class RequestDAO extends DBContext {
         Date date = new Date();
         Participate p = a.getParticipateByUsernameAndCourseId(1, "anmentor");
         List<Request> list = dao.getAllRequestMentorByKeyword("ja");
-            a.addParticipate(new Participate(1, "anmentor", 2, 0, "anmentor"));
-        dao.addRequest(new Request(1, "anmentor", date, 0, "he"));
+        a.addParticipate(new Participate(1, "anmentor", 2, 0, "anmentor"));
+        dao.addRequest(new Request(1, "anmentor", date, 0, "he", "anmentor"));
 
 //        Date date = new Date();
 //        int courseId = 1;
@@ -288,7 +296,8 @@ public class RequestDAO extends DBContext {
                 int courseId = rs.getInt("courseId");
                 Date requestTime = rs.getDate("requestTime");
                 String requestReason = rs.getString("requestReason");
-                Request r = new Request(courseId, username, requestTime, status, requestReason);
+                String mentorUsername = rs.getString("mentorUsername");
+                Request r = new Request(courseId, username, requestTime, status, requestReason, mentorUsername);
                 list.add(r);
             }
         } catch (SQLException ex) {
