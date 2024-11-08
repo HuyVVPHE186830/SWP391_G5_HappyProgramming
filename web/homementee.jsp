@@ -121,24 +121,26 @@
                 <c:if test="${not empty sessionScope.choosedMentor}">
                     <div class="mentor-cards">
                         <c:forEach items="${sessionScope.choosedMentor}" var="m" begin="0" end="3">
+                            <c:set var="total" value="${0}"/>
                             <div class="mentor-card">
                                 <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
                                 <div class="mentor-body">
                                     <div class="mentor-text">
                                         <div style="color: black">${m.lastName} ${m.firstName}</div>
-                                        <c:set var="courseCount" value="0" />
-                                        <c:forEach items="${sessionScope.participate}" var="p">
-                                            <c:if test="${p.username == m.username}">
-                                                <c:forEach items="${sessionScope.course}" var="c">
-                                                    <c:if test="${c.courseId == p.courseId}">
-                                                        <c:if test="${courseCount < 2}">
-                                                            <a href="viewcourse?courseId=${c.courseId}" class="mentor-course"><p>${c.courseName}</p></a>
-                                                                    <c:set var="courseCount" value="${courseCount + 1}"/>
-                                                                </c:if>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                    </c:if>
-                                                </c:forEach>
+                                        <c:set var="count" value="${0}"/>
+                                        <c:forEach items="${sessionScope.ratings}" var="r">
+                                            <c:if test="${r.ratedToUser == m.username}">
+                                                <c:set var="total" value="${total + r.noStar}"/>
+                                                <c:set var="count" value="${count + 1}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${count == 0}">
+                                            <p class="rating-text">No Ratings Yet</p>                                      
+                                        </c:if>
+                                        <c:if test="${count != 0}">
+                                            <c:set var="total" value="${total/count}"/> 
+                                            <p class="rating-text">Average Rating ${total}<span class="star" style="color: gold">★</span></p>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +182,7 @@
                 </div>
                 <a href="allCourse" class="more-course-button">View All Courses</a>
             </div>
-            
+
             <!-- CHAT -->
             <jsp:include page="chat.jsp"/>
 

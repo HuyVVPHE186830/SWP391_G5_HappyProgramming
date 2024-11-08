@@ -76,13 +76,13 @@ public class Login extends HttpServlet {
         }
         
         if (!active) {
-            session.setAttribute("error", "*Your Account Have Been Deactivate");
+            session.setAttribute("error", "Your Account Have Been Deactivate");
             response.sendRedirect("login.jsp");
             return;
         }
         
         if (!found) {
-            session.setAttribute("error", "*Check Your Username Or Password");
+            session.setAttribute("error", "Check Your Username Or Password");
             response.sendRedirect("login.jsp");
             return;
         }

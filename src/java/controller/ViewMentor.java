@@ -7,6 +7,7 @@ package controller;
 
 import dal.CategoryDAO;
 import dal.CourseDAO;
+import dal.ParticipateDAO;
 import dal.RatingDAO;
 import dal.UserDAO;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Category;
 import model.Course;
+import model.Participate;
 import model.Rating;
 import model.User;
 
@@ -71,6 +73,7 @@ public class ViewMentor extends HttpServlet {
         RatingDAO rateDAO = new RatingDAO();
         CourseDAO daoC = new CourseDAO();
         CategoryDAO daoCt = new CategoryDAO();
+        ParticipateDAO daoP = new ParticipateDAO();
 
         String userId_str = request.getParameter("userId");
         if (request.getParameter("courseId") == null) {
@@ -86,11 +89,13 @@ public class ViewMentor extends HttpServlet {
             float avg = rateDAO.getAverageStar(userId);
             User mentor = daoU.getUserById(userId);
             Category cate = daoCt.getCategoryByCourseId(courseId);
+            List<Participate> participate = daoP.getAll();
             List<User> othermentor = daoU.getAllMentorByCourseIdExceptOne(courseId, mentor.getUsername());
             List<Course> othercourse = daoC.getAllCoursesOfMentorExceptOne(courseId, mentor.getUsername());
             List<Rating> rateList = rateDAO.getAll();
             int rateListByUsernameCID = rateDAO.getByUsnIdAndCId(ratedToUser, courseID);
             request.setAttribute("avg", avg);
+            request.setAttribute("participate", participate);
             request.setAttribute("rateListByUsernameCID", rateListByUsernameCID);
             request.setAttribute("rateList", rateList);
             request.setAttribute("otherCourseMentor", othercourse);

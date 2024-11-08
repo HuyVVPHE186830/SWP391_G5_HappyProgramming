@@ -17,16 +17,18 @@ public class Request {
     private Date requestTime;
     private int requestStatus;
     private String requestReason;
+    private String mentorUsername;
 
     public Request() {
     }
 
-    public Request(int courseId, String username, Date requestTime, int requestStatus, String requestReason) {
+    public Request(int courseId, String username, Date requestTime, int requestStatus, String requestReason, String mentorUsername) {
         this.courseId = courseId;
         this.username = username;
         this.requestTime = requestTime;
         this.requestStatus = requestStatus;
         this.requestReason = requestReason;
+        this.mentorUsername = mentorUsername;
     }
 
     public int getCourseId() {
@@ -68,6 +70,15 @@ public class Request {
     public void setRequestReason(String requestReason) {
         this.requestReason = requestReason;
     }
+
+    public String getMentorUsername() {
+        return mentorUsername;
+    }
+
+    public void setMentorUsername(String mentorUsername) {
+        this.mentorUsername = mentorUsername;
+    }
+    
 
     @Override
     public String toString() {

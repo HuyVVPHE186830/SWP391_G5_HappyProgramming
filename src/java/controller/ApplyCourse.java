@@ -125,7 +125,7 @@ public class ApplyCourse extends HttpServlet {
             int courseId = Integer.parseInt(courseId_str);
             Participate p = daoP.getParticipateByUsernameAndCourseId(courseId, username);
             daoP.addParticipate(new Participate(courseId, username, 2, 0, username));
-            daoR.addRequest(new Request(courseId, username, date, 0, requestReason));
+            daoR.addRequest(new Request(courseId, username, date, 0, requestReason, username));
             List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(username);
             List<Request> requests = daoR.getAllRequestByUsername(username);
             List<Course> additionalCourses = new ArrayList<>();

@@ -112,6 +112,10 @@
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
                 text-decoration: none;
             }
+            .rate {
+                display: inline-block;
+                max-width: 200px;
+            }
 
             .rate:hover {
                 text-decoration: none;
@@ -128,13 +132,162 @@
                 margin-left: 5px; /* Space between number and star */
             }
 
+            .form {
+                display: inline; /* Keeps the form inline with the other button */
+                margin: 0; /* Remove default form margin */
+            }
 
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+            }
+
+            /* Modal Buttons */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+                z-index: 1000;
+                transition: opacity 0.3s ease-in-out; /* Smooth fade-in/out effect */
+                overflow: hidden;
+            }
+
+            /* Modal Content */
+            .modal-content {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(145deg, #ffffff, #f3f3f3); /* Subtle gradient */
+                padding: 25px 35px;
+                border-radius: 20px;
+                text-align: center;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                max-width: 400px;
+                font-family: Arial, sans-serif;
+                color: #333;
+            }
+
+            /* Modal Heading/Text */
+            .modal-content p {
+                font-size: 18px;
+                font-weight: 500;
+                margin: 15px 0;
+                line-height: 1.5;
+                color: #444;
+            }
+
+            /* Modal Buttons */
+            .modal-buttons {
+                display: flex;
+                justify-content: space-evenly;
+                margin-top: 20px;
+            }
+
+            .btn-confirm, .btn-cancel {
+                font-size: 16px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: background-color 0.2s ease, transform 0.2s ease;
+            }
+
+            /* Confirm Button */
+            .btn-cancel {
+                background-color: #f44336; /* Red */
+                color: white;
+            }
+
+            .btn-cancel:hover {
+                background-color: #d32f2f;
+                transform: scale(1.05); /* Slight zoom effect */
+            }
+
+            /* Cancel Button */
+            .btn-confirm {
+                background-color: #4caf50; /* Green */
+                color: white;
+            }
+
+            .btn-confirm:hover {
+                background-color: #388e3c;
+                transform: scale(1.05);
+            }
+
+            /* Add subtle focus styles */
+            .btn-confirm:focus, .btn-cancel:focus {
+                outline: 2px solid #ddd;
+                outline-offset: 2px;
+            }
+
+            /* Notify */
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: green;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 1000;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
         <!-- DESCRIPTION -->
+        <!-- Notification Container -->
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const sessionMessage = '<%= session.getAttribute("message") != null ? session.getAttribute("message") : "" %>';
+            if (sessionMessage) {
+                showNotification(sessionMessage);
+            <% session.removeAttribute("message"); %>
+            }
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+
+                // Make the notification visible
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100); // Small delay for smooth animation
+
+                // Automatically hide the notification after 3 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500); // Allow animation to finish before hiding
+                }, 3000);
+            }
+        </script>
         <div class="description">
             <c:if test="${not empty requestScope.mentorDetail}">
                 <c:set var="mD" value="${requestScope.mentorDetail}"/>
@@ -163,23 +316,70 @@
                                 <span class="avg">${requestScope.avg}</span> 
                                 <span class="star">★</span> 
                             </div>
-
                         </a>
+                        <br>
                         <c:if test="${empty sessionScope.user}">
                             <h3 style="font-style: italic; color: #656565; font-weight: 400; margin-top: 25px;">You must sign in to enroll this course</h3>
                         </c:if>    
-                        <c:if test="${sessionScope.user.username != mD.username && not empty sessionScope.user}">
-                            <form action="requestScreen" method="post">
-                                <input type="hidden" name="courseId" value="${cM.courseId}">
-                                <input type="hidden" name="mentorUsername" value="${mD.username}">
-                                <input type="hidden" name="username" value="${sessionScope.user.username}">
-                                <button type="submit" class="button-enroll">Enroll</button>
-                            </form>
-                        </c:if>
-                        <c:if test="${sessionScope.user.username == mD.username && not empty sessionScope.user}">
-                            <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="button-enroll">
-                                Your Course
-                            </a>
+                        <c:if test="${not empty sessionScope.user}">
+                            <c:set var="isEnrolled" value="false" />
+                            <c:forEach items="${requestScope.participate}" var="p">
+                                <c:if test="${p.username == sessionScope.user.username && mD.username == p.mentorUsername && cM.courseId == p.courseId}">
+                                    <c:set var="isEnrolled" value="true" />
+                                    <c:if test="${p.statusId == 1}">
+                                        <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="button-enroll">
+                                            Your Course
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${p.statusId == 0}">
+                                        <a class="button-enroll" style="background-color: #ccc; margin-right: 10px">
+                                            Pending
+                                        </a>
+
+                                        <form action="deleteRequestForMentee" method="post" class="form" onsubmit="confirmCancel(event)">
+                                            <input type="hidden" name="courseId" value="${cM.courseId}">
+                                            <input type="hidden" name="mentorUsername" value="${mD.username}">
+                                            <input type="hidden" name="username" value="${sessionScope.user.username}">
+                                            <button type="submit" class="button-enroll">Cancel</button>                                        
+                                        </form>
+                                        <script>
+                                            function confirmCancel(event) {
+                                                event.preventDefault();
+
+                                                document.getElementById('confirmationModal').style.display = 'block';
+                                            }
+
+                                            function closeModal() {
+                                                document.getElementById('confirmationModal').style.display = 'none';
+                                            }
+
+                                            function confirmAction() {
+                                                document.querySelector('.form').submit();
+                                            }
+                                        </script>
+                                        <div id="confirmationModal" class="modal">
+                                            <div class="modal-content">
+                                                <p style="margin: 0 auto; font-weight: bold">Are you sure you want to cancel this request?</p>
+                                                <div class="modal-buttons">
+                                                    <button onclick="confirmAction()" class="btn-confirm">Yes</button>
+                                                    <button onclick="closeModal()" class="btn-cancel">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </c:if>
+                                </c:if>
+                            </c:forEach>
+
+                            <c:if test="${!isEnrolled}">
+                                <form action="requestScreen" method="post">
+                                    <input type="hidden" name="courseId" value="${cM.courseId}">
+                                    <input type="hidden" name="mentorUsername" value="${mD.username}">
+                                    <input type="hidden" name="username" value="${sessionScope.user.username}">
+                                    <button type="submit" class="button-enroll">Enroll</button>
+                                </form>
+                            </c:if>
                         </c:if>
                     </div>
                 </div>

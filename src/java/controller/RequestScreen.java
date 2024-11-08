@@ -6,12 +6,14 @@
 package controller;
 
 import dal.CourseDAO;
+import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.User;
 
 /**
  *
@@ -71,15 +73,16 @@ public class RequestScreen extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        UserDAO daoU = new UserDAO();
         String username = request.getParameter("username");
         String mentorUsername = request.getParameter("mentorUsername");
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         CourseDAO daoC = new CourseDAO();
-        daoC.setMenteeStatus(courseId, username, 0,mentorUsername);
+        User u = daoU.getUserByUsernameM(mentorUsername);
+        daoC.setMenteeStatus(courseId, username, 0, mentorUsername);
 
-        request.setAttribute("message", "Your request is waiting!");
-
-        request.getRequestDispatcher("request.jsp").forward(request, response);
+//        request.setAttribute("message", "Your request is waiting!");
+        response.sendRedirect("viewMentor?userId=" + u.getId() + "&courseId=" + courseId);
     }
 
     /**
