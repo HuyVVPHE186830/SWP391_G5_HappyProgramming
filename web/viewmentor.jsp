@@ -237,14 +237,14 @@
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background-color: green;
+                background-color: #4caf50;
                 color: white;
                 padding: 15px 20px;
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 font-size: 16px;
                 font-family: Arial, sans-serif;
-                z-index: 1000;
+                z-index: 9999;
                 opacity: 0;
                 transform: scale(0.8) translateY(20px);
                 transition: opacity 0.3s ease, transform 0.5s ease;
@@ -256,9 +256,6 @@
         </style>
     </head>
     <body>
-        <!-- HEADER -->
-        <jsp:include page="header.jsp"/>
-        <!-- DESCRIPTION -->
         <!-- Notification Container -->
         <div id="notification" class="notification hidden"></div>
         <script>
@@ -288,6 +285,10 @@
                 }, 3000);
             }
         </script>
+        <!-- HEADER -->
+        <jsp:include page="header.jsp"/>
+        <!-- DESCRIPTION -->
+
         <div class="description">
             <c:if test="${not empty requestScope.mentorDetail}">
                 <c:set var="mD" value="${requestScope.mentorDetail}"/>

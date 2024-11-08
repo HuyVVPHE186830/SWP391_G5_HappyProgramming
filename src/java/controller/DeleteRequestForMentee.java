@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 
 /**
@@ -58,6 +59,7 @@ public class DeleteRequestForMentee extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         ParticipateDAO daoP = new ParticipateDAO();
         UserDAO daoU = new UserDAO();
         String username = request.getParameter("username");
@@ -66,6 +68,7 @@ public class DeleteRequestForMentee extends HttpServlet {
             User user = daoU.getUserByUsernameM(username);
             int courseId = Integer.parseInt(courseId_str);
             daoP.deleteParticipate(courseId, username);
+            session.setAttribute("message", "Delete Successfully");
             response.sendRedirect("listRequestForMentee?userId=" + user.getId());
         } catch (Exception e) {
         }
@@ -82,6 +85,7 @@ public class DeleteRequestForMentee extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         ParticipateDAO daoP = new ParticipateDAO();
         UserDAO daoU = new UserDAO();
         String username = request.getParameter("username");
@@ -91,7 +95,8 @@ public class DeleteRequestForMentee extends HttpServlet {
             User user = daoU.getUserByUsernameM(mentorUsername);
             int courseId = Integer.parseInt(courseId_str);
             daoP.deleteParticipate(courseId, username);
-            response.sendRedirect("viewMentor?userId=" + user.getId() +"&courseId="+courseId);
+            session.setAttribute("message", "Delete Successfully");
+            response.sendRedirect("viewMentor?userId=" + user.getId() + "&courseId=" + courseId);
         } catch (Exception e) {
         }
     }

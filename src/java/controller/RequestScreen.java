@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 
 /**
@@ -73,6 +74,7 @@ public class RequestScreen extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         UserDAO daoU = new UserDAO();
         String username = request.getParameter("username");
         String mentorUsername = request.getParameter("mentorUsername");
@@ -80,7 +82,7 @@ public class RequestScreen extends HttpServlet {
         CourseDAO daoC = new CourseDAO();
         User u = daoU.getUserByUsernameM(mentorUsername);
         daoC.setMenteeStatus(courseId, username, 0, mentorUsername);
-
+        session.setAttribute("message", "Enroll Successfully");
 //        request.setAttribute("message", "Your request is waiting!");
         response.sendRedirect("viewMentor?userId=" + u.getId() + "&courseId=" + courseId);
     }

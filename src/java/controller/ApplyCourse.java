@@ -145,7 +145,7 @@ public class ApplyCourse extends HttpServlet {
             courses.addAll(additionalCourses);
             List<Course> otherCourses = daoC.getOtherCourses(courses);
             session.setAttribute("otherCourse", otherCourses);
-            session.setAttribute("message", "*Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
+            session.setAttribute("message", "Your request has been submitted successfully! Please allow some time for it to be reviewed and approved.");
             response.sendRedirect("applyCourse?userId=" + u.getId());
         } catch (Exception e) {
             e.printStackTrace();

@@ -142,7 +142,7 @@ public class EditRequestForMentor extends HttpServlet {
             daoR.updateRequest(oldCourseId, newCourseId, username, requestReason);
             daoP.deleteParticipate(oldCourseId, username);
             Request req2 = daoR.getRequestByUsername(username, newCourseId);
-            session.setAttribute("message", "*Update Successfully!");
+            session.setAttribute("message", "Update Successfully");
             session.setAttribute("req", req2);
             response.sendRedirect("viewRequestForMentor.jsp");
         } catch (Exception e) {

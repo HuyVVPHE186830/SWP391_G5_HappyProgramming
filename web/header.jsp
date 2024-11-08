@@ -27,6 +27,7 @@
                 align-items: center;
                 justify-content: center;
                 padding: 5px;
+                z-index: 1000;
                 gap: 30%;
             }
 
@@ -34,7 +35,6 @@
                 background-color: white;
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             }
-
 
             .menu {
                 text-align: center;
