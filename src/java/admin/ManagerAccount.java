@@ -50,11 +50,11 @@ public class ManagerAccount extends HttpServlet {
 
         UserDAO dao = new UserDAO();
         List<User> list = dao.getUsersBySearchName(txt);
-
-        request.setAttribute("listUsers", list);
+        HttpSession session = request.getSession();
+        session.setAttribute("listUsers", list);
         request.setAttribute("searchValue", txt);
         response.setContentType("text/html;charset=UTF-8");
-
+         
         request.getRequestDispatcher("dashboard/mngaccount.jsp").forward(request, response);
     }
 
