@@ -22,10 +22,29 @@
         <title>User Profile</title>
         <style>
             body {
+                position: relative;
+                background: url(img/banner.jpg) no-repeat center center fixed;
+                background-size: cover;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
+            }
+
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 1;
+            }
+
+            body > * {
+                position: relative;
+                z-index: 2;
             }
 
             .profile-form {

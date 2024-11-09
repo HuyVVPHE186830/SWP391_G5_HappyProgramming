@@ -478,7 +478,7 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="editPostModalLabel_${post.postId}">Edit Post</h5>
                                         </div>
-                                        <p class="modal-title" style="margin: 10px 0 0 20px">Last change: <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" /></p>
+                                        <p class="modal-title" style="margin: 10px 0 0 20px">Last change: <fmt:formatDate value="${post.createdAt}" pattern="MM/dd/yyyy, HH:mm" /></p>
                                         <div class="modal-body">
                                             <form id="editPostForm_${post.postId}" action="editMentorPost" method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="postId" value="${post.postId}">
