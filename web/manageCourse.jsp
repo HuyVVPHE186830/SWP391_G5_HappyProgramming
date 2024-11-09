@@ -22,6 +22,27 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <title>Course</title>
         <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: 100vh;
+            }
+
+            .content {
+                flex-grow: 1;
+            }
+
+            footer {
+                background-color: #f8f9fa;
+                padding: 20px;
+                text-align: center;
+            }
             .container{
                 max-width: 95%;
             }
@@ -307,7 +328,7 @@
         </script>
         <c:set var="user" value="${sessionScope.user}"/>
         <jsp:include page="header.jsp"/>
-        <div class="container mt-5">
+        <div class="container mt-5 content">
             <div class="course-banner text-center">
                 <h2>${course.courseName}</h2>
             </div>
@@ -822,7 +843,7 @@
                     </div>
                 </div>
             </div>
-
-
+        </div>
+        <jsp:include page="footer.jsp"/>
     </body>
 </html>
