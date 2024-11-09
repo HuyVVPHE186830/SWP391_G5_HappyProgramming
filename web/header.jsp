@@ -197,8 +197,7 @@
             <!-- MIDDLE -->
             <ul class="menu">
                 <li><a href="allCourse">Courses</a></li>
-                <li><a href="viewblogs">Blog</a></li>
-                <c:if test="${sessionScope.user != null}">
+                    <c:if test="${sessionScope.user != null}">
                     <li><a href="viewMyCourses">My Courses</a></li>
                     <li>
                         <c:choose>
@@ -211,6 +210,7 @@
                         </c:choose>
                     </li>
                 </c:if>
+                <li><a href="viewblogs">Blog</a></li>
             </ul>
 
             <!-- USER AVATAR -->   
