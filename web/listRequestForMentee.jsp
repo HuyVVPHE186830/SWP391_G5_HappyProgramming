@@ -193,9 +193,9 @@
         <!-- TABLE -->
         <div class="content">
             <h6 style="text-align: start">
-                <a href="home" class="link" style="margin-left: 30px">Home</a> <span>></span> <a href="viewMyCourses" class="link">My Courses</a> <span>></span> List Request   
+                <a href="home" class="link" style="margin-left: 30px">Home</a> <span>></span> <a href="viewMyCourses" class="link">My Courses</a> <span>></span> List Request Studying
             </h6>
-            <h3 class="title">List Request Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
+            <h3 class="title">List Request Studying Of ${sessionScope.user.lastName} ${sessionScope.user.firstName}</h3>
             <form action="listRequestForMentee" method="post" class="search-bar">
                 <input type="hidden" name="search" value="searchByName"/>
                 <input type="text" class="input-submit" placeholder="Search" name="keyword" id="keyword" oninput="checkInput()">
