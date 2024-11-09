@@ -121,6 +121,8 @@ public class EditMentorPost extends HttpServlet {
         Timestamp time = new Timestamp(System.currentTimeMillis());
         MentorPost mp = new MentorPost(title, content, postTypeId, deadline, time, fileContent, fileName, fileType);
         mentorPostDAO.updateMentorPost(mp, postId);
+        String success = "Edit successful!";
+        session.setAttribute("success", success);
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }
 

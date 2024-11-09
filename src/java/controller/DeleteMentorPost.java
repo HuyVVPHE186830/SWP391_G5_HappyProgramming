@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -56,6 +57,7 @@ public class DeleteMentorPost extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String postIdStr = request.getParameter("postId");
         int postId = Integer.parseInt(postIdStr);
         String courseIdStr = request.getParameter("courseId");
@@ -63,7 +65,8 @@ public class DeleteMentorPost extends HttpServlet {
         int courseId = Integer.parseInt(courseIdStr);
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
         mentorPostDAO.deletePost(postId);
-
+        String success = "Delete successful!";
+        session.setAttribute("success", success);
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
 
     }
@@ -79,14 +82,6 @@ public class DeleteMentorPost extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String postIdStr = request.getParameter("postId");
-        String courseIdStr = request.getParameter("courseId");
-        MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        if (postIdStr != null) {
-            int postId = Integer.parseInt(postIdStr);
-            mentorPostDAO.deletePost(postId);
-        }
-        response.sendRedirect("manageCourse?courseId=" + courseIdStr);
     }
 
     /**

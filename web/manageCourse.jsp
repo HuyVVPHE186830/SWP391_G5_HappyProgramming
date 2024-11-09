@@ -425,7 +425,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                           
                             <div class="modal fade" id="viewSubmit_${post.postId}" tabindex="-1" aria-labelledby="viewSubmit_${post.postId}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                                     <div class="modal-content">
@@ -738,6 +738,7 @@
                                                             <input type="hidden" name="courseId" value="${course.courseId}">
                                                             <input type="hidden" name="username" value="${mentee.username}">
                                                             <input type="hidden" name="mentorName" value="${mentorName}">
+                                                            <input type="hidden" name="fullname" value="${mentee.lastName} ${mentee.firstName}">
                                                             <button type="submit" class="btn btn-danger btn-sm">
                                                                 <i class="fas fa-ban"></i>
                                                             </button>
@@ -758,7 +759,6 @@
                     </div>
                 </div>
             </div>
-
 
 
             <div class="modal fade" id="requestListModal" tabindex="-1" aria-labelledby="requestListModalLabel" aria-hidden="true">
@@ -794,6 +794,7 @@
                                                         <input type="hidden" name="courseId" value="${course.courseId}">
                                                         <input type="hidden" name="username" value="${requesto.username}">
                                                         <input type="hidden" name="mentorName" value="${mentorName}">
+                                                        <input type="hidden" name="fullname" value="${requesto.lastName} ${requesto.firstName}">
                                                         <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept" style="width: 70px">
                                                             <i class="fas fa-check"></i>
                                                         </button>

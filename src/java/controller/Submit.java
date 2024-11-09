@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -93,6 +94,7 @@ public class Submit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
         int postId = Integer.parseInt(request.getParameter("postId"));
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         String mentorName = request.getParameter("mentorName");
@@ -130,6 +132,8 @@ public class Submit extends HttpServlet {
 
         MentorPostDAO daoM = new MentorPostDAO();
         daoM.addOrUpdateSubmission(submission);
+        String success = "Submit successful!";
+        session.setAttribute("success", success);
 
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }

@@ -65,19 +65,24 @@ public class ManageMentee extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
         String username = request.getParameter("username");
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         String action = request.getParameter("action");
         String mentorName = request.getParameter("mentorName");
+        String fullname = request.getParameter("fullname");
         CourseDAO daoC = new CourseDAO();
 
         if ("accept".equals(action)) {
             daoC.setMenteeStatus(courseId, username, 1, mentorName);
+            String success = "You accepted request of " + fullname;
+            session.setAttribute("success", success);
         } else if ("decline".equals(action)) {
+            String success = "You declined request of " + fullname;
+            session.setAttribute("error", success);
             daoC.setMenteeStatus(courseId, username, -1, mentorName);
         }
-
-        response.sendRedirect("manageCourse?courseId=" + courseId+"&mentorName=" + mentorName);
+        request.getRequestDispatcher("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName).forward(request, response);
     }
 
     /**
@@ -91,14 +96,16 @@ public class ManageMentee extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
         String username = request.getParameter("username");
         int courseId = Integer.parseInt(request.getParameter("courseId"));
         String mentorName = request.getParameter("mentorName");
+        String fullname = request.getParameter("fullname");
         CourseDAO daoC = new CourseDAO();
-
         daoC.setMenteeStatus(courseId, username, -1, mentorName);
-
-        response.sendRedirect("manageCourse?courseId=" + courseId+"&mentorName=" + mentorName);
+        String success = "You banned " + fullname + " from this course";
+        session.setAttribute("error", success);
+        response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }
 
     /**
