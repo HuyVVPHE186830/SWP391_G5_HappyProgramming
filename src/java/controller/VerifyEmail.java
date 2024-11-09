@@ -107,13 +107,13 @@ public class VerifyEmail extends HttpServlet {
 
         if (userEnteredCode.equals(actualCode)) {
             user.setIsVerified(true);
-            session.setAttribute("verify", "Your account has been verified successfully!");
+            session.setAttribute("success", "Your account has been verified successfully!");
             UserDAO dao = new UserDAO();
             dao.verifyEmail(user.getUsername(), user);
             response.sendRedirect("userProfile.jsp");
         } else {
             session.setAttribute("error", "Invalid verification code.");
-            response.sendRedirect("userProfile.jsp");
+            response.sendRedirect("verifyEmail.jsp");
         }
     }
 
