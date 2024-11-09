@@ -286,17 +286,18 @@
         </div>
 
         <!-- Comment Form -->
-        <div class="comment-form">
-            <h4>Leave a Comment:</h4>
-            <form id="commentForm" action="addBlogComment" method="POST">
-                <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                <div class="mb-3">
-                    <textarea id="commentContent" name="commentContent" class="form-control" rows="3" placeholder="Write your comment"></textarea>
-                </div>
-                <button type="submit" class="btn btn_submit" style="background-color: #452cbf; color: #f8f9fa">Submit</button>
-            </form>
-        </div>
-
+        <c:if test="${not empty sessionScope.user}">
+            <div class="comment-form">
+                <h4>Leave a Comment:</h4>
+                <form id="commentForm" action="addBlogComment" method="POST">
+                    <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                    <div class="mb-3">
+                        <textarea id="commentContent" name="commentContent" class="form-control" rows="3" placeholder="Write your comment"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn_submit" style="background-color: #452cbf; color: #f8f9fa">Submit</button>
+                </form>
+            </div>
+        </c:if>
         <div class="comment-section" id="commentSection">
             <%
                 List<BlogComment> comments = (List<BlogComment>) request.getAttribute("comments");
