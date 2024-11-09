@@ -212,30 +212,30 @@
                 cursor: pointer;
                 font-size: 20px;
             }
-            /* Style for the input field */
+           
             .styled-input {
-                padding: 8px; /* Slightly smaller padding */
+                padding: 8px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
-                width: calc(100% - 22px); /* Adjust width */
-                margin-right: 5px; /* Less spacing between input and button */
+                width: calc(100% - 22px);
+                margin-right: 5px; 
             }
-            /* Style for the button */
+           
             .styled-button {
-                background-color: #5e3fd3; /* Purple background */
-                color: white; /* White text */
-                border: none; /* No border */
-                border-radius: 5px; /* Rounded corners */
-                padding: 8px 12px; /* Smaller padding */
-                cursor: pointer; /* Pointer cursor */
-                font-size: 14px; /* Smaller font size */
+                background-color: #5e3fd3; 
+                color: white; 
+                border: none; 
+                border-radius: 5px; 
+                padding: 8px 12px;
+                cursor: pointer;
+                font-size: 14px; 
             }
             .input-group {
                 display: flex;
-                align-items: center; /* Center align items vertically */
+                align-items: center;
             }
             #editToggle:checked ~ .edit-form {
-                display: block; /* Show edit form when checked */
+                display: block;
             }
         </style>
     </head>
