@@ -453,9 +453,9 @@
                         <div class="input-container">
                             <label>First Name:</label>
                             <div class="name-input">
-                                <input type="text" name="firstName" value="<%= user.getFirstName() %>">
+                                <input type="text" name="firstName" value="<%= user.getFirstName() %>" pattern="^(?!\s*$).+" title="First Name cannot be only spaces">
                                 <label>Last Name:</label>
-                                <input type="text" name="lastName" value="<%= user.getLastName() %>">
+                                <input type="text" name="lastName" value="<%= user.getLastName() %>" pattern="^(?!\s*$).+" title="First Name cannot be only spaces">
                             </div>
                         </div>
                         <div class="input-container">
