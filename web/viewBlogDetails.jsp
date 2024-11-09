@@ -286,6 +286,7 @@
         </div>
 
         <!-- Comment Form -->
+        <%User u = (User) session.getAttribute("user");%>
         <c:if test="${not empty sessionScope.user}">
             <div class="comment-form">
                 <h4>Leave a Comment:</h4>
@@ -314,53 +315,54 @@
                     <p><strong><%= commenter.getLastName() + " " + commenter.getFirstName() %></strong></p>
                     <p><%= comment.getCommentContent() %></p>
                     <p><small>Posted on: <%= sdf.format(comment.getCommentedAt()) %></small></p>
-
-                    <div class="edit-comment-form" id="edit-form-<%= comment.getCommentId() %>" style="display: none;">
-                        <form id="editCommentForm" method="POST" action="editBlogComment">
-                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                            <input type="hidden" name="commentId" value="<%= comment.getCommentId() %>">
-                            <div class="mb-3">
-                                <textarea name="commentContent" class="form-control" rows="2"><%= comment.getCommentContent() %></textarea>
-                            </div>
-                            <button type="submit" class="btn btn_submit" style="background-color: #452cbf; color: #f8f9fa">Save</button>
-                        </form>
-                    </div>
-
-                    <!-- Reply Buttons -->
-                    <div class="comment-actions">
-                        <button type="button" class="btn btn-link reply-btn" style="color: #452cbf" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
-
-                        <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle" style="color: #452cbf" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-ellipsis-h"></i> 
-                            </button>
-                            <% User u = (User) session.getAttribute("user");
-                               if (commenter.getId() == u.getId()) { %>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item edit-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
-                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
-                            </ul>
-                            <% } else { %>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item report-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Report</a></li>
-                            </ul>
-                            <% } %>
+                    <c:if test="${not empty sessionScope.user}">
+                        <div class="edit-comment-form" id="edit-form-<%= comment.getCommentId() %>" style="display: none;">
+                            <form id="editCommentForm" method="POST" action="editBlogComment">
+                                <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                                <input type="hidden" name="commentId" value="<%= comment.getCommentId() %>">
+                                <div class="mb-3">
+                                    <textarea name="commentContent" class="form-control" rows="2"><%= comment.getCommentContent() %></textarea>
+                                </div>
+                                <button type="submit" class="btn btn_submit" style="background-color: #452cbf; color: #f8f9fa">Save</button>
+                            </form>
                         </div>
+                    </c:if>
+                    <!-- Reply Buttons -->
+                    <c:if test="${not empty sessionScope.user}">
+                        <div class="comment-actions">
+                            <button type="button" class="btn btn-link reply-btn" style="color: #452cbf" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
 
-                    </div>
-
-                    <!-- Reply form -->
-                    <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none; margin-bottom: 5px">
-                        <form id="replyForm" action="addBlogComment" method="POST">
-                            <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
-                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                            <div class="mb-3">
-                                <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
+                            <div class="dropdown">
+                                <button class="btn btn-link dropdown-toggle" style="color: #452cbf" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i> 
+                                </button>
+                                <% if (commenter.getId() == u.getId()) { %>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item edit-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Edit</a></li>
+                                    <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= comment.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
+                                </ul>
+                                <% } else { %>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item report-comment" href="#<%= comment.getCommentId() %>" data-comment-id="<%= comment.getCommentId() %>">Report</a></li>
+                                </ul>
+                                <% } %>
                             </div>
-                            <button type="submit" class="btn btn-primary btn_submit" style="background-color: #452cbf; color: #f8f9fa">Reply</button>
-                        </form>
-                    </div>
 
+                        </div>
+                    </c:if>
+                    <!-- Reply form -->
+                    <c:if test="${not empty sessionScope.user}">
+                        <div class="reply-form mt-2" id="reply-form-<%= comment.getCommentId() %>" style="display:none; margin-bottom: 5px">
+                            <form id="replyForm" action="addBlogComment" method="POST">
+                                <input type="hidden" name="parentId" value="<%= comment.getCommentId() %>">
+                                <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                                <div class="mb-3">
+                                    <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn_submit" style="background-color: #452cbf; color: #f8f9fa">Reply</button>
+                            </form>
+                        </div>
+                    </c:if>
                     <!-- Display Replies -->
                     <div class="replies" id="replies-<%= comment.getCommentId() %>">
                         <%
@@ -375,81 +377,84 @@
                                 <p><strong><%= replier.getLastName() + " " + replier.getFirstName() %></strong></p>
                                 <p><%= reply.getCommentContent() %></p>
                                 <p><small>Posted on: <%= sdf.format(reply.getCommentedAt()) %></small></p>
-                                <div class="comment-actions">
+                                <c:if test="${not empty sessionScope.user}">
+                                    <div class="comment-actions">
 
-                                    <div class="dropdown">
-                                        <button class="btn btn-link dropdown-toggle" style="color: #452cbf" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h"></i> 
-                                        </button>
-                                        <% if (replier.getId() == u.getId()) { %>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item edit-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
-                                            <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
-                                        </ul>
-                                        <% } else { %>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item report-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Report</a></li>
-                                        </ul>
-                                        <% } %>
-                                    </div>
-                                </div>
-
-                                <div class="edit-comment-form" id="edit-form-<%= reply.getCommentId() %>" style="display: none;">
-                                    <form id="editCommentForm" method="POST" action="editBlogComment">
-                                        <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                                        <input type="hidden" name="commentId" value="<%= reply.getCommentId() %>">
-                                        <div class="mb-3">
-                                            <textarea name="commentContent" class="form-control" rows="2"><%= reply.getCommentContent() %></textarea>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link dropdown-toggle" style="color: #452cbf" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h"></i> 
+                                            </button>
+                                            <% if (replier.getId() == u.getId()) { %>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <li><a class="dropdown-item edit-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Edit</a></li>
+                                                <li><a class="dropdown-item delete-comment" href="deleteBlogComment?id=<%= reply.getCommentId() %>" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a></li>
+                                            </ul>
+                                            <% } else { %>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <li><a class="dropdown-item report-comment" href="#<%= reply.getCommentId() %>" data-comment-id="<%= reply.getCommentId() %>">Report</a></li>
+                                            </ul>
+                                            <% } %>
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn_submit" style="background-color: #452cbf; color: #f8f9fa">Save</button>
-                                    </form>
-                                </div>
-
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty sessionScope.user}">
+                                    <div class="edit-comment-form" id="edit-form-<%= reply.getCommentId() %>" style="display: none;">
+                                        <form id="editCommentForm" method="POST" action="editBlogComment">
+                                            <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                                            <input type="hidden" name="commentId" value="<%= reply.getCommentId() %>">
+                                            <div class="mb-3">
+                                                <textarea name="commentContent" class="form-control" rows="2"><%= reply.getCommentContent() %></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn_submit" style="background-color: #452cbf; color: #f8f9fa">Save</button>
+                                        </form>
+                                    </div>
+                                </c:if>
                             </div>
                         </div>
                         <%
                             }
                         %>
                     </div>
-
-                    <!-- Report Modal -->
-                    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form id="reportForm" action="reportComment" method="POST">
-                                    <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
-                                    <input type="hidden" id="commentId" name="commentId">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label for="reportType" class="form-label">Reason for Reporting</label>
-                                            <select id="reportType" name="reportTypeId" class="form-select" onchange="displayReportDescription()">
-                                                <%
-                                                    List<ReportType> reportTypes = (List<ReportType>) request.getAttribute("reportTypes");
-                                                    for (ReportType reportType : reportTypes) {
-                                                %>
-                                                <option value="<%= reportType.getReportTypeId() %>" data-description="<%= reportType.getReportDescription() %>">
-                                                    <%= reportType.getReportName() %>
-                                                </option>
-                                                <% } %>
-                                            </select>
+                    <c:if test="${not empty sessionScope.user}">
+                        <!-- Report Modal -->
+                        <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form id="reportForm" action="reportComment" method="POST">
+                                        <input type="hidden" name="blogId" value="<%= blog.getBlogId() %>">
+                                        <input type="hidden" id="commentId" name="commentId">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div id="reportDescription" class="mb-3 text-muted"></div>
-                                        <div class="mb-3">
-                                            <label for="reportContent" class="form-label">Additional Details (Optional)</label>
-                                            <textarea id="reportContent" name="reportContent" class="form-control" rows="3"></textarea>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="reportType" class="form-label">Reason for Reporting</label>
+                                                <select id="reportType" name="reportTypeId" class="form-select" onchange="displayReportDescription()">
+                                                    <%
+                                                        List<ReportType> reportTypes = (List<ReportType>) request.getAttribute("reportTypes");
+                                                        for (ReportType reportType : reportTypes) {
+                                                    %>
+                                                    <option value="<%= reportType.getReportTypeId() %>" data-description="<%= reportType.getReportDescription() %>">
+                                                        <%= reportType.getReportName() %>
+                                                    </option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                            <div id="reportDescription" class="mb-3 text-muted"></div>
+                                            <div class="mb-3">
+                                                <label for="reportContent" class="form-label">Additional Details (Optional)</label>
+                                                <textarea id="reportContent" name="reportContent" class="form-control" rows="3"></textarea>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn" style="background-color: #452cbf; color: #f8f9fa">Report</button>
-                                    </div>
-                                </form>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn" style="background-color: #452cbf; color: #f8f9fa">Report</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </c:if>
                 </div>
             </div>
             <hr>
