@@ -117,7 +117,7 @@ public class ReportDAO extends DBContext {
 
     public List<Report> getAllReports() {
         List<Report> list = new ArrayList<>();
-        String sql = "SELECT * FROM Report";
+        String sql = "SELECT * FROM Report ORDER BY commentId ASC, reportTime DESC";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
