@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>filter.AdminFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/AddAccountControl</url-pattern>
+        <url-pattern>/addcourse</url-pattern>
+        <url-pattern>/checkReport</url-pattern>
+        <url-pattern>/deleteblog</url-pattern>
+        <url-pattern>/DeleteUserInfoControl</url-pattern>
+        <url-pattern>/ManageReport</url-pattern>
+        <url-pattern>/ManageSearchAccount</url-pattern>
+        <url-pattern>/ManagerAccount</url-pattern>
+        <url-pattern>/ManagerBlog</url-pattern>
+        <url-pattern>/MangeRequest</url-pattern>
+        <url-pattern>/StatisticsController</url-pattern>
+        <url-pattern>/updateblog</url-pattern>
+        <url-pattern>/updatecourse</url-pattern>
+        <url-pattern>/UpdateUserInfoControl</url-pattern>
+        <url-pattern>/dashboard/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>register</servlet-name>
         <servlet-class>controller.Register</servlet-class>
@@ -196,6 +218,14 @@
         <servlet-name>DeleteRequestForMentee</servlet-name>
         <servlet-class>controller.DeleteRequestForMentee</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteBlogControl</servlet-name>
+        <servlet-class>admin.DeleteBlogControl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateBlogControl</servlet-name>
+        <servlet-class>admin.UpdateBlogControl</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -391,6 +421,14 @@
     <servlet-mapping>
         <servlet-name>ManagerBlog</servlet-name>
         <url-pattern>/managerBlog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteBlogControl</servlet-name>
+        <url-pattern>/deleteblog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateBlogControl</servlet-name>
+        <url-pattern>/updateblog</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
