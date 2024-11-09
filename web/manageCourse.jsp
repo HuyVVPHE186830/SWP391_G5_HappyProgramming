@@ -228,10 +228,14 @@
                 document.getElementById('addType').addEventListener('change', function () {
                     var selectedType = this.value;
                     var deadlineContainer = document.getElementById('deadlineContainer');
+                    var deadlineInput = document.getElementById('deadline');
                     if (selectedType === 'Exercise' || selectedType === 'Test') {
                         deadlineContainer.style.display = 'block';
+                        deadlineInput.setAttribute('required', 'required');
                     } else {
                         deadlineContainer.style.display = 'none';
+                        deadlineInput.removeAttribute('required');
+                        deadlineInput.value = '';
                     }
                 });
 
@@ -248,8 +252,10 @@
                             if (previousDeadline) {
                                 deadlineInput.value = previousDeadline;
                             }
+                            deadlineInput.setAttribute('required', 'required')
                         } else {
                             deadlineContainer.style.display = 'none';
+                            deadlineInput.removeAttribute('required');
                             deadlineInput.value = '';
                         }
                     });
@@ -391,7 +397,7 @@
                                                     <input type="hidden" name="username" value="${user.username}">
                                                     <input type="hidden" name="courseId" value="${course.courseId}">
                                                     <div class="input-group">
-                                                        <input style="margin-right: 10px;" type="text" name="commentContent" class="form-control" placeholder="Add a comment..." required>
+                                                        <input style="margin-right: 10px;" type="text" name="commentContent" class="form-control" placeholder="Add a comment..." required oninput="this.value = this.value.trimStart()">
                                                         <button type="submit" class="btn btn-primary">
                                                             <i class="fas fa-paper-plane"></i>
                                                         </button>
@@ -556,11 +562,11 @@
                                                 <input type="file" style="display:none" name="oldFileContent" value="${post.fileContent}">
                                                 <div class="form-group">
                                                     <label for="postTitle">Title</label>
-                                                    <input type="text" class="form-control" id="editTitle_${post.postId}" name="editTitle" value="${post.postTitle}" required>
+                                                    <input type="text" class="form-control" id="editTitle_${post.postId}" name="editTitle" value="${post.postTitle}" required oninput="this.value = this.value.trimStart()">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="postContent">Content</label>
-                                                    <textarea class="form-control" id="editContent_${post.postId}" name="editContent" rows="3" required>${post.postContent}</textarea>
+                                                    <textarea class="form-control" id="editContent_${post.postId}" name="editContent" rows="3" required oninput="this.value = this.value.trimStart()">${post.postContent} </textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="postType">Type</label>
@@ -575,11 +581,10 @@
                                                     <c:choose>
                                                         <c:when test="${not empty post.fileName}">
                                                             <input text="text" class="form-control" id="editFile" onfocus="(this.type = 'file')" name="addFile" placeholder="${post.fileName}">
-                                                            <input type="file" id="editFile_${post.postId}" name="addFile" style="display: none;" onchange="updateFileName(${post.postId})">
+                                                            <input type="file" id="editFile_${post.postId}" name="addFile" style="display: none;">
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <input text="text" class="form-control" id="editFile" onfocus="(this.type = 'file')" name="addFile" placeholder="No File Chosen">
-                                                            <input type="file" id="editFile_${post.postId}" name="addFile" style="display: none;" onchange="updateFileName(${post.postId})">
+                                                            <input type="file" class="form-control" id="editFile_${post.postId}" name="addFile">
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
@@ -657,11 +662,11 @@
                                 <input type="hidden" name="username" value="${user.username}">
                                 <div class="form-group">
                                     <label for="postTitle">Title</label>
-                                    <input type="text" class="form-control" id="addTitle" name="addTitle" required>
+                                    <input type="text" class="form-control" id="addTitle" name="addTitle" required oninput="this.value = this.value.trimStart()">
                                 </div>
                                 <div class="form-group">
                                     <label for="postContent">Content</label>
-                                    <textarea class="form-control" id="addContent" name="addContent" rows="3" required></textarea>
+                                    <textarea class="form-control" id="addContent" name="addContent" rows="3" required oninput="this.value = this.value.trimStart()"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="postType">Type</label>

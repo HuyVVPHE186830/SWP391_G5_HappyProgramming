@@ -106,9 +106,13 @@ public class EditMentorPost extends HttpServlet {
             fileName = fileName1;
             fileType = fileType1;
         } else {
-            fileContent = oldFileContentStr.getBytes();
             fileName = request.getParameter("oldFileName");
             fileType = request.getParameter("oldFileType");
+            if (fileName.trim().isEmpty() && fileType.trim().isEmpty()) {
+                fileContent = null;
+            } else {
+                fileContent = oldFileContentStr.getBytes();
+            }
         }
         Timestamp deadline = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
