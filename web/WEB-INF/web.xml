@@ -17,7 +17,7 @@
         <url-pattern>/ManagerBlog</url-pattern>
         <url-pattern>/MangeRequest</url-pattern>
         <url-pattern>/StatisticsController</url-pattern>
-        <url-pattern>/updateblog</url-pattern>
+        <url-pattern>/UpdateBlogControl</url-pattern>
         <url-pattern>/updatecourse</url-pattern>
         <url-pattern>/UpdateUserInfoControl</url-pattern>
         <url-pattern>/dashboard/*</url-pattern>
@@ -428,7 +428,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UpdateBlogControl</servlet-name>
-        <url-pattern>/updateblog</url-pattern>
+        <url-pattern>/UpdateBlogControl</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

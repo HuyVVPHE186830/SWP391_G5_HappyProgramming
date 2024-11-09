@@ -136,7 +136,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Add enctype to support multipart form data -->
-                    <form action="updateblog" method="post" enctype="multipart/form-data">
+                    <form action="UpdateBlogControl" method="post" enctype="multipart/form-data">
                         <div class="modal-header">
                             <h4>Edit Blog</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
