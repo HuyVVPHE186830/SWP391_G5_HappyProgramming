@@ -87,6 +87,61 @@
             .icon {
                 font-size: 1.5rem;
             }
+
+            table {
+                margin: 0 auto;
+                width: 80%;
+                max-width: 1200px;
+                background-color: #ffffff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-collapse: collapse;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .table th, .table td {
+                padding: 15px;
+                text-align: center;
+                font-size: 1rem;
+            }
+
+            .table thead th {
+                background-color: #5d3fd3;
+                color: #ffffff;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .table tbody tr:nth-child(even) {
+                background-color: #f8f8f8;
+            }
+
+            .table tbody tr:nth-child(odd) {
+                background-color: #ffffff;
+            }
+
+            .table tbody td {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            .table .text-center {
+                text-align: center;
+                font-size: 1rem;
+                color: #888888;
+            }
+
+            .btn-primary{
+                background-color: #5d3fd3 !important;
+                border-color: #5d3fd3 !important;
+            }
+
+            .btn-primary:focus {
+                box-shadow: none !important;
+            }
+            
+            .btn-primary:hover {
+                background-color: #3d249e !important;
+            }
         </style>
     </head>
     <body>
@@ -195,7 +250,7 @@
                                     <div><strong>${post.postTitle}</strong></div>
                                     <c:choose>
                                         <c:when test="${not empty post.createdAt}">
-                                            <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy" />
+                                            <fmt:formatDate value="${post.createdAt}" pattern="MM/dd/yyyy" />
                                         </c:when>
                                         <c:otherwise>
                                             N/A
@@ -213,7 +268,7 @@
                                 </c:choose>
                             </div>
                             <div class="modal fade" id="postDetailModal_${post.postId}" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 1000px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <strong><h3 class="modal-title">${post.postTitle}</h3></strong>
@@ -248,7 +303,7 @@
                                             </c:if>
                                             <c:if test="${not empty post.deadline}">
                                                 <p><strong>Deadline:</strong> 
-                                                    <fmt:formatDate value="${post.deadline}" pattern="dd/MM/yyyy, HH:mm" />
+                                                    <fmt:formatDate value="${post.deadline}" pattern="MM/dd/yyyy, HH:mm" />
                                                 </p>
                                                 <c:choose>
                                                     <c:when test="${user.username == mentorName}">
@@ -306,7 +361,7 @@
                                 </div>
                             </div>
                             <div class="modal fade" id="viewSubmit_${post.postId}" tabindex="-1" aria-labelledby="viewSubmit_${post.postId}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" style="max-width: 700px;">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="viewSubmitModalLabel_${post.postId}">Submission</h5>
@@ -340,7 +395,7 @@
                                                                     </td>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <td><fmt:formatDate value="${submission.submittedAt}" pattern="dd-MM-yyyy, HH:mm" /></td>
+                                                                    <td><fmt:formatDate value="${submission.submittedAt}" pattern="MM/dd/yyyy, HH:mm" /></td>
                                                                     <td>
                                                                         <c:choose>
                                                                             <c:when test="${submission.isLate}">
@@ -376,7 +431,7 @@
 
 
                             <div class="modal fade" id="submitFormModal_${post.postId}" tabindex="-1" aria-labelledby="submitFormModalLabel_${post.postId}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="submitFormModalLabel_${post.postId}">Submit</h5>
@@ -418,7 +473,7 @@
 
 
                             <div class="modal fade" id="editPostModal_${post.postId}" tabindex="-1" aria-labelledby="editPostModalLabel_${post.postId}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="editPostModalLabel_${post.postId}">Edit Post</h5>
@@ -515,7 +570,7 @@
 
             <!-- Modal tạo post -->
             <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
@@ -561,7 +616,7 @@
                 </div>
             </div>
             <div class="modal fade" id="memberListModal" tabindex="-1" aria-labelledby="memberListModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title" id="memberListModalLabel">List Mentee: ${member}</h3>
@@ -576,7 +631,7 @@
                                         <th>Email</th>
                                             <c:if test="${user.username == mentorName}">
                                             <th>Date of Birth</th>
-                                            <th>Action</th>
+                                            <th>Ban</th>
                                             </c:if>
                                     </tr>
                                 </thead>
@@ -590,13 +645,15 @@
                                                 <td>${mentee.lastName} ${mentee.firstName}</td>
                                                 <td>${mentee.mail}</td>
                                                 <c:if test="${user.username == mentorName}">
-                                                    <td>${mentee.dob}</td>
+                                                    <td><fmt:formatDate value="${mentee.dob}" pattern="MM/dd/yyyy"/></td>
                                                     <td>
                                                         <form action="manageMentee" method="post">
                                                             <input type="hidden" name="courseId" value="${course.courseId}">
                                                             <input type="hidden" name="username" value="${mentee.username}">
                                                             <input type="hidden" name="mentorName" value="${mentorName}">
-                                                            <button type="submit" class="btn btn-danger btn-sm">Ban</button>
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="fas fa-ban"></i>
+                                                            </button>
                                                         </form>
                                                     </td>
                                                 </c:if>
@@ -618,7 +675,7 @@
 
 
             <div class="modal fade" id="requestListModal" tabindex="-1" aria-labelledby="requestListModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title" id="requestListModalLabel">List Request: ${rmember}</h3>
@@ -644,16 +701,16 @@
                                                 </td>
                                                 <td>${requesto.lastName} ${requesto.firstName}</td>
                                                 <td>${requesto.mail}</td>
-                                                <td>${requesto.dob}</td>
+                                                <td><fmt:formatDate value="${requesto.dob}" pattern="MM/dd/yyyy"/></td>                                             
                                                 <td>
                                                     <form action="manageMentee" method="get">
                                                         <input type="hidden" name="courseId" value="${course.courseId}">
                                                         <input type="hidden" name="username" value="${requesto.username}">
                                                         <input type="hidden" name="mentorName" value="${mentorName}">
-                                                        <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept">
+                                                        <button type="submit" class="btn btn-success btn-sm me-2" name="action" value="accept" style="width: 70px">
                                                             <i class="fas fa-check"></i>
                                                         </button>
-                                                        <button type="submit" class="btn btn-danger btn-sm" name="action" value="decline">
+                                                        <button type="submit" class="btn btn-danger btn-sm" name="action" value="decline" style="width: 35px">
                                                             <i class="fas fa-times"></i>
                                                         </button>
                                                     </form>

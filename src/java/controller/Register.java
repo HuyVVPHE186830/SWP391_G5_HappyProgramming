@@ -132,17 +132,17 @@ public class Register extends HttpServlet {
         String greenString = "";
 
         if (!password.equals(repassword)) {
-            session.setAttribute("error", "*Passwords do not match");
+            session.setAttribute("error", "Passwords do not match");
             response.sendRedirect("register.jsp");
             return;
         }
 
         for (User u : users) {
             if (username.equals(u.getUsername())) {
-                redString += "*Username has been used<br>";
+                redString += "Username has been used";
             }
             if (email.equals(u.getMail())) {
-                redString += "*Email has been used<br>";
+                redString += "Email has been used";
             }
         }
         if (!redString.isEmpty()) {
@@ -153,7 +153,7 @@ public class Register extends HttpServlet {
             User user = new User(username, password, firstName, lastName, dob, email, doc, avatar, cvBase64, true, false, roleId);
             dao.registerUser(user);
             greenString = "Register Successfully!";
-            session.setAttribute("note", greenString);
+            session.setAttribute("success", greenString);
         }
         response.sendRedirect("register.jsp");
     }
