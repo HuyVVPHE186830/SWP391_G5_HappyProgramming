@@ -20,10 +20,6 @@
                 font-family: Arial, sans-serif;
                 background-color: #fbfbfb;
             }
-            #sidebarMenu {
-                width: 200px;
-                background-color: #edf2fa;
-            }
             .content {
                 flex: 1;
                 padding: 20px;
