@@ -248,9 +248,7 @@
                             <p class="short-description">${cou.courseDescription}</p>
                             <p>Created at: ${cou.createdAt}</p>
                             <h6 class="lv3Text">Mentee in this course: ${cou.countMentee}</h6>
-                            <button>
-                                <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course"style="color: whitesmoke; text-decoration: none;">View</a>
-                            </button>
+                           
                         </div>
                     </div>
                 </c:forEach>
@@ -276,9 +274,7 @@
                             <p class="short-description">${cou.courseDescription}</p>
                             <h6>Created at: ${cou.createdAt}</h6>
                             <h6 class="lv3Text">Mentee in this course: ${cou.countMentee}</h6>
-                            <button>
-                                <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course"style="color: whitesmoke; text-decoration: none;">View</a>
-                            </button>
+                            
                         </div>
                     </div>
                 </c:forEach>

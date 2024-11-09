@@ -53,7 +53,7 @@ public class ManageConversation extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String RatedUser = request.getParameter("recipientUsername");
+        RatingDAO rateDAO = new RatingDAO();
         List<Course> listCourse4 = courseDAO.getAll();
         request.getSession().setAttribute("listCourse4", listCourse4);
     }

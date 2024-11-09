@@ -42,7 +42,6 @@ public class SendMessage extends HttpServlet {
         String username = request.getParameter("username");
         String conversationIdParam = request.getParameter("conversationId");
 
-        // Lấy danh sách khóa học và người tham gia
         List<Course> listCourse4 = courseDAO.getAll();
         List<User> listUser4 = uDAO.getAllUserByRoleId(2);
         List<Participate> listParticipate4 = pDAO.getAll();
@@ -56,7 +55,7 @@ public class SendMessage extends HttpServlet {
         Conversation latestConversation = conversationDAO.getLatestConversationWithMessageForUser(currentUser.getUsername());
         int lastConversationId = (latestConversation != null) ? latestConversation.getConversationId() : -1; // Sử dụng -1 nếu không có
 
-        request.getSession().setAttribute("lastConversationId", lastConversationId);
+        request.getSession().setAttribute("lastConversationId2", lastConversationId);
 
         User recipient = null;
 

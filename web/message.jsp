@@ -309,7 +309,16 @@
                 <p>Name:${sessionScope.currentChatRecipient.lastName} ${currentChatRecipient.firstName} </p>
                 <p>DOB: ${sessionScope.currentChatRecipient.dob}</p>
                 <p>Email: ${sessionScope.currentChatRecipient.mail}</p>
-                <p>Status: ${sessionScope.currentChatRecipient.activeStatus}</p>
+                <p>Status: 
+                    <c:choose>
+                        <c:when test="${sessionScope.currentChatRecipient.activeStatus == true}">
+                            Verified
+                        </c:when>
+                        <c:otherwise>
+                            Non verified
+                        </c:otherwise>
+                    </c:choose>
+                </p>
                 <p>Role: 
                     ${sessionScope.currentChatRecipient.roleId == 1 ? 'Mentee' : 
                       (sessionScope.currentChatRecipient.roleId == 2 ? 'Mentor' : 'Unknown Role')}
