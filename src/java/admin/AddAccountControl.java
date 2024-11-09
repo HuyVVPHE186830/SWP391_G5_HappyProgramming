@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet(name = "AddAccountControl", urlPatterns = {"/addaccount"})
 public class AddAccountControl extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
