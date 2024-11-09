@@ -113,7 +113,7 @@ public class VerifyEmail extends HttpServlet {
             response.sendRedirect("userProfile.jsp");
         } else {
             session.setAttribute("error", "Invalid verification code.");
-            response.sendRedirect("verifyEmail.jsp");
+            response.sendRedirect("userProfile.jsp");
         }
     }
 
