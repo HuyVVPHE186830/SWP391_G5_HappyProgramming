@@ -81,7 +81,7 @@ public class ApplyCourse extends HttpServlet {
             for (Request r : requests) {
                 boolean found = false;
                 for (Course c : courses) {
-                    if (r.getCourseId() == c.getCourseId()) {
+                    if (r.getCourseId() == c.getCourseId() && r.getRequestStatus() != -1) {
                         found = true;
                         break;
                     }
@@ -123,11 +123,25 @@ public class ApplyCourse extends HttpServlet {
         try {
             User u = daoU.getUserByUsernameM(username);
             int courseId = Integer.parseInt(courseId_str);
-            Participate p = daoP.getParticipateByUsernameAndCourseId(courseId, username);
-            daoP.addParticipate(new Participate(courseId, username, 2, 0, username));
-            daoR.addRequest(new Request(courseId, username, date, 0, requestReason, username));
+            Participate p = daoP.getParticipateByUsernameAndCourseIdAndMentorUsername(courseId, username, username);
+//            Request req = daoR.getRequestByUsernameAndMentorUsername(username, courseId, username);
             List<Course> courses = daoC.getAllCoursesByUsernameOfMentor(username);
-            List<Request> requests = daoR.getAllRequestByUsername(username);
+            List<Request> requests = daoR.getAllRequestByUsernameForList(username);
+            boolean found1 = false;
+            for (Request r : requests) {
+                if (courseId == r.getCourseId() && username.equals(r.getUsername()) && username.equals(r.getMentorUsername())) {
+                    daoP.updateParticipateStatusForMentor(new Participate(courseId, username, 2, 0, username));
+                    daoR.updateRequestStatusForMentor(new Request(courseId, username, date, 0, requestReason, username));
+                    found1 = true;
+                    break;
+                }
+                
+            }
+            if (!found1) {
+                daoP.addParticipate(new Participate(courseId, username, 2, 0, username));
+                daoR.addRequest(new Request(courseId, username, date, 0, requestReason, username));
+            }
+
             List<Course> additionalCourses = new ArrayList<>();
             for (Request r : requests) {
                 boolean found = false;

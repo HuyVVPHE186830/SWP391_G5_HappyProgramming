@@ -189,6 +189,27 @@ public class RequestDAO extends DBContext {
         return request;
     }
 
+    public Request getRequestByUsernameAndMentorUsername(String username, int courseId, String mentorUsername) {
+        Request request = new Request();
+        String sql = "SELECT * FROM [Request] where username = ? and courseId = ? and mentorUsername = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            st.setInt(2, courseId);
+            st.setString(3, mentorUsername);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Date requestTime = rs.getDate("requestTime");
+                int requestStatus = rs.getInt("requestStatus");
+                String requestReason = rs.getString("requestReason");
+                request = new Request(courseId, username, requestTime, requestStatus, requestReason, mentorUsername);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return request;
+    }
+
     public void addRequest(Request request) {
         String sql = "INSERT INTO [Request] (courseId, username, requestTime, requestStatus, requestReason, mentorUsername) VALUES (?, ?, ?, ?, ?, ?)";
         try {
@@ -224,14 +245,17 @@ public class RequestDAO extends DBContext {
         return f;
     }
 
-    public boolean updateRequestStatus(int courseId, String username, int statusId) {
+    public boolean updateRequestStatusForMentor(Request request) {
         boolean f = false;
         try {
-            String sql = "Update Request Set requestStatus = ? Where username = ? and courseId = ?";
+            String sql = "Update Request Set requestStatus = ?, requestTime = ?, requestReason = ? Where username = ? and courseId = ? and mentorUsername = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, statusId);
-            ps.setString(2, username);
-            ps.setInt(3, courseId);
+            ps.setInt(1, request.getRequestStatus());
+            ps.setDate(2, new java.sql.Date(request.getRequestTime().getTime()));
+            ps.setString(3, request.getRequestReason());
+            ps.setString(4, request.getUsername());
+            ps.setInt(5, request.getCourseId());
+            ps.setString(6, request.getMentorUsername());
             int i = ps.executeUpdate();
             if (i == 1) {
                 f = true;
@@ -244,11 +268,12 @@ public class RequestDAO extends DBContext {
 
     public boolean deleteRequest(int courseId, String username) {
         boolean f = false;
-        String sql = "DELETE FROM Request WHERE courseId = ? and username = ? and requestStatus != 1";
+        String sql = "DELETE FROM Request WHERE courseId = ? and username = ? and mentorUsername = ? and requestStatus != 1";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, courseId);
             ps.setString(2, username);
+            ps.setString(3, username);
             int i = ps.executeUpdate();
             if (i == 1) {
                 f = true;
@@ -263,11 +288,25 @@ public class RequestDAO extends DBContext {
         RequestDAO dao = new RequestDAO();
         ParticipateDAO a = new ParticipateDAO();
         Date date = new Date();
-        Participate p = a.getParticipateByUsernameAndCourseId(1, "anmentor");
-        List<Request> list = dao.getAllRequestMentorByKeyword("ja");
-        a.addParticipate(new Participate(1, "anmentor", 2, 0, "anmentor"));
-        dao.addRequest(new Request(1, "anmentor", date, 0, "he", "anmentor"));
+        List<Request> r = dao.getAllRequestByUsernameForList("anmentor");
+        List<Request> requests = dao.getAll();
+        List<Participate> p = a.getAllByUsername("anmentor");
+        for (Request l : r) {
+            System.out.println(l);
+        }
+        Participate par = a.getParticipateByUsernameAndCourseIdAndMentorUsername(1, "anmentor", "anmentor");
+        boolean found1 = false;
+        for (Request r1 : requests) {
+            if (par.getCourseId() == r1.getCourseId() && par.getUsername().equals(r1.getUsername()) && par.getMentorUsername().equals(r1.getMentorUsername())) {
+                found1 = true;
+                break;
+            }
 
+        }
+        System.out.println(found1);
+
+        a.updateParticipateStatusForMentor(new Participate(7, "anmentor", 2, 0, "anmentor"));
+        dao.updateRequestStatusForMentor(new Request(7, "anmentor", date, 0, "e", "anmentor"));
 //        Date date = new Date();
 //        int courseId = 1;
 ////        dao.updateRequest(1, 2, "anmentor", "helo");

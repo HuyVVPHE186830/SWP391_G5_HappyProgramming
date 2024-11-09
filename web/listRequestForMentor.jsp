@@ -240,14 +240,13 @@
                                     </a>
                                 </td>
                                 <th>
-                                    <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" onclick="confirm('Are you sure to cancel this request!')"
+                                    <a href="deleteRequestForMentor?username=${req.username}&courseId=${req.courseId}" onclick="return confirm('Are you sure to cancel this request!')"
                                        <c:if test="${req.requestStatus != 0}">
                                            style="color: gray; pointer-events: none;" 
                                        </c:if>>                                  
                                         <i class="fas fa-trash" 
                                            style="<c:if test='${req.requestStatus != 0}'>color: black;</c:if><c:if test='${req.requestStatus == 0}'>color: red;</c:if>">
                                            </i>
-                                        </a>
                                         </a>
                                     </th>
                                 </tr>

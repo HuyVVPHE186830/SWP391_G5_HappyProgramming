@@ -113,7 +113,7 @@ public class CourseDAO extends DBContext {
         List<Course> list = new ArrayList<>();
         String sql = "SELECT * FROM Course join Participate on Course.courseId = Participate.courseId\n"
                 + "join [User] on Participate.username = [User].username\n"
-                + "WHERE [User].username = ? and Participate.ParticipateRole = 2";
+                + "WHERE [User].username = ? and Participate.ParticipateRole = 2 and Participate.statusId != -1";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, username);

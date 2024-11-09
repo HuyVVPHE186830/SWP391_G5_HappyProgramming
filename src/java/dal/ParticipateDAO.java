@@ -63,7 +63,7 @@ public class ParticipateDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Participate> getAllByUsernameOfMentee(String username) {
         List<Participate> list = new ArrayList<>();
         String sql = "SELECT * FROM [Participate] where username = ? and participateRole = 3";
@@ -137,13 +137,33 @@ public class ParticipateDAO extends DBContext {
         return f;
     }
 
+    public boolean updateParticipateStatusForMentor(Participate participate) {
+        boolean f = false;
+        try {
+            String sql = "Update Participate Set statusId = ? Where username = ? and courseId = ? and mentorUsername = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, participate.getStatusId());
+            ps.setString(2, participate.getUsername());
+            ps.setInt(3, participate.getCourseId());
+            ps.setString(4, participate.getMentorUsername());
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+
     public boolean deleteParticipate(int courseId, String username) {
         boolean f = false;
-        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ? and statusId != 1";
+        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ? and mentorUsername = ? and statusId != 1";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, courseId);
             ps.setString(2, username);
+            ps.setString(3, username);
             int i = ps.executeUpdate();
             if (i == 1) {
                 f = true;
@@ -157,10 +177,12 @@ public class ParticipateDAO extends DBContext {
     public static void main(String[] args) {
         ParticipateDAO dao = new ParticipateDAO();
         RequestDAO daoR = new RequestDAO();
-        List<Participate> list = dao.getAllParticipateOfMenteeByKeyword("", "anmentor");
-        for (Participate l : list) {
-            System.out.println(l);
-        }
+//        List<Participate> list = dao.getParticipateByUsernameAndCourseIdAndMentorUsername(7, "anmentor", "anmentor");
+        Participate p = dao.getParticipateByUsernameAndCourseIdAndMentorUsername(7, "anmentor", "anmentor");
+//        for (Participate l : list) {
+//            System.out.println(l);
+//        }
+        System.out.println(p);
 //        Request req1 = daoR.getRequestByUsername("anmentor", 1);
 ////        dao.addParticipate(new Participate(4, req1.getUsername(), 2, req1.getRequestStatus()));
 ////        daoR.updateRequest(4, 1, "anmentor", "hel");
@@ -215,7 +237,7 @@ public class ParticipateDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Participate> getAllParticipateOfMenteeByKeyword(String keyword, String username) {
         List<Participate> list = new ArrayList<>();
         String sql = "SELECT * FROM [Participate] JOIN Course ON Participate.CourseId = Course.CourseId WHERE username = ? and ParticipateRole = 3 AND (Course.CourseName LIKE ? OR Participate.mentorUsername LIKE ?)";
@@ -238,7 +260,7 @@ public class ParticipateDAO extends DBContext {
         }
         return list;
     }
-    
+
     public Participate getParticipateByUsernameAndCourseId(int courseId, String username) {
         Participate p = new Participate();
         String sql = "SELECT * FROM [Participate] where courseId = ? and username = ?";
@@ -259,4 +281,23 @@ public class ParticipateDAO extends DBContext {
         return p;
     }
 
+    public Participate getParticipateByUsernameAndCourseIdAndMentorUsername(int courseId, String username, String mentorUsername) {
+        Participate p = new Participate();
+        String sql = "SELECT * FROM [Participate] where courseId = ? and username = ? and mentorUsername = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, courseId);
+            st.setString(2, username);
+            st.setString(3, mentorUsername);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int participateRole = rs.getInt("participateRole");
+                int statusId = rs.getInt("statusId");
+                p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return p;
+    }
 }

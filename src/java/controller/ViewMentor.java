@@ -88,7 +88,7 @@ public class ViewMentor extends HttpServlet {
             Course course = daoC.getCourseByCourseId(courseId);
             float avg = rateDAO.getAverageStar(userId);
             User mentor = daoU.getUserById(userId);
-            Category cate = daoCt.getCategoryByCourseId(courseId);
+            List<Category> cate = daoCt.getAllCategoryByCourseId(courseId);
             List<Participate> participate = daoP.getAll();
             List<User> othermentor = daoU.getAllMentorByCourseIdExceptOne(courseId, mentor.getUsername());
             List<Course> othercourse = daoC.getAllCoursesOfMentorExceptOne(courseId, mentor.getUsername());
@@ -100,7 +100,7 @@ public class ViewMentor extends HttpServlet {
             request.setAttribute("rateList", rateList);
             request.setAttribute("otherCourseMentor", othercourse);
             request.setAttribute("mentorDetail", mentor);
-            request.setAttribute("thisCate", cate);
+            request.setAttribute("categories", cate);
             request.setAttribute("otherMentor", othermentor);
             request.setAttribute("courseOfMentor", course);
 

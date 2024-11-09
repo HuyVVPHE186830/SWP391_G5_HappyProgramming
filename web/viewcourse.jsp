@@ -19,7 +19,7 @@
         <style>
             .chat-button {
                 display: inline-block;
-                padding: 10px 15px;
+                padding: 7px 15px;
                 background-color: #007bff;
                 color: white;
                 text-decoration: none;
@@ -33,6 +33,18 @@
                 color: white;
                 text-decoration: none;
             }
+            .description::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background: #a855f7; /* Màu tím */
+                clip-path: polygon(50% 100%, 100% 30%, 100% 100%); /* Tạo hình dạng chéo */
+                z-index: 0; /* Đưa phần tử ra phía sau nội dung */
+            }
+
         </style>
     </head>
     <body>
@@ -150,7 +162,7 @@
                                 <div style="color: black">${m.lastName} ${m.firstName}</div>
                                 <c:if test="${not empty sessionScope.user}">
                                     <c:if test="${m.username != sessionScope.user.username}">
-                                        <a href="sendMessage?username=${m.username}" class="chat-button">Chat</a>
+                                        <a href="sendMessage?username=${m.username}" class="chat-button" style="background: #5e3fd3">Chat</a>
                                     </c:if>
                                 </c:if>
                             </div>

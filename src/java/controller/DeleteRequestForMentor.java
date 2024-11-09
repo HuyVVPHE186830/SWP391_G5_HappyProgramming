@@ -77,7 +77,7 @@ public class DeleteRequestForMentor extends HttpServlet {
             int courseId = Integer.parseInt(courseId_str);
             daoR.deleteRequest(courseId, username);
             daoP.deleteParticipate(courseId, username);
-            List<Request> requests = daoR.getAllRequestByUsername(username);
+            List<Request> requests = daoR.getAllRequestByUsernameForList(username);
             List<Course> courses = daoC.getAll();
             List<Status> status = daoS.getAll();
             request.setAttribute("requests", requests);

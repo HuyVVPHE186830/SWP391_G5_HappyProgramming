@@ -25,7 +25,7 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 transition: all 0.3s ease;
                 text-align: center;
-                height: 500px;
+                height: 400px;
                 overflow: hidden;
             }
 
@@ -115,7 +115,22 @@
             .button-submit:hover {
                 background-color: #541371;
             }
+            .chat-button {
+                display: inline-block;
+                padding: 7px 15px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 10px;
+                transition: all 1s ease;
+            }
 
+            .chat-button:hover {
+                background-color: #0056b3;
+                color: white;
+                text-decoration: none;
+            }
         </style>
     </head>
     <body>
@@ -173,14 +188,19 @@
                 <div style="margin-left: 30px;">
                     <div class="mentor-cards row">
                         <c:forEach items="${requestScope.mentorThisCourse}" var="m">
-                            <a href="viewMentor?userId=${m.id}&courseId=${cM.courseId}" class="mentor-card">
-                                <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}">
+                            <div class="mentor-card" style="height: 400px;"> 
+                                <a href="viewMentor?userId=${m.id}&courseId=${cM.courseId}"><img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${m.avatarPath}"></a>
                                 <div class="mentor-body">
                                     <div class="mentor-text">
                                         <div style="color: black">${m.lastName} ${m.firstName}</div>
+                                        <c:if test="${not empty sessionScope.user}">
+                                            <c:if test="${m.username != sessionScope.user.username}">
+                                                <a href="sendMessage?username=${m.username}" class="chat-button" style="background: #5e3fd3">Chat</a>
+                                            </c:if>
+                                        </c:if>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </c:forEach>
                     </div>
                 </div>
