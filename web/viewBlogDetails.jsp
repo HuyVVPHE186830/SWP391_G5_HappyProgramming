@@ -84,7 +84,7 @@
                 background-color: #f8f9fa;
                 margin-bottom: 15px;
                 border-radius: 8px;
-                border-left: 5px solid #007bff;
+                border-left: 5px solid #452cbf;
                 position: relative;
             }
 
@@ -121,26 +121,112 @@
                 top: 10px;
                 right: 10px;
             }
+
+            .comment-actions .dropdown-item {
+                color: #452cbf;
+            }
+
+            .comment-actions .btn, .comment-actions .btn:focus,
+            .comment-actions .btn:hover, .comment-actions .btn:active {
+                background-color: transparent !important;
+                color: #452cbf !important;
+                text-decoration: none;
+                box-shadow: none !important;
+                transition: color 0.3s ease, transform 0.2s ease;
+            }
+
+            .comment-actions .btn:hover {
+                color: #301ca0 !important;
+                transform: scale(1.05);
+            }
+
+            .comment-actions .dropdown-item,
+            .comment-actions .dropdown-item:focus,
+            .comment-actions .dropdown-item:hover,
+            .comment-actions .dropdown-item:active {
+                color: #452cbf !important;
+                background-color: transparent !important;
+                text-decoration: none;
+                transition: color 0.3s ease, transform 0.2s ease;
+            }
+
+            .comment-actions .dropdown-item:hover {
+                color: #301ca0 !important;
+                transform: scale(1.05);
+            }
+
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: red;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 1000;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+
+            .notification.success {
+                background-color: green;
+            }
+
+            .notification.error {
+                background-color: red;
+            }
+
+            .hidden {
+                display: none;
+            }
+            
+            #dropdownMenuButton::after {
+    display: none !important;
+}
         </style>
     </head>
     <body>
 
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const successMessage = '<c:out value="${succMsg}" />';
+            const errorMessage = '<c:out value="${failedMsg}" />';
 
-        <c:if test="${not empty succMsg}">
-            <div style="margin-top: 50px" class="alert alert-success" role="alert">
-                ${succMsg}
-            </div>
-            <c:remove var="succMsg" scope="session"/>
-        </c:if>
+            if (successMessage) {
+                showNotification(successMessage, 'success');
+            <% session.removeAttribute("succMsg"); %>
+            } else if (errorMessage) {
+                showNotification(errorMessage, 'error');
+            <% session.removeAttribute("failedMsg"); %>
+            }
 
-        <c:if test="${not empty failedMsg}">
-            <div style="margin-top: 50px" class="alert alert-danger" role="alert">
-                ${failedMsg}
-            </div>
-            <c:remove var="failedMsg" scope="session"/>
-        </c:if>
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+                notification.classList.add(type === 'success' ? 'success' : 'error');
+
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                        notification.classList.remove(type); // Clean up class for next use
+                    }, 500);
+                }, 3000);
+            }
+        </script>
 
         <div class="container mt-5"> <!-- Keep container for responsiveness -->
             <div class="blog-detail">
@@ -199,8 +285,6 @@
             </div>
         </div>
 
-
-
         <!-- Comment Form -->
         <div class="comment-form">
             <h4>Leave a Comment:</h4>
@@ -209,7 +293,7 @@
                 <div class="mb-3">
                     <textarea id="commentContent" name="commentContent" class="form-control" rows="3" placeholder="Write your comment"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn_submit">Submit</button>
+                <button type="submit" class="btn btn_submit" style="background-color: #452cbf; color: #f8f9fa">Submit</button>
             </form>
         </div>
 
@@ -237,17 +321,17 @@
                             <div class="mb-3">
                                 <textarea name="commentContent" class="form-control" rows="2"><%= comment.getCommentContent() %></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary btn_submit">Save</button>
+                            <button type="submit" class="btn btn_submit" style="background-color: #452cbf; color: #f8f9fa">Save</button>
                         </form>
                     </div>
 
                     <!-- Reply Buttons -->
                     <div class="comment-actions">
-                        <button type="button" class="btn btn-link reply-btn" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
+                        <button type="button" class="btn btn-link reply-btn" style="color: #452cbf" data-comment-id="<%= comment.getCommentId() %>">Reply</button>
 
                         <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
+                            <button class="btn btn-link dropdown-toggle" style="color: #452cbf" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i> 
                             </button>
                             <% User u = (User) session.getAttribute("user");
                                if (commenter.getId() == u.getId()) { %>
@@ -272,7 +356,7 @@
                             <div class="mb-3">
                                 <textarea name="commentContent" class="form-control" rows="2" placeholder="Reply to this comment"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary btn_submit">Reply</button>
+                            <button type="submit" class="btn btn-primary btn_submit" style="background-color: #452cbf; color: #f8f9fa">Reply</button>
                         </form>
                     </div>
 
@@ -280,7 +364,7 @@
                     <div class="replies" id="replies-<%= comment.getCommentId() %>">
                         <%
                             for (BlogComment reply : comment.getReplies()) {
-                                User replier = reply.getUser(); // Assuming reply also has User object
+                                User replier = reply.getUser(); 
                         %>
                         <div class="reply d-flex align-items-start">
                             <!-- Displaying Replier's Profile Picture -->
@@ -293,8 +377,8 @@
                                 <div class="comment-actions">
 
                                     <div class="dropdown">
-                                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h"></i> <!-- Font Awesome icon for three dots -->
+                                        <button class="btn btn-link dropdown-toggle" style="color: #452cbf" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i> 
                                         </button>
                                         <% if (replier.getId() == u.getId()) { %>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
@@ -316,7 +400,7 @@
                                         <div class="mb-3">
                                             <textarea name="commentContent" class="form-control" rows="2"><%= reply.getCommentContent() %></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn_submit">Save</button>
+                                        <button type="submit" class="btn btn-primary btn_submit" style="background-color: #452cbf; color: #f8f9fa">Save</button>
                                     </form>
                                 </div>
 
@@ -359,7 +443,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-danger">Report</button>
+                                        <button type="submit" class="btn" style="background-color: #452cbf; color: #f8f9fa">Report</button>
                                     </div>
                                 </form>
                             </div>
@@ -640,14 +724,14 @@
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
             <script>
-                // Set the clicked image in the modal
-                const imageModal = document.getElementById('imageModal');
-                imageModal.addEventListener('show.bs.modal', event => {
-                    const button = event.relatedTarget; // Button that triggered the modal
-                    const imageUrl = button.getAttribute('data-bs-img'); // Extract info from data-* attributes
-                    const modalImage = document.getElementById('modal-image'); // Find the modal image element
-                    modalImage.src = imageUrl; // Update the modal's image source
-                });
+            // Set the clicked image in the modal
+            const imageModal = document.getElementById('imageModal');
+            imageModal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget; // Button that triggered the modal
+                const imageUrl = button.getAttribute('data-bs-img'); // Extract info from data-* attributes
+                const modalImage = document.getElementById('modal-image'); // Find the modal image element
+                modalImage.src = imageUrl; // Update the modal's image source
+            });
             </script>
 
             <!-- FOOTER -->

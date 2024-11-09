@@ -79,7 +79,7 @@ public class ListRequestForMentee extends HttpServlet {
             User user = daoU.getUserById(userId);
             List<Course> courses = daoC.getAll();
             List<Status> status = daoS.getAll();
-            List<Participate> participate = daoP.getAllByUsername(user.getUsername());
+            List<Participate> participate = daoP.getAllByUsernameOfMentee(user.getUsername());
             request.setAttribute("participates", participate);
             request.setAttribute("courses", courses);
             request.setAttribute("status", status);

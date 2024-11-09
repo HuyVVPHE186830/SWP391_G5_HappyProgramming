@@ -54,6 +54,11 @@ public class ReportComment extends HttpServlet {
         BlogComment blogComment = blogCommentDAO.getCommentById(commentId);
 
         ReportDAO reportDAO = new ReportDAO();
+        if (reportDAO.hasUserReportedComment(commentId, user.getUsername())) {
+            request.getSession().setAttribute("failedMsg", "You have reported this comment before.");
+            response.sendRedirect("viewBlogDetail?id=" + blogId);
+            return;
+        }
         ReportType reportType = reportDAO.getReportTypeById(reportTypeId);
 
         Report report = new Report();

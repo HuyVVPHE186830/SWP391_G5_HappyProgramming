@@ -63,6 +63,28 @@ public class ParticipateDAO extends DBContext {
         }
         return list;
     }
+    
+    public List<Participate> getAllByUsernameOfMentee(String username) {
+        List<Participate> list = new ArrayList<>();
+        String sql = "SELECT * FROM [Participate] where username = ? and participateRole = 3";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, username);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseId");
+                int participateRole = rs.getInt("participateRole");
+                int statusId = rs.getInt("statusId");
+                String mentorUsername = rs.getString("mentorUsername");
+                Participate p = new Participate(courseId, username, participateRole, statusId, mentorUsername);
+
+                list.add(p);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
 
     public void addParticipate(Participate participate) {
         String sql = "INSERT INTO [Participate] (courseId, username, ParticipateRole, statusId, mentorUsername) VALUES (?, ?, ?, ?, ?)";
@@ -135,7 +157,7 @@ public class ParticipateDAO extends DBContext {
     public static void main(String[] args) {
         ParticipateDAO dao = new ParticipateDAO();
         RequestDAO daoR = new RequestDAO();
-        List<Participate> list = dao.getAllParticipateOfMenteeByKeyword("", "chauntm");
+        List<Participate> list = dao.getAllParticipateOfMenteeByKeyword("", "anmentor");
         for (Participate l : list) {
             System.out.println(l);
         }
