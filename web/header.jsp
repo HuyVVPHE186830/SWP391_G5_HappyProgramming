@@ -28,14 +28,14 @@
                 justify-content: center;
                 padding: 5px;
                 z-index: 1000;
-                gap: 30%;
+                gap: 25%;
             }
 
             .content-header.scrolled {
                 background-color: white;
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             }
-
+            
             .menu {
                 text-align: center;
                 display: flex;
@@ -191,7 +191,7 @@
             <!-- LOGO -->
             <div class="logo">
                 <img src="img/logocolor.png" width="30px" alt="alt"/>
-                <a href="home" class="icon"><span>LEARNING</span></a>
+                <a href="home" class="icon"><span>LEARNING CONNECT SITE</span></a>
             </div>
 
             <!-- MIDDLE -->
