@@ -24,6 +24,7 @@ import model.Participate;
 import model.User;
 
 public class SendMessage extends HttpServlet {
+
     private MessageDAO messageDAO = new MessageDAO();
     private UserDAO uDAO = new UserDAO();
     private ConversationDAO conversationDAO = new ConversationDAO();
@@ -53,7 +54,7 @@ public class SendMessage extends HttpServlet {
         request.getSession().setAttribute("listCourse4", listCourse4);
 
         Conversation latestConversation = conversationDAO.getLatestConversationWithMessageForUser(currentUser.getUsername());
-        int lastConversationId = (latestConversation != null) ? latestConversation.getConversationId() : -1; // Sử dụng -1 nếu không có
+        int lastConversationId = (latestConversation != null) ? latestConversation.getConversationId() : -1;
 
         request.getSession().setAttribute("lastConversationId2", lastConversationId);
 
@@ -62,6 +63,10 @@ public class SendMessage extends HttpServlet {
         if (username != null) {
             recipient = uDAO.getUserByUsernameM(username);
             if (recipient == null) {
+                response.sendRedirect("homementor.jsp");
+                return;
+            }
+            if (recipient != null && recipient.getUsername().equals(currentUser.getUsername())) {
                 response.sendRedirect("homementor.jsp");
                 return;
             }
@@ -157,7 +162,10 @@ public class SendMessage extends HttpServlet {
             response.sendRedirect("homementor.jsp");
             return;
         }
-
+        if (messageContent == null || recipientUsername == null || recipientUsername.equals(currentUser.getUsername())) {
+            response.sendRedirect("homementor.jsp");
+            return;
+        }
         session.setAttribute("currentChatRecipient", recipient);
         List<Message> messages = messageDAO.getMessagesByConversationId(conversation.getConversationId());
         session.setAttribute("currentChatMessages", messages);

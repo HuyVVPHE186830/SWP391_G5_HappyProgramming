@@ -75,9 +75,9 @@ public class VerifyServlet extends HttpServlet {
             User foundUser = null;
             for (User u : users) {
                 if (passWord.equals(u.getPassword())) {
-                    userFound = true; // Đánh dấu rằng người dùng đã tìm thấy
+                    userFound = true; 
                     foundUser = u;
-                    break; // Ngừng lặp sau khi tìm thấy người dùng
+                    break; 
                 }
             }
             if (!userFound) {
