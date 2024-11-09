@@ -35,6 +35,7 @@ public class LoginFilter implements Filter {
             "/allCourse", // No-access page
             "/CSS/*", // No-access page
             "/img/*", // No-access page
+            "/blogimg/*", // No-access page
             "/footer.jsp", // No-access page
             "/header.jsp", // No-access page
             "/home" // Any public resources
