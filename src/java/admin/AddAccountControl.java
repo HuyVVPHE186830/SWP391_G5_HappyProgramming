@@ -25,10 +25,19 @@ public class AddAccountControl extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         // Retrieve form parameters from the request
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = request.getParameter("username").trim();
+        String password = request.getParameter("password").trim();
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
+
+        // Validation: Reject if username or password is empty or contains only spaces
+        String msg = null;
+        if (username.isEmpty() || password.isEmpty()) {
+            msg = "Username and password cannot be empty or contain only spaces!";
+            request.setAttribute("error", msg);
+            request.getRequestDispatcher("ManagerAccount").forward(request, response);
+            return;
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date dob = dateFormat.parse(request.getParameter("dob")); // Date of birth
@@ -46,7 +55,6 @@ public class AddAccountControl extends HttpServlet {
         // Role ID: Based on the selected role from the dropdown (1 for Admin, 2 for Mentor, 3 for Mentee)
         int roleId = Integer.parseInt(request.getParameter("roleId"));
 
-        String msg = null;
         UserDAO dao = new UserDAO();
 
         // Check if the username already exists
@@ -60,6 +68,7 @@ public class AddAccountControl extends HttpServlet {
             msg = "Username " + username + " added successfully!";
             request.setAttribute("mess", msg);
         }
+        
         HttpSession session = request.getSession();
         List<User> list = dao.getAll();
         session.setAttribute("listUsers", list);
