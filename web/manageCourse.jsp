@@ -138,9 +138,29 @@
             .btn-primary:focus {
                 box-shadow: none !important;
             }
-            
+
             .btn-primary:hover {
                 background-color: #3d249e !important;
+            }
+
+            .notification {
+                position: fixed;
+                top: 50px;
+                right: 20px;
+                background-color: #4caf50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 9999;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+            .hidden {
+                display: none;
             }
         </style>
     </head>
@@ -156,7 +176,53 @@
         <c:set var="activePostId" value="${param.postId}" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const successMessage = '<%= session.getAttribute("success") != null ? session.getAttribute("success") : "" %>';
+            const errorMessage = '<%= session.getAttribute("error") != null ? session.getAttribute("error") : "" %>';
+            if (successMessage) {
+                showSuccess(successMessage);
+            <% session.removeAttribute("success"); %>
+            }
+            if (errorMessage) {
+                showError(errorMessage);
+            <% session.removeAttribute("error"); %>
+            }
+            function showSuccess(message) {
+                const notification = document.getElementById('notification');
+                notification.innerHTML = message;
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                    notification.style.backgroundColor = '#4caf50';
+                }, 100);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            }
+            function showError(message) {
+                const notification = document.getElementById('notification');
+                notification.innerHTML = message;
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                    notification.style.backgroundColor = '#dc133b';
+                }, 100);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            }
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('addType').addEventListener('change', function () {
@@ -519,7 +585,7 @@
                                                 </div>
                                                 <div class="form-group" id="deadlineContainer_${post.postId}">
                                                     <label for="deadline">Deadline</label>
-                                                    <input type="datetime-local" class="form-control" id="editDeadline_${post.postId}" name="editDeadline" value="${post.deadline}">
+                                                    <input type="datetime-local" class="form-control" id="editDeadline_${post.postId}" name="editDeadline" value="${post.deadline}" min="<%= new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(new java.util.Date()) %>">
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
@@ -547,15 +613,24 @@
                     <div class="side-panel">
                         <div class="d-flex align-items-center mb-4">
                             <a href="#" data-bs-toggle="modal" data-bs-target="#memberListModal" class="text-decoration-none icon-link">
-                                <i class="fas fa-users icon"></i>&nbsp; 
-                                <strong style="color: #5d3fd3">${member}</strong>
+                                <i class="fas fa-users icon" style="font-size: 20px;"></i>&nbsp; 
+                                <strong style="color: #5d3fd3;font-size: 20px;">${member}</strong>
                             </a>
-                            <c:if test="${user.username == mentorName}">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
-                                    <i class="fas fa-bell icon"></i>
-                                    <strong style="color: #5d3fd3">${rmember}</strong>
-                                </a>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${user.username == mentorName}">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
+                                        <i class="fas fa-bell icon" style="font-size: 20px;"></i>
+                                        <strong style="color: #5d3fd3; font-size: 20px;">${rmember}</strong>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="chatvoimentor" class="text-decoration-none">
+                                        <button type="button" class="btn btn-primary" style="margin-left: 30px;">
+                                            <i class="fas fa-comments"></i> Chat with Mentor
+                                        </button>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
 
                         </div>
                         <c:if test="${user.username == mentorName}">
@@ -602,7 +677,7 @@
                                 </div>
                                 <div class="form-group" id="deadlineContainer" style="display: none;">
                                     <label for="deadline">Deadline</label>
-                                    <input type="datetime-local" class="form-control" id="deadline" name="deadline">
+                                    <input type="datetime-local" class="form-control" id="deadline" name="deadline" min="<%= new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(new java.util.Date()) %>">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">
@@ -631,6 +706,9 @@
                                         <th>Email</th>
                                             <c:if test="${user.username == mentorName}">
                                             <th>Date of Birth</th>
+                                            </c:if>
+                                        <th>Chat</th>
+                                            <c:if test="${user.username == mentorName}">
                                             <th>Ban</th>
                                             </c:if>
                                     </tr>
@@ -646,6 +724,15 @@
                                                 <td>${mentee.mail}</td>
                                                 <c:if test="${user.username == mentorName}">
                                                     <td><fmt:formatDate value="${mentee.dob}" pattern="MM/dd/yyyy"/></td>
+                                                </c:if>
+                                                <td>
+                                                    <a href="chatvoimentee">
+                                                        <button type="button" class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-comments"></i>
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                                <c:if test="${user.username == mentorName}">
                                                     <td>
                                                         <form action="manageMentee" method="post">
                                                             <input type="hidden" name="courseId" value="${course.courseId}">

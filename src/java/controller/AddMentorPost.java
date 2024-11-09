@@ -134,7 +134,7 @@ public class AddMentorPost extends HttpServlet {
         mentorPost.setCreatedBy(createdBy);
         mentorPost.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         mentorPostDAO.addMentorPost(mentorPost);
-
+        session.setAttribute("success", "Create post successful!");
         response.sendRedirect("manageCourse?courseId=" + courseId + "&mentorName=" + mentorName);
     }
 
