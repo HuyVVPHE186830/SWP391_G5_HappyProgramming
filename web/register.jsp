@@ -358,12 +358,12 @@
                 <div id="registrationForm" class="${showRoleSelection ? 'hidden' : ''}">
                     <form id="registerForm" action="register" method="post" enctype="multipart/form-data">
                         <div class="name-container">
-                            <input class="nameInput" type="text" placeholder="First Name" name="firstName" pattern="^(?!\s*$).+" title="First Name cannot be only spaces" value="${sessionScope.firstName}" required>
-                            <input class="nameInput" type="text" placeholder="Last Name" name="lastName" pattern="^(?!\s*$).+" title="Last Name cannot be only spaces" value="${sessionScope.lastName}" required>
+                            <input class="nameInput" type="text" placeholder="First Name" name="firstName" pattern="^[^\s][A-Za-z\s]*[^\s]$" title="First Name cannot have leading or trailing spaces and must contain at least one non-space character" value="${sessionScope.firstName}" required>
+                            <input class="nameInput" type="text" placeholder="Last Name" name="lastName" pattern="^[^\s][A-Za-z\s]*[^\s]$" title="Last Name cannot have leading or trailing spaces and must contain at least one non-space character" value="${sessionScope.lastName}" required>
                         </div>
-                        <input type="text" placeholder="Username" name="username" pattern="^(?!\s*$).+" title="Password cannot be only spaces" value="${sessionScope.username}" required>
-                        <input type="password" placeholder="Password" name="password" pattern="^(?!\s*$).+" title="Password cannot be only spaces" value="${sessionScope.password}"required>
-                        <input type="password" placeholder="Re-Enter Password" name="repassword" pattern="^(?!\s*$).+" title="Password cannot be only spaces" value="${sessionScope.repassword}" required>
+                        <input type="text" placeholder="Username" name="username" pattern="^[^\s]+$" title="Username cannot contain spaces" value="${sessionScope.username}" required>
+                        <input type="password" placeholder="Password" name="password" pattern="^[^\s]+$" title="Password cannot contain spaces" value="${sessionScope.password}"required>
+                        <input type="password" placeholder="Re-Enter Password" name="repassword" pattern="^[^\s]+$" title="Password cannot contain spaces" value="${sessionScope.repassword}" required>
                         <input type="text" name="dob" placeholder="Date Of Birth" required onfocus="(this.type = 'date')" value="${sessionScope.dob}" max="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>">
                         <input type="email" placeholder="Email" name="email" value="${sessionScope.email}" required>
                         <input type="hidden" name="role" id="selectedRole" value="${sessionScope.role}" required>

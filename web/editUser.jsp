@@ -453,9 +453,9 @@
                         <div class="input-container">
                             <label>First Name:</label>
                             <div class="name-input">
-                                <input type="text" name="firstName" value="<%= user.getFirstName() %>" pattern="^(?!\s*$).+" title="First Name cannot be only spaces">
+                                <input type="text" name="firstName" value="<%= user.getFirstName() %>" pattern="^[^\s][A-Za-z\s]*[^\s]$" title="First Name cannot have leading or trailing spaces and must contain at least one non-space character">
                                 <label>Last Name:</label>
-                                <input type="text" name="lastName" value="<%= user.getLastName() %>" pattern="^(?!\s*$).+" title="First Name cannot be only spaces">
+                                <input type="text" name="lastName" value="<%= user.getLastName() %>" pattern="^[^\s][A-Za-z\s]*[^\s]$" title="Last Name cannot have leading or trailing spaces and must contain at least one non-space character">
                             </div>
                         </div>
                         <div class="input-container">
