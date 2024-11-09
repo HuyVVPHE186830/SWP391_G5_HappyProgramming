@@ -183,10 +183,10 @@
             .hidden {
                 display: none;
             }
-            
+
             #dropdownMenuButton::after {
-    display: none !important;
-}
+                display: none !important;
+            }
         </style>
     </head>
     <body>
