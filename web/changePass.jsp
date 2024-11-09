@@ -100,6 +100,35 @@
                 text-align: center;
                 font-size: 14px;
             }
+            
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: red;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 1000;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+
+            .notification.success {
+                background-color: green;
+            }
+
+            .notification.error {
+                background-color: red;
+            }
+
+            .hidden {
+                display: none;
+            }
         </style>
         <script>
             function validateChangePassword() {
@@ -151,11 +180,42 @@
         </script>
     </head>
     <body>
-        <c:if test="${empty user}">
-            <c:redirect url="login.jsp"/>
-        </c:if>
         <!-- HEADER -->
         <jsp:include page="header.jsp"/>
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const successMessage = '<c:out value="${succMsg}" />';
+            const errorMessage = '<c:out value="${failedMsg}" />';
+
+            if (successMessage) {
+                showNotification(successMessage, 'success');
+            <% session.removeAttribute("succMsg"); %>
+            } else if (errorMessage) {
+                showNotification(errorMessage, 'error');
+            <% session.removeAttribute("failedMsg"); %>
+            }
+
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+                notification.classList.add(type === 'success' ? 'success' : 'error');
+
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                        notification.classList.remove(type); // Clean up class for next use
+                    }, 500);
+                }, 3000);
+            }
+        </script>
 
         <div class="middle">
             <div class="changepass-form">
@@ -167,21 +227,6 @@
                         <input type="password" placeholder="New password" id="newPass" name="newPass" style="margin-left: 70px;" required>
                         <input type="password" placeholder="Confirm new password" id="confirmPass" name="confirmPass" style="margin-left: 70px;" required>
                         <a href="forgetPass.jsp" class="forgot">Forgot Your Password?</a>
-
-                        <c:if test="${not empty succMsg}">
-                            <div class="success-message">
-                                ${succMsg}
-                            </div>
-                            <c:remove var="succMsg" scope="session"/>
-                        </c:if>
-
-                        <c:if test="${not empty failedMsg}">
-                            <div class="error-message">
-                                ${failedMsg}
-                            </div>
-                            <c:remove var="failedMsg" scope="session"/>
-                        </c:if>
-
                         <button type="submit" class="button-changepass">CHANGE PASSWORD</button>
                     </form>
                 </div>

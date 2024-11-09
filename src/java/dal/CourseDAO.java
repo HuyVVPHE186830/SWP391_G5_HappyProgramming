@@ -985,12 +985,12 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 AND c.courseName LIKE ? "
-                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
             ps.setString(2, "%" + keyword + "%");
-            ps.setInt(3, (page - 1) * 6);
+            ps.setInt(3, (page - 1) * 4);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));
@@ -1025,11 +1025,11 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 "
-                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
-            ps.setInt(2, (page - 1) * 6);
+            ps.setInt(2, (page - 1) * 4);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));
@@ -1063,12 +1063,12 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 AND c.courseName LIKE ? "
-                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
             ps.setString(2, "%" + keyword + "%");
-            ps.setInt(3, (page - 1) * 6);  // Pagination logic
+            ps.setInt(3, (page - 1) * 4);  // Pagination logic
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));
@@ -1103,11 +1103,11 @@ public class CourseDAO extends DBContext {
         String sql = "SELECT * FROM Course c "
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 "
-                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
-            ps.setInt(2, (page - 1) * 6);
+            ps.setInt(2, (page - 1) * 4);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));
@@ -1137,7 +1137,7 @@ public class CourseDAO extends DBContext {
     }
 
     private int calculateTotalPages(int totalCourses) {
-        int itemsPerPage = 5;
+        int itemsPerPage = 4;
         return (int) Math.ceil((double) totalCourses / itemsPerPage);
     }
 
@@ -1179,12 +1179,12 @@ public class CourseDAO extends DBContext {
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "INNER JOIN Course_Category cc ON c.courseId = cc.courseId "
                 + "WHERE p.userName = ? AND p.participateRole = 2 AND p.statusId = 1 AND cc.categoryId = ? "
-                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
             ps.setString(2, categoryId);
-            ps.setInt(3, (page - 1) * 6);
+            ps.setInt(3, (page - 1) * 4);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));
@@ -1221,12 +1221,12 @@ public class CourseDAO extends DBContext {
                 + "INNER JOIN Participate p ON c.courseId = p.courseId "
                 + "INNER JOIN Course_Category cc ON c.courseId = cc.courseId "
                 + "WHERE p.userName = ? AND p.participateRole = 3 AND p.statusId = 1 AND cc.categoryId = ? "
-                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 6 ROWS ONLY";
+                + "ORDER BY c.courseName OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
             ps.setString(2, categoryId);
-            ps.setInt(3, (page - 1) * 6);
+            ps.setInt(3, (page - 1) * 4);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));

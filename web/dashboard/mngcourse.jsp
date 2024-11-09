@@ -61,6 +61,35 @@
             .modal-content {
                 padding: 20px;
             }
+
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: red;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 1000;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+
+            .notification.success {
+                background-color: green;
+            }
+
+            .notification.error {
+                background-color: red;
+            }
+
+            .hidden {
+                display: none;
+            }
         </style>
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&amp;display=swap"><link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/css/mdb5/3.8.1/compiled.min.css"><link rel="stylesheet" type="text/css" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/css/mdb-plugins-gathered.min.css"><style>body {
                 background-color: #fbfbfb;
@@ -160,18 +189,40 @@
                                 </form>
                             </div>
                         </div>
-                        <c:if test="${not empty succMsg}">
-                            <div style="margin-top: 20px" class="alert alert-success" role="alert">
-                                ${succMsg}
-                            </div>
-                            <c:remove var="succMsg" scope="session"/>
-                        </c:if>
-                        <c:if test="${not empty failedMsg}">
-                            <div style="margin-top: 20px" class="alert alert-danger" role="alert">
-                                ${failedMsg}
-                            </div>
-                            <c:remove var="failedMsg" scope="session"/>
-                        </c:if>
+                        <div id="notification" class="notification hidden"></div>
+                        <script>
+                            const successMessage = '<c:out value="${succMsg}" />';
+                            const errorMessage = '<c:out value="${failedMsg}" />';
+
+                            if (successMessage) {
+                                showNotification(successMessage, 'success');
+                            <% session.removeAttribute("succMsg"); %>
+                            } else if (errorMessage) {
+                                showNotification(errorMessage, 'error');
+                            <% session.removeAttribute("failedMsg"); %>
+                            }
+
+                            function showNotification(message, type) {
+                                const notification = document.getElementById('notification');
+                                notification.textContent = message;
+                                notification.classList.remove('hidden');
+                                notification.classList.add(type === 'success' ? 'success' : 'error');
+
+                                setTimeout(() => {
+                                    notification.style.opacity = '1';
+                                    notification.style.transform = 'translateY(0)';
+                                }, 100);
+
+                                setTimeout(() => {
+                                    notification.style.opacity = '0';
+                                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                                    setTimeout(() => {
+                                        notification.classList.add('hidden');
+                                        notification.classList.remove(type); // Clean up class for next use
+                                    }, 500);
+                                }, 3000);
+                            }
+                        </script>
                         <div class="card-body" style="padding: 0">
                             <div class="table-responsive">
                                 <table class="table table-hover text-nowrap">
