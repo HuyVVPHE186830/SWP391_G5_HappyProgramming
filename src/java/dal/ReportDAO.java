@@ -101,7 +101,7 @@ public class ReportDAO extends DBContext {
             return false;
         }
     }
-    
+
     public boolean deleteReport(int commentId, String reportedBy) {
         String sql = "DELETE FROM Report WHERE commentId = ? AND reportedBy = ?";
         try {
@@ -143,5 +143,19 @@ public class ReportDAO extends DBContext {
             System.out.println(ex);
         }
         return list;
+    }
+
+    public boolean hasUserReportedComment(int commentId, String username) {
+        String sql = "SELECT 1 FROM Report WHERE commentId = ? AND reportedBy = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, commentId);
+            ps.setString(2, username);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); 
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            return false;
+        }
     }
 }
