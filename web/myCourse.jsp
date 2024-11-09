@@ -262,11 +262,11 @@
                 </div>
 
                 <!-- Pagination for Mentoring -->
-                <div class="pagination">
+                <div class="pagination" id="course-section">
                     <ul>
                         <c:forEach begin="1" end="${mentoringPageControl.totalPage}" var="pageNumber">
                             <li class="${pageNumber == mentoringPageControl.page ? 'active' : ''}">
-                                <a href="viewMyCourses?mentoringPage=${pageNumber}&search=${param.search}&keyword=${param.keyword}">${pageNumber}</a>
+                                <a href="viewMyCourses?mentoringPage=${pageNumber}&search=${param.search}&keyword=${param.keyword}#course-section">${pageNumber}</a>
                             </li>
                         </c:forEach>
                     </ul>
@@ -306,11 +306,11 @@
             </div>
 
             <!-- Pagination for Studying -->
-            <div class="pagination">
+            <div class="pagination" id="course-section">
                 <ul>
                     <c:forEach begin="1" end="${studyingPageControl.totalPage}" var="pageNumber">
                         <li class="${pageNumber == studyingPageControl.page ? 'active' : ''}">
-                            <a href="viewMyCourses?studyingPage=${pageNumber}&search=${param.search}&keyword=${param.keyword}">${pageNumber}</a>
+                            <a href="viewMyCourses?studyingPage=${pageNumber}&search=${param.search}&keyword=${param.keyword}#course-section">${pageNumber}</a>
                         </li>
                     </c:forEach>
                 </ul>

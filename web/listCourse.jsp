@@ -24,46 +24,49 @@
                 position: relative;
                 padding-left: 20px;
             }
-            .search-container {
-                width: 100%;
-                max-width: 600px;
-                background: rgba(255, 255, 255, 0.8);
-                border-radius: 5px;
-                padding: 10px;
-                margin-bottom: 15px;
-            }
-            #search-form {
+            .search-bar {
                 display: flex;
-                justify-content: flex-start;
-            }
-            input[type="text"] {
-                padding: 5px;
-                width: 500px;
-                border: none;
-                border-radius: 5px;
-            }
-            .content {
-                display: flex; /* Added */
-                flex-direction: column; /* Keep items stacked */
-                justify-content: space-between; /* Distribute space */
-                flex: 1; /* Allow content to grow */
-                min-height: 200px; /* Maintain uniform height */
+                align-items: start;
+                width: 400px;
+                max-width: 600px;
+                border-radius: 10px;
+                overflow: hidden;
             }
 
-            .button-container {
-                display: flex; /* Added */
-                justify-content: center; /* Center button */
-                margin-top: auto; /* Push to the bottom of the content */
+            .input-submit {
+                border: none;
+                padding: 10px;
+                flex: 1;
+                border-radius: 10px 0 0 10px;
+                font-size: 16px;
+                outline: none;
             }
-            button:hover {
-                background-color: plum;
+
+            .button-submit {
+                background-color: #5e3fd3;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 0 10px 10px 0;
+                font-size: 16px;
+                transition: all 1s ease;
+                font-weight: bold;
             }
+
+            .button-submit:hover {
+                background-color: #541371;
+            }
+
             .dropdown {
                 position: relative;
                 display: inline-block;
                 margin-left: 15px;
                 color: white;
                 cursor: pointer;
+                font-weight: bold;
+                font-size: 18px;
+                transition: 0.3s all ease;
                 z-index: 10;
             }
             .dropdown-content {
@@ -82,7 +85,7 @@
                 color: black;
                 padding: 10px;
                 display: block;
-                font-size: 12px;
+                font-size: 18px;
                 text-decoration: none; /* Remove underline for dropdown links */
             }
             .dropdown-content a:hover {
@@ -106,16 +109,16 @@
                 text-align: center;
                 color: black;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                background-color: rgba(255, 182, 193, 0.5);
+                background-color: #f9f9f9;
                 display: flex; /* Added */
                 flex-direction: column; /* Added */
                 justify-content: space-between; /* Added to distribute space */
+                transition: 0.3s all ease;
             }
 
             .content {
                 position: relative;
                 z-index: 1;
-                background: rgba(255, 255, 255, 0.8);
                 padding: 10px;
                 border-radius: 8px;
                 flex: 1; /* Allow content to grow and fill space */
@@ -123,6 +126,13 @@
             }
             .product-item:hover {
                 transform: translateY(-5px);
+            }
+
+            .mentor-course h3{
+                font-size: 22px;
+                margin-bottom: 20px;
+                height: 25%;
+                color: black;
             }
 
             .pagination {
@@ -142,19 +152,20 @@
             }
             .pagination a {
                 padding: 10px 15px;
-                background-color: #5e3fd3;
-                color: white;
+                background-color: white;
+                color: #5d3fd3;
                 border-radius: 5px;
-                text-decoration: none; /* Remove underline for pagination links */
+                text-decoration: none;
                 transition: background-color 0.3s;
             }
             .pagination a:hover {
-                background-color: #5a8dee;
+                background-color: #edf2fa;
+                text-decoration: none;
             }
             .pagination .active a {
-                background-color: #5a8dee;
+                background-color: #5d3fd3;
                 font-weight: bold;
-                cursor: default;
+                color: white;
             }
             .all-products {
                 padding: 20px;
@@ -181,7 +192,7 @@
             }
             .alo {
                 color: #5e3fd3;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                font-weight: bold;
             }
             .lv3Text {
                 color: grey;
@@ -189,6 +200,24 @@
             .view-all {
                 text-align: center;
                 margin-top: 20px;
+            }
+            .more-course-button {
+                padding: 12px 24px;
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                text-decoration: none;
+                color: white;
+                border-radius: 20px;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .more-course-button:hover {
+                background-color: #5d3fd3;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+                color: white;
+                text-decoration: none;
             }
         </style>
     </head>
@@ -198,11 +227,12 @@
 
         <header class="banner"> 
             <div class="search-container">
-                <form action="allCourse" method="get" id="search-form">
+                <form action="allCourse" class="search-bar">
                     <input type="hidden" name="search" value="searchByName"/>
-                    <input type="text" placeholder="Search course" name="keyword" id="search-input" required/>
-                    <button type="submit" title="Search">Search</button>
+                    <input type="text" class="input-submit" placeholder="Search a course" name="keyword" id="search-input" required>
+                    <input type="submit" title="Search" class="button-submit" id="submit-btn" value="Search">
                 </form>
+
             </div>
             <div class="dropdown">
                 Sort by ▼
@@ -229,26 +259,26 @@
             </div>
         </header>
 
-        <section class="featured-product2">
-            <h2 class="alo"style="color: whitesmoke; text-decoration: none;">LATEST COURSE</h2>
+        <section class="featured-product2" style="margin: 10px 40px; border-radius: 16px; background: white; padding: 20px 0; box-shadow: 0px 0px 10px #5d3fd3;">
+            <h2 class="alo"style="color: #5d3fd3; text-decoration: none;">LATEST COURSE</h2>
             <div class="product-list">
                 <c:forEach items="${listByDate}" var="cou" end="2">
                     <div class="product-item">
                         <div class="content">
-                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course"style="color: inherit; text-decoration: none;">
+                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course" style="color: inherit; text-decoration: none;">
                                 <h3>${cou.courseName}</h3>
                             </a>
                             <c:if test="${not empty cou.categories}">
-                                <h6>Category: 
+                                <h6 style="font-weight: 500">Category: 
                                     <c:forEach items="${cou.categories}" var="cat" varStatus="status">
-                                        ${cat.categoryName}<c:if test="${not status.last}">, </c:if>
+                                        <span style="font-style: italic; font-weight: 400">${cat.categoryName}<c:if test="${not status.last}">, </c:if></span>
                                     </c:forEach>
                                 </h6>
                             </c:if>  
                             <p class="short-description">${cou.courseDescription}</p>
                             <p>Created at: ${cou.createdAt}</p>
-                            <h6 class="lv3Text">Mentee in this course: ${cou.countMentee}</h6>
-                           
+                            <h6 class="lv3Text">Mentees in this course: ${cou.countMentee}</h6>
+
                         </div>
                     </div>
                 </c:forEach>
@@ -261,37 +291,38 @@
                 <c:forEach items="${listCourse}" var="cou">
                     <div class="product-item">
                         <div class="content">
-                            <h3>
-                                <a href="viewcourse?courseId=${cou.courseId}" class="course-title-link"style="color: inherit; text-decoration: none;">${cou.courseName}</a>
-                            </h3>
+                            <a href="viewcourse?courseId=${cou.courseId}" class="mentor-course" style="color: inherit; text-decoration: none;">
+                                <h3>${cou.courseName}</h3>
+                            </a>
                             <c:if test="${not empty cou.categories}">
-                                <h6>Category: 
+                                <h6 style="font-weight: 500">Category: 
                                     <c:forEach items="${cou.categories}" var="cat" varStatus="status">
-                                        ${cat.categoryName}<c:if test="${not status.last}">, </c:if>
+                                        <span style="font-style: italic; font-weight: 400">${cat.categoryName}<c:if test="${not status.last}">, </c:if></span>
                                     </c:forEach>
                                 </h6>
                             </c:if>
                             <p class="short-description">${cou.courseDescription}</p>
                             <h6>Created at: ${cou.createdAt}</h6>
-                            <h6 class="lv3Text">Mentee in this course: ${cou.countMentee}</h6>
-                            
+                            <h6 class="lv3Text">Mentees in this course: ${cou.countMentee}</h6>
+
                         </div>
                     </div>
                 </c:forEach>
             </div>
 
-            <div class="view-all">
-                <a href="allCourse" class="nav-button"style="color: white; text-decoration: none;">View All Courses</a>
-            </div>
 
-            <div class="pagination">
+
+            <div class="pagination" id="course-section">
                 <ul>
                     <c:forEach begin="1" end="${pageControl.totalPage}" var="pageNumber">
                         <li class="${pageNumber == pageControl.page ? 'active' : ''}">
-                            <a href="${pageControl.urlPattern}page=${pageNumber}">${pageNumber}</a>
+                            <a href="${pageControl.urlPattern}page=${pageNumber}#course-section">${pageNumber}</a>
                         </li>
                     </c:forEach>
                 </ul>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <a href="allCourse" class="more-course-button">View All Courses</a>
             </div>
         </section>
 
@@ -302,8 +333,8 @@
 
         <script>
             document.querySelectorAll('.short-description').forEach(function (desc) {
-                if (desc.innerText.length > 45) {
-                    desc.innerText = desc.innerText.substring(0, 45) + '...';
+                if (desc.innerText.length > 100) {
+                    desc.innerText = desc.innerText.substring(0, 100) + '...';
                 }
             });
         </script>
