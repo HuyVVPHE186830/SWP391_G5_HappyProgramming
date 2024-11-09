@@ -20,6 +20,7 @@ public class LoginFilter implements Filter {
     // Define a list of paths to exclude from filtering
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
             "/login.jsp", // Login page
+            "/googlelogin.jsp", // Login page
             "/register.jsp", // Registration page
             "/login", // No-access page
             "/register", // No-access page
@@ -42,7 +43,9 @@ public class LoginFilter implements Filter {
             "/home", // Any public resources
             "/forgetPass.jsp", // Any public resources
             "/verify.jsp", // Any public resources
-            "/verify" // Any public resources
+            "/verify", // Any public resources
+            "/home", // Any public resources
+            "/googlelogin"
     );
 
     public LoginFilter() {
