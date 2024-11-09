@@ -162,14 +162,6 @@
                                 <input type="text" name="tags" id="editTags" class="form-control" placeholder="Enter tags separated by commas">
                             </div>
 
-                            <!-- Current Images -->
-                            <div class="form-group">
-                                <label>Current Images</label>
-                                <div id="editImageList">
-                                    <!-- Existing images will be displayed here -->
-                                </div>
-                            </div>
-
                             <!-- New Image Uploads -->
                             <div class="form-group">
                                 <label>Upload New Images</label>
