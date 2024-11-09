@@ -155,17 +155,20 @@
                 <c:if test="${not empty sessionScope.listCourse}">
                     <div class="row course-cards" id="course-container">
                         <c:forEach items="${sessionScope.listCourse}" var="c" varStatus="status">
-                            <a href="viewcourse?courseId=${c.courseId}" class="col-md-5 course-card">
+                            <div class="col-md-5 course-card">
                                 <div class="course-body">
                                     <div class="course-text">
                                         <div class="course-name">${c.courseName}</div>
-                                        <div class="course-body-text">${fn:substring(c.courseDescription, 0, 140)}
-                                            <c:if test="${fn:length(c.courseDescription) > 140}">...
+                                        <div class="course-body-text">${fn:substring(c.courseDescription, 0, 200)}
+                                            <c:if test="${fn:length(c.courseDescription) > 200}">...
                                             </c:if>
+                                            <div class="viewmore">
+                                                <a href="viewcourse?courseId=${c.courseId}">View more</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </c:forEach>
                     </div>
                 </c:if>

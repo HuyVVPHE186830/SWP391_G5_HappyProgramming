@@ -26,7 +26,7 @@
                 max-width: 95%;
             }
             .course-banner {
-                background: linear-gradient(90deg, #7b4397, #dc2430);
+                background:  linear-gradient(90deg, #6a11cb, #5d3fd3);
                 color: white;
                 padding: 20px;
                 border-radius: 10px;
@@ -274,7 +274,7 @@
                                             <strong><h3 class="modal-title">${post.postTitle}</h3></strong>
                                                 <c:if test="${user.username == mentorName}">
                                                 <div class="dropdown">
-                                                    <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <button class="btn btn-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" style="color: #5d3fd3" aria-expanded="false">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -548,12 +548,12 @@
                         <div class="d-flex align-items-center mb-4">
                             <a href="#" data-bs-toggle="modal" data-bs-target="#memberListModal" class="text-decoration-none icon-link">
                                 <i class="fas fa-users icon"></i>&nbsp; 
-                                <strong>${member}</strong>
+                                <strong style="color: #5d3fd3">${member}</strong>
                             </a>
                             <c:if test="${user.username == mentorName}">
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#requestListModal" class="text-decoration-none icon-link ms-3">
                                     <i class="fas fa-bell icon"></i>
-                                    <strong>${rmember}</strong>
+                                    <strong style="color: #5d3fd3">${rmember}</strong>
                                 </a>
                             </c:if>
 

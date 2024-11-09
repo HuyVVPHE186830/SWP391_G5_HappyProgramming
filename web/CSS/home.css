@@ -8,6 +8,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 */
 
 /* MIDDLE */
+body {
+    font-family: Inter;
+}
+
 .header-content-middle {
     position: relative;
     text-align: center
@@ -385,7 +389,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .course-body-text {
     align-self: stretch;
-    position: relative;
     font-size: 18px;
     line-height: 140%;
     color: #757575;
@@ -419,6 +422,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     flex-grow: 1;
     color: black;
     font-weight: 500;
+    position: relative;
+
 }
 
 .course-card:hover {
@@ -435,6 +440,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     gap: 30px;
 }
 
+.viewmore {
+    position: absolute;
+    font-weight: bold;
+    bottom: 10px;
+    right: 15px;
+}
+
+.viewmore a {
+    color: #5d3fd3;
+    font-family: Inter;
+    font-size: 20px;
+}
+
+.viewmore a:hover{
+    text-decoration: none;
+}
 .more-course-button {
     display: inline-block;
     padding: 12px 24px;

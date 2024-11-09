@@ -289,12 +289,11 @@
                             <a href="manageCourse?courseId=${cou.courseId}&mentorName=${cou.mentorName}" class="mentor-course">
                                 <h3>${cou.courseName}</h3>
                             </a>
-                            <p>Mentor: ${cou.mentorName}</p>
-                            <p>Categories: 
+                            <p style="font-weight: 500">Mentor: <span style="font-style: italic; font-weight: 400">${cou.mentorName}</span></p>
+                            <p style="font-weight: 500">Categories: 
                                 <c:forEach items="${cou.categories}" var="cat" varStatus="status">
-                                    ${cat.categoryName}<c:if test="${not status.last}">, </c:if>
+                                    <span style="font-style: italic; font-weight: 400">${cat.categoryName}<c:if test="${not status.last}">, </c:if></span>
                                 </c:forEach>
-
                             </p>
                             <p class="short-description">${cou.courseDescription}</p>
                         </div>
