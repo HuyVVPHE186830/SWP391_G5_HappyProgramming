@@ -43,7 +43,7 @@
             gap: 15px;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             padding: 10px;
             font-size: 0.8rem;
             border: none;
@@ -51,22 +51,6 @@
             background-color: #eeeded;
             width: 70%;
             margin: 0 auto;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        input[type="password"] {
-            padding: 10px;
-            font-size: 0.8rem;
-            border: none;
-            border-radius: 5px;
-            background-color: #eeeded;
-            width: 48%;
         }
 
         .button-changepass {
@@ -86,51 +70,47 @@
             background-color: #452cbf;
         }
 
-        .forgot {
+        .input-group {
+            display: flex;
+            justify-content: center; /* Căn giữa nút */
+            width: 100%; /* Chiếm toàn bộ chiều rộng */
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50; /* Màu xanh lá cây cho thông báo thành công */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            z-index: 9999;
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            transition: opacity 0.3s ease, transform 0.5s ease;
+        }
+
+        .notification.hidden {
+            display: none; /* Ẩn thông báo khi không cần thiết */
+        }
+
+        .message {
+            color: #4CAF50; /* Màu xanh lục cho thông báo */
             font-size: 0.9rem;
-            font-weight: 500;
-            color: #888;
-            text-align: center;
-            text-decoration: none;
-            width: 150px;
-            margin: 0 auto;
+            text-align: center; /* Căn giữa chữ */
+            margin: 10px 0; /* Khoảng cách trên và dưới */
         }
 
-        .success-message {
-            color: green;
-            font-weight: bold;
-            text-align: center;
-            font-size: 14px;
+        .error {
+            color: red; /* Màu cho lỗi */
+            font-size: 0.9rem;
+            text-align: center; /* Căn giữa chữ */
+            margin: 10px 0; /* Khoảng cách trên và dưới */
         }
-
-        .error-message {
-            color: red;
-            font-weight: bold;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .countdown {
-            color: blue; /* Màu xanh cho dòng chữ đếm ngược */
-            font-size: 0.8rem;
-            text-align: center;
-        }
-        
-    .message {
-        color: #4CAF50; /* Màu xanh lục cho thông báo */
-        font-size: 0.9rem;
-        text-align: center; /* Căn giữa chữ */
-        margin: 10px 0; /* Khoảng cách trên và dưới */
-    }
-
-    .error {
-        color: red; /* Màu cho lỗi */
-        font-size: 0.9rem;
-        text-align: center; /* Căn giữa chữ */
-        margin: 10px 0; /* Khoảng cách trên và dưới */
-    }
     </style>
-  
 </head>
 <body>
     <div class="changepass-form">
@@ -140,20 +120,44 @@
                 <input type="text" placeholder="Your Username" id="username" name="username" required>
                 <input type="text" placeholder="Your Email" id="email" name="email" required>
                 <div class="input-group">
-                    <!--<input type="password" placeholder="Your verification code" id="verificationCode" name="verificationCode" required>-->
                     <button type="submit" class="button-changepass">SEND</button>
                 </div>
             </form>
-            </br>
-            <!--<div id="countdown" class="countdown">Wait few second ...</div>-->
-            <c:if test="${not empty message}">
-                <div class="message">${message}</div>
-            </c:if>
-            
-            <!-- Hiển thị lỗi nếu có -->
-            <c:if test="${not empty error}">
-                <div class="error">${error}</div>
-            </c:if>
+            <br>
+            <!-- Notification Container -->
+            <div id="notification" class="notification hidden"></div>
+            <script>
+                const sessionMessage = '<%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>';
+                const sessionError = '<%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>';
+                
+                if (sessionMessage) {
+                    showNotification(sessionMessage, "success");
+                } else if (sessionError) {
+                    showNotification(sessionError, "error");
+                }
+
+                function showNotification(message, type) {
+                    const notification = document.getElementById('notification');
+                    notification.textContent = message;
+                    notification.classList.remove('hidden');
+                    notification.style.backgroundColor = type === "error" ? "#f44336" : "#4caf50";
+
+                    // Hiển thị thông báo
+                    setTimeout(() => {
+                        notification.style.opacity = '1';
+                        notification.style.transform = 'translateY(0)';
+                    }, 100);
+
+                    // Tự động ẩn thông báo sau 3 giây
+                    setTimeout(() => {
+                        notification.style.opacity = '0';
+                        notification.style.transform = 'scale(0.8) translateY(20px)';
+                        setTimeout(() => {
+                            notification.classList.add('hidden');
+                        }, 500);
+                    }, 3000);
+                }
+            </script>
         </div>
     </div>
 </body>

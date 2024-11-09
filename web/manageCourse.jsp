@@ -624,7 +624,7 @@
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="chatvoimentor" class="text-decoration-none">
+                                    <a href="sendMessage?username=${mentorName}" class="text-decoration-none">
                                         <button type="button" class="btn btn-primary" style="margin-left: 30px;">
                                             <i class="fas fa-comments"></i> Chat with Mentor
                                         </button>
@@ -726,7 +726,7 @@
                                                     <td><fmt:formatDate value="${mentee.dob}" pattern="MM/dd/yyyy"/></td>
                                                 </c:if>
                                                 <td>
-                                                    <a href="chatvoimentee">
+                                                    <a href="sendMessage?username=${mentee.username}">
                                                         <button type="button" class="btn btn-primary btn-sm">
                                                             <i class="fas fa-comments"></i>
                                                         </button>

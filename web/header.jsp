@@ -1,9 +1,3 @@
-<%-- 
-    Document   : header
-    Created on : Sep 18, 2024, 11:32:17 PM
-    Author     : ThuanNV
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
@@ -14,7 +8,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
         <style>
-
             /* HEADER */
             .content-header {
                 background-color: white;
@@ -35,7 +28,7 @@
                 background-color: white;
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             }
-            
+
             .menu {
                 text-align: center;
                 display: flex;
@@ -45,7 +38,6 @@
                 padding-left: 0;
                 margin: auto 0;
                 gap: 20px;
-
             }
 
             .icon {
@@ -72,7 +64,8 @@
                 color: #6a1b9a;
             }
 
-            .button-signup {
+            .button-signup,
+            .button-signin {
                 background-color: transparent;
                 border: 2px solid black;
                 border-radius: 8px;
@@ -87,17 +80,6 @@
                 background-color: #6a1b9a;
                 color: white;
                 border: 2px solid white;
-            }
-
-            .button-signin {
-                background-color: transparent;
-                border: 2px solid black;
-                border-radius: 8px;
-                color: black;
-                font-size: 14px;
-                font-weight: bold;
-                transition: all 0.3s ease;
-                width: 70px;
             }
 
             .button-signin:hover {
@@ -182,12 +164,32 @@
             .show {
                 display: block;
             }
+
+            /* Thông báo */
+            .notification {
+                position: fixed;
+                top: 60px; /* Dưới header */
+                right: 20px;
+                background-color: #4caf50; /* Màu xanh lá cho thông báo thành công */
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+                z-index: 9999;
+            }
+
+            .notification.hidden {
+                display: none; /* Ẩn thông báo khi không cần thiết */
+            }
         </style>
     </head>
     <body>
         <!-- HEADER -->
         <div class="content-header">
-
             <!-- LOGO -->
             <div class="logo">
                 <img src="img/logocolor.png" width="30px" alt="alt"/>
@@ -205,7 +207,7 @@
                                 <a href="sendMessage?conversationId=${sessionScope.lastConversationId}">Chat</a>
                             </c:when>
                             <c:otherwise>
-                                <a href="javascript:void(0);" onclick="alert('No conversations found, join a course to start a conversation with a mentor.');">Chat</a>
+                                <a href="javascript:void(0);" onclick="showNotification('No conversations found, join a course to start a conversation with a mentor.', 'info');">Chat</a>
                             </c:otherwise>
                         </c:choose>
                     </li>
@@ -217,7 +219,6 @@
             <div>
                 <c:if test="${sessionScope.user != null}">
                     <c:set var="u" value="${sessionScope.user}"/>
-
                     <div class="user-dropdown">
                         <c:if test="${u.avatarPath != null}">
                             <a href="javascript:void(0);" class="user-logo" onclick="toggleDropdown()">
@@ -245,14 +246,52 @@
                     <a href="login.jsp"><input type="submit" value="Sign In" class="button-signin"></a>
                     </c:if>  
             </div>
-
-            <!-- SCOLL BAR FUNCTION -->    
-            <script>
-                window.addEventListener("scroll", function () {
-                    var header = document.querySelector(".content-header");
-                    header.classList.toggle("scrolled", window.scrollY > 0);
-                });
-            </script>
         </div>
+
+        <!-- Notification Container -->
+        <div id="notification" class="notification hidden"></div>
+
+        <script>
+            // Hàm hiển thị thông báo
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+                notification.style.backgroundColor = type === "error" ? "#f44336" : "#f44336"; // Đổi màu thông báo theo loại
+
+                // Hiển thị thông báo
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100);
+
+                // Tự động ẩn thông báo sau 3 giây
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            }
+
+            // Kiểm tra và hiển thị thông báo từ session
+            document.addEventListener("DOMContentLoaded", function () {
+                const sessionMessage = '<%= request.getAttribute("success") != null ? request.getAttribute("success") : "" %>';
+                const sessionError = '<%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>';
+
+                if (sessionMessage) {
+                    showNotification(sessionMessage, "success");
+                } else if (sessionError) {
+                    showNotification(sessionError, "error");
+                }
+            });
+
+            // SCROLL BAR FUNCTION   
+            window.addEventListener("scroll", function () {
+                var header = document.querySelector(".content-header");
+                header.classList.toggle("scrolled", window.scrollY > 0);
+            });
+        </script>
     </body>
 </html>
