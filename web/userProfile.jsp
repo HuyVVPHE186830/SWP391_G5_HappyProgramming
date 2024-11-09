@@ -185,6 +185,25 @@
                 text-align: center;
                 font-size: 12px;
             }
+            .notification {
+                position: fixed;
+                top: 50px;
+                right: 20px;
+                background-color: #4caf50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 9999;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+            .hidden {
+                display: none;
+            }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
@@ -202,6 +221,53 @@
             String dobFormatted = user.getDob() != null ? sdf.format(user.getDob()) : "";
             String base64Cv = user.getCvPath();
         %>
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const successMessage = '<%= session.getAttribute("success") != null ? session.getAttribute("success") : "" %>';
+            const errorMessage = '<%= session.getAttribute("error") != null ? session.getAttribute("error") : "" %>';
+            if (successMessage) {
+                showSuccess(successMessage);
+            <% session.removeAttribute("success"); %>
+            }
+            if (errorMessage) {
+                showError(errorMessage);
+            <% session.removeAttribute("error"); %>
+            }
+            function showSuccess(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                    notification.style.backgroundColor = '#4caf50';
+                }, 100);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            }
+            function showError(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                    notification.style.backgroundColor = '#dc133b';
+                }, 100);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            }
+        </script>
         <script>
             let originalValues = {};
             let mimeType, fileName;
@@ -362,18 +428,6 @@
                                 <input type="hidden" name="cvFile" id="cvFile" style="display: none;" accept="*" value="<%= user.getCvPath() %>">
                             </div>
                         </c:if>
-                        <c:if test="${not empty sessionScope.error}">
-                            <div class="error-message">
-                                ${sessionScope.error}
-                            </div>
-                        </c:if>
-                        <% session.removeAttribute("error"); %>
-                        <c:if test="${not empty sessionScope.note}">
-                            <div class="success-message">
-                                ${sessionScope.note}
-                            </div>
-                        </c:if>
-                        <% session.removeAttribute("note"); %>
                         <div class="button-container">
                             <button type="button" class="button-save" id="editButton" onclick="window.location.href = 'editUser.jsp'">Edit Profile</button>
                         </div>

@@ -190,7 +190,8 @@
 
             <!-- LOGO -->
             <div class="logo">
-                <a href="home" class="icon"><span>WALAH</span></a>
+                <img src="img/logocolor.png" width="30px" alt="alt"/>
+                <a href="home" class="icon"><span>LEARNING</span></a>
             </div>
 
             <!-- MIDDLE -->

@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import dal.UserDAO;
@@ -97,10 +96,13 @@ public class Register extends HttpServlet {
         String repassword = request.getParameter("repassword");
         String dobString = request.getParameter("dob");
         Date dob = null;
+        String formattedDob = "";
         if (dobString != null && !dobString.isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
             try {
                 dob = sdf.parse(dobString);
+                formattedDob = outputFormat.format(dob);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -113,6 +115,7 @@ public class Register extends HttpServlet {
         String avatar = ImageConverter.gI().encode(avatarBytes);
 
         String cvBase64 = null;
+        Part cv = null;
 
         if ("mentor".equals(request.getParameter("role"))) {
             Part cvPart = request.getPart("cv");
@@ -132,22 +135,46 @@ public class Register extends HttpServlet {
         String greenString = "";
 
         if (!password.equals(repassword)) {
-            session.setAttribute("error", "Passwords do not match");
+            session.setAttribute("error", "Passwords do not match<br>");
+            session.setAttribute("firstName", firstName);
+            session.setAttribute("lastName", lastName);
+            session.setAttribute("username", username);
+            session.setAttribute("email", email);
+            session.setAttribute("dob", formattedDob);
+            session.setAttribute("role", role);
             response.sendRedirect("register.jsp");
             return;
         }
 
         for (User u : users) {
             if (username.equals(u.getUsername())) {
-                redString += "Username has been used";
+                redString += "Username has been used<br>";
             }
             if (email.equals(u.getMail())) {
-                redString += "Email has been used";
+                redString += "Email has been used<br>";
             }
         }
         if (!redString.isEmpty()) {
             session.setAttribute("error", redString);
+            session.setAttribute("firstName", firstName);
+            session.setAttribute("lastName", lastName);
+            session.setAttribute("password", password);
+            session.setAttribute("username", username);
+            session.setAttribute("repassword", repassword);
+            session.setAttribute("email", email);
+            session.setAttribute("dob", formattedDob);
+            session.setAttribute("role", role);
+            response.sendRedirect("register.jsp");
+            return;
         } else {
+            session.removeAttribute("firstName");
+            session.removeAttribute("lastName");
+            session.removeAttribute("username");
+            session.removeAttribute("password");
+            session.removeAttribute("repassword");
+            session.removeAttribute("email");
+            session.removeAttribute("dob");
+            session.removeAttribute("role");
             Date doc = new Date();
             int roleId = role.equals("mentor") ? 2 : 3;
             User user = new User(username, password, firstName, lastName, dob, email, doc, avatar, cvBase64, true, false, roleId);

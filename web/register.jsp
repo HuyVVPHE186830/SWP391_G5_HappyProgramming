@@ -196,6 +196,7 @@
                 font-weight: bold;
                 text-decoration: none;
             }
+           
             .button-signin:hover {
                 background-color: #5d3fd3;
                 color: #fff;
@@ -238,7 +239,7 @@
             }
             function showSuccess(message) {
                 const notification = document.getElementById('notification');
-                notification.textContent = message;
+                notification.innerHTML = message;
                 notification.classList.remove('hidden');
                 setTimeout(() => {
                     notification.style.opacity = '1';
@@ -255,7 +256,7 @@
             }
             function showError(message) {
                 const notification = document.getElementById('notification');
-                notification.textContent = message;
+                notification.innerHTML = message;
                 notification.classList.remove('hidden');
                 setTimeout(() => {
                     notification.style.opacity = '1';
@@ -318,27 +319,6 @@
                     });
                 }
             });
-//
-//            function validateNoSpacesOnly() {
-//                const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
-//                let valid = true;
-//
-//                inputs.forEach(input => {
-//                    const trimmedValue = input.value.trim();
-//                    if (trimmedValue === "") {
-//                        valid = false;
-//                        input.value = "";
-//                    } else {
-//                        input.value = trimmedValue;
-//                    }
-//                });
-//
-//                if (!valid) {
-//                    alert("Fields cannot be empty or contain only spaces.");
-//                }
-//
-//                return valid;
-//            }
 
             function validateFileSize() {
                 const fileInput = document.getElementById("cvContainer");
@@ -356,50 +336,66 @@
             }
         </script>
 
-        <c:set var="showRegistrationForm" value="${empty sessionScope.error and empty sessionScope.note}" />
+
+        <c:set var="showRegistrationForm" value="${empty sessionScope.error and empty sessionScope.success}" />
+        <c:set var="showRoleSelection" value="${empty sessionScope.role}" />
 
         <div class="signup-form">
             <div class="signup-form-left">
                 <h2>Sign Up</h2>
-                <div class="role-container <c:if test="${!showRegistrationForm}">hidden</c:if>">
-                        <div class="role-box" id="menteeBox" onclick="selectRole('mentee')">
-                            <div class="icon icon-mentee"></div>
-                            <p>Mentee</p>
-                        </div>
-                        <div class="role-box" id="mentorBox" onclick="selectRole('mentor')">
-                            <div class="icon icon-mentor"></div>
-                            <p>Mentor</p>
-                        </div>
+
+                <div class="role-container ${showRoleSelection ? '' : 'hidden'}">
+                    <div class="role-box" id="menteeBox" onclick="selectRole('mentee')">
+                        <div class="icon icon-mentee"></div>
+                        <p>Mentee</p>
                     </div>
-                    <div id="registrationForm" class="<c:if test="${showRegistrationForm}">hidden</c:if>">
-                        <form id="registerForm" action="register" method="post">
-                            <div class="name-container">
-                                <input class="nameInput" type="text" placeholder="First Name" name="firstName" required>
-                                <input class="nameInput" type="text" placeholder="Last Name" name="lastName" required>
-                            </div>
-                            <input type="text" placeholder="Username" name="username" required>
-                            <input type="password" placeholder="Password" name="password" required>
-                            <input type="password" placeholder="Re-Enter Password" name="repassword" required>
-                            <input type="text" name="dob" placeholder="Date Of Birth" required onfocus="(this.type = 'date')" max="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>">
-                        <input type="email" placeholder="Email" name="email" required>
-                        <input type="hidden" name="role" id="selectedRole" value="" required>
+                    <div class="role-box" id="mentorBox" onclick="selectRole('mentor')">
+                        <div class="icon icon-mentor"></div>
+                        <p>Mentor</p>
+                    </div>
+                </div>
+
+                <div id="registrationForm" class="${showRoleSelection ? 'hidden' : ''}">
+                    <form id="registerForm" action="register" method="post" enctype="multipart/form-data">
+                        <div class="name-container">
+                            <input class="nameInput" type="text" placeholder="First Name" name="firstName" pattern="^(?!\s*$).+" title="First Name cannot be only spaces" value="${sessionScope.firstName}" required>
+                            <input class="nameInput" type="text" placeholder="Last Name" name="lastName" pattern="^(?!\s*$).+" title="Last Name cannot be only spaces" value="${sessionScope.lastName}" required>
+                        </div>
+                        <input type="text" placeholder="Username" name="username" pattern="^(?!\s*$).+" title="Password cannot be only spaces" value="${sessionScope.username}" required>
+                        <input type="password" placeholder="Password" name="password" pattern="^(?!\s*$).+" title="Password cannot be only spaces" value="${sessionScope.password}"required>
+                        <input type="password" placeholder="Re-Enter Password" name="repassword" pattern="^(?!\s*$).+" title="Password cannot be only spaces" value="${sessionScope.repassword}" required>
+                        <input type="text" name="dob" placeholder="Date Of Birth" required onfocus="(this.type = 'date')" value="${sessionScope.dob}" max="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>">
+                        <input type="email" placeholder="Email" name="email" value="${sessionScope.email}" required>
+                        <input type="hidden" name="role" id="selectedRole" value="${sessionScope.role}" required>
                         <input type="text" id="cvContainer" class="hidden" name="cv" accept=".pdf, image/*" onfocus="(this.type = 'file')" placeholder="Your CV (<5MB)" onchange="validateFileSize()">
 
-                        <div class="button-container">
-                            <button id="backButton" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button type="submit" class="button-signup" id="signUpButton">SIGN UP</button>
-                        </div>
-                    </form>
+                            <div class="button-container">
+                                <button type="button" id="backButton" onclick="goBack()">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <button type="submit" class="button-signup" id="signUpButton">SIGN UP</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-
+            <% 
+            session.removeAttribute("firstName");
+            session.removeAttribute("lastName");
+            session.removeAttribute("username");
+            session.removeAttribute("password");
+            session.removeAttribute("repassword");
+            session.removeAttribute("email");
+            session.removeAttribute("dob");
+            session.removeAttribute("role");
+            %>
             <div class="signup-form-right">
-                <h2>Walah!</h2>
-                <p>Already have an account</p>
+                <a href="homeguest.jsp">
+                    <img src="img/logowhite.png" style="margin-left:10px;" width="120px" alt="Back to Home"/>
+                </a>
+                <p style="font-size: 20px; font-weight: bolder;">Already have an account</p>
                 <a href="login.jsp" class="button-signin">SIGN IN</a>
             </div>
         </div>
+
     </body>
 </html>

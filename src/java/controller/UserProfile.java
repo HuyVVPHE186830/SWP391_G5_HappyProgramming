@@ -142,13 +142,14 @@ public class UserProfile extends HttpServlet {
         if (!newEmail.equals(oldEmail)) {
             for (User u : users) {
                 if (newEmail.equals(u.getMail())) {
-                    redString += "*Email has been used<br>";
+                    redString += "Email has been used";
                 }
             }
 
         }
         if (!redString.isEmpty()) {
             session.setAttribute("error", redString);
+            response.sendRedirect("editUser.jsp");
         } else {
             user.setFirstName(firstName);
             user.setLastName(lastName);
@@ -157,9 +158,9 @@ public class UserProfile extends HttpServlet {
             user.setCvPath(cvBase64);
             dao.updateProfile(username, user);
             greenString = "Update Successfully!";
-            session.setAttribute("note", greenString);
+            session.setAttribute("success", greenString);
+            response.sendRedirect("userProfile.jsp");
         }
-        response.sendRedirect("userProfile.jsp");
     }
 
     /**

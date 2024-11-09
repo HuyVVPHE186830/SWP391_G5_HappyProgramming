@@ -228,8 +228,10 @@
             </div>
 
             <div class="signin-form-right">
-                <h2>Hello, New Member!</h2>
-                <p>Want to join us to use all of site features</p>
+                <a href="homeguest.jsp">
+                    <img src="img/logowhite.png" style="margin-left:10px;" width="120px" alt="Back to Home"/>
+                </a>
+                <p style="font-weight: bolder; width: 700px;">Want to use all of features?</p>
                 <a href="register.jsp" class="button-signup">SIGN UP</a>
             </div>
         </div>
