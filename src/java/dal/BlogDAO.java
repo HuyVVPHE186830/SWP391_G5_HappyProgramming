@@ -55,9 +55,9 @@ public class BlogDAO extends DBContext {
                 // Add the current row's tag if available and unique
                 int tagId = rs.getInt("tag_id");
                 String tagName = rs.getString("tag_name");
-                if (tagName != null && !tagName.isEmpty()) {
+                if (tagId != 0 && tagName != null && !tagName.isEmpty()) {
                     Tag tag = new Tag(tagId, tagName);
-                    if (!blog.getTags().contains(tag)) {
+                    if (!blog.getTags().stream().anyMatch(existingTag -> existingTag.getTagId() == tagId)) {
                         blog.getTags().add(tag); // Add unique Tag to blog
                     }
                 }
