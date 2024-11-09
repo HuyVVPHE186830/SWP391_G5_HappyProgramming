@@ -103,8 +103,8 @@ public class MangeRequest extends HttpServlet {
                 response.sendRedirect("MangeRequest");
                 break;
             case "Reject":
-                daoP.changeParticipate(menId, couId, 0);
                 daoR.changeRequest(menId, couId, 0);
+                daoP.changeParticipate(menId, couId, 0);
                 response.sendRedirect("MangeRequest");
                 break;
             default:
