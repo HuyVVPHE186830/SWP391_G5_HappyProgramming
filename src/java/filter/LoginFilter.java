@@ -39,7 +39,8 @@ public class LoginFilter implements Filter {
             "/blogimg/*", // No-access page
             "/footer.jsp", // No-access page
             "/header.jsp", // No-access page
-            "/home" // Any public resources
+            "/home", // Any public resources
+            "/googlelogin"
     );
 
     public LoginFilter() {
