@@ -27,12 +27,11 @@ public class ResetPass extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username"); // Không kiểm tra null
-        String email = request.getParameter("email"); // Không kiểm tra null
-
+        String username = request.getParameter("username"); 
+        String email = request.getParameter("email"); 
         Email em = new Email();
         UserDAO dao = new UserDAO();
-        List<User> users = dao.getAll(); // Không kiểm tra null
+        List<User> users = dao.getAll(); 
         boolean userFound = false;
 
         for (User u : users) {
@@ -53,7 +52,7 @@ public class ResetPass extends HttpServlet {
                 } else {
                     request.setAttribute("error", "Error updating password, please try again.");
                 }
-                break; // Không cần thiết
+                break; 
             }
         }
 
