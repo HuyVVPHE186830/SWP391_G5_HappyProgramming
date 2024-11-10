@@ -74,20 +74,12 @@ public class UserProfile extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
-        // Giả sử user được lấy từ session (hoặc bạn có thể lấy từ cơ sở dữ liệu)
         User user = (User) session.getAttribute("user");
-
         if (user == null) {
-            // Nếu user không tồn tại, chuyển hướng về trang đăng nhập
             response.sendRedirect("login.jsp");
             return;
         }
-
-        // Đặt đối tượng user vào request để sử dụng trong JSP
         request.setAttribute("user", user);
-
-        // Chuyển tiếp đến UserProfile.jsp
         request.getRequestDispatcher("userProfile.jsp").forward(request, response);
     }
 

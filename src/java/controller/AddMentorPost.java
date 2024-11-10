@@ -92,8 +92,8 @@ public class AddMentorPost extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         MentorPostDAO mentorPostDAO = new MentorPostDAO();
-        String postTitle = request.getParameter("addTitle");
-        String postContent = request.getParameter("addContent");
+        String postTitle = request.getParameter("addTitle").trim();
+        String postContent = request.getParameter("addContent").trim();
         String postType = request.getParameter("addType");
         int postTypeId = mentorPostDAO.getPostTypeId(postType);
 
@@ -109,19 +109,16 @@ public class AddMentorPost extends HttpServlet {
             Date date = dateFormat.parse(deadlineStr);
             deadline = new Timestamp(date.getTime());
         } catch (ParseException e) {
-            System.out.println("Lỗi khi phân tích chuỗi ngày giờ: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
         Part filePart = request.getPart("addFile");
         MentorPost mentorPost = new MentorPost();
         byte[] fileContent = null;
         if (filePart != null && filePart.getSize() > 0) {
-            // Có file được tải lên
             String fileName = filePart.getSubmittedFileName();
             String fileType = filePart.getContentType();
             InputStream inputStream = filePart.getInputStream();
             fileContent = inputStream.readAllBytes();
-
-            // Đặt thông tin file cho đối tượng mentorPost
             mentorPost.setFileName(fileName);
             mentorPost.setFileType(fileType);
         }

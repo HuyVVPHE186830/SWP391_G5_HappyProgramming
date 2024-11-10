@@ -87,8 +87,8 @@ public class EditMentorPost extends HttpServlet {
         String mentorName = request.getParameter("mentorName");
         String postIdStr = request.getParameter("postId");
         int postId = Integer.parseInt(postIdStr);
-        String title = request.getParameter("editTitle");
-        String content = request.getParameter("editContent");
+        String title = request.getParameter("editTitle").trim();
+        String content = request.getParameter("editContent").trim();
         String type = request.getParameter("editType");
         int postTypeId = mentorPostDAO.getPostTypeId(type);
         String deadlineStr = request.getParameter("editDeadline");

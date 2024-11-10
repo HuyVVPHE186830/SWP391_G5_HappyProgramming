@@ -140,7 +140,7 @@ public class Register extends HttpServlet {
             session.setAttribute("lastName", lastName);
             session.setAttribute("username", username);
             session.setAttribute("email", email);
-            session.setAttribute("dob", formattedDob);
+            session.setAttribute("dob", dobString);
             session.setAttribute("role", role);
             response.sendRedirect("register.jsp");
             return;
@@ -162,7 +162,7 @@ public class Register extends HttpServlet {
             session.setAttribute("username", username);
             session.setAttribute("repassword", repassword);
             session.setAttribute("email", email);
-            session.setAttribute("dob", formattedDob);
+            session.setAttribute("dob", dobString);
             session.setAttribute("role", role);
             response.sendRedirect("register.jsp");
             return;
