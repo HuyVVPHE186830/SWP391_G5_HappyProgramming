@@ -194,7 +194,6 @@
                                                     <span id="cvFile_${t.username}" style="display:none;">${t.cvPath}</span>
                                                     <button id="download_${t.username}" class="btn btn-primary" title="Download CV"><i class="fa-solid fa-download"></i> </button>
                                                 </td>
-                                                <td class="text_page" style="font-weight: 500; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${tCVPath}</td>
                                                 <td>
                                                     <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;"> <i class="fa-solid fa-eye"></i></a>
                                                 </td>
@@ -283,14 +282,10 @@
                                                     <td class="text_page" style="font-weight: 500">${mentor.lastName} ${mentor.firstName}</td>
                                                     <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
                                                     <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
-<<<<<<< HEAD
                                                     <td class="text_page" style="font-weight: 500">
                                                         <span id="cvFile_${mentor.username}" style="display:none;">${mentor.cvPath}</span>
                                                         <button id="download_${mentor.username}" class="btn btn-primary" title="Download CV"><i class="fa-solid fa-download"></i> </button>
                                                     </td>
-=======
-                                                    <td class="text_page" style="font-weight: 500; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${mentor.cvPath}</td>
->>>>>>> 80b96388d806e463d4dbf6fd20d49ba7f47fe654
                                                     <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
                                                     <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
                                                     <td class="text_page" style="font-weight: 500">
