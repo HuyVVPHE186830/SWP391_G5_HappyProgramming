@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -125,20 +126,28 @@
                                 <div class="mentor-body">
                                     <div class="mentor-text">
                                         <div style="color: black">${m.lastName} ${m.firstName}</div>
-                                        <c:set var="count" value="${0}"/>
+                                        <c:set var="total" value="0" scope="page"/>
+                                        <c:set var="count" value="0" scope="page"/>
+
                                         <c:forEach items="${sessionScope.ratings}" var="r">
                                             <c:if test="${r.ratedToUser == m.username}">
-                                                <c:set var="total" value="${total + r.noStar}"/>
-                                                <c:set var="count" value="${count + 1}"/>
+                                                <c:set var="total" value="${total + r.noStar}" scope="page"/>
+                                                <c:set var="count" value="${count + 1}" scope="page"/>
                                             </c:if>
                                         </c:forEach>
-                                        <c:if test="${count == 0}">
-                                            <p class="rating-text">No Ratings Yet</p>                                      
-                                        </c:if>
-                                        <c:if test="${count != 0}">
-                                            <c:set var="total" value="${total/count}"/> 
-                                            <p class="rating-text">Average Rating ${total}<span class="star" style="color: gold">★</span></p>
-                                        </c:if>
+
+                                        <c:choose>
+                                            <c:when test="${count == 0}">
+                                                <p class="rating-text">No Ratings Yet</p>                                      
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="average" value="${total / count}" scope="page"/>
+                                                <p class="rating-text">
+                                                    Average Rating: <fmt:formatNumber value="${average}" pattern="#0.00"/>
+                                                <span class="star" style="color: gold">★</span>
+                                                </p>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </div>
