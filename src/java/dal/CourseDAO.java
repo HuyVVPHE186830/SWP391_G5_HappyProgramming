@@ -18,6 +18,11 @@ public class CourseDAO extends DBContext {
     public static void main(String[] args) {
         CourseDAO dao = new CourseDAO();
         CourseCategoryDAO daoCC = new CourseCategoryDAO();
+           List<Course> list = dao.findCourseOrderByNumberOfMentee3(1);
+           for (Course course : list) {
+               System.out.println(course);
+        }
+
 //        int count = dao.findTotalRecordOrderByNumberOfMentee();
 ////        List<Integer> in = new ArrayList<>();
 ////        in.add(1);
@@ -719,14 +724,8 @@ public class CourseDAO extends DBContext {
 
     public int getNumOfMentee(int id) {
 
-        String sql = "SELECT COUNT(*)\n"
-                + "			FROM Course c\n"
-                + "			JOIN Participate p ON c.courseId = p.courseId\n"
-                + "			JOIN [User] u ON p.username = u.username\n"
-                + "			JOIN Status s ON p.statusId = s.statusId\n"
-                + "			WHERE p.participateRole = 3 AND p.statusId = 1 AND c.courseId = ?\n"
-                + "			GROUP BY c.courseId, c.courseName, \n"
-                + "			CAST(c.courseDescription AS NVARCHAR(MAX)), c.createdAt";
+        String sql = " SELECT COUNT(p.username) FROM Participate p\n"
+                + "  WHERE courseId = ? and statusId = 1 and participateRole = 3";
         int totalMentee = 0;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -871,21 +870,12 @@ public class CourseDAO extends DBContext {
     }
 
     public int findTotalRecordOrderByNumberOfMentee() {
-        String sql = "SELECT COUNT(*) AS total_records\n"
-                + "FROM (\n"
-                + "    SELECT c.courseId, c.courseName, \n"
-                + "           CAST(c.courseDescription AS NVARCHAR(MAX)) AS courseDescription, \n"
-                + "           c.createdAt, \n"
-                + "           COUNT(p.username) AS user_count\n"
-                + "    FROM Course c\n"
-                + "    JOIN Participate p ON c.courseId = p.courseId\n"
-                + "    JOIN [User] u ON p.username = u.username\n"
-                + "    JOIN Status s ON p.statusId = s.statusId\n"
-                + "    WHERE p.participateRole = 3 AND p.statusId = 1\n"
-                + "    GROUP BY c.courseId, c.courseName, \n"
-                + "             CAST(c.courseDescription AS NVARCHAR(MAX)), \n"
-                + "             c.createdAt\n"
-                + ") AS subquery";
+        String sql = "SELECT COUNT(DISTINCT c.courseId) AS totalCourses\n"
+                + "FROM \n"
+                + "    Course c\n"
+                + "LEFT JOIN \n"
+                + "    Participate p ON c.courseId = p.courseId AND p.statusId = 1"
+                + "AND p.participateRole = 3;";
         int totalRecord = 0;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -903,19 +893,20 @@ public class CourseDAO extends DBContext {
 
     public List<Course> findCourseOrderByNumberOfMentee(int page) {
         List<Course> courses = new ArrayList<>();
-        String sql = "SELECT c.courseId, c.courseName, \n"
-                + "       CAST(c.courseDescription AS NVARCHAR(MAX)) AS courseDescription, \n"
-                + "       c.createdAt, \n"
-                + "       COUNT(p.username) AS user_count\n"
-                + "FROM Course c\n"
-                + "JOIN Participate p ON c.courseId = p.courseId\n"
-                + "JOIN [User] u ON p.username = u.username\n"
-                + "JOIN Status s ON p.statusId = s.statusId\n"
-                + "WHERE p.participateRole = 3 AND p.statusId = 1\n"
-                + "GROUP BY c.courseId, c.courseName, \n"
-                + "         CAST(c.courseDescription AS NVARCHAR(MAX)), \n"
-                + "         c.createdAt\n"
-                + "ORDER BY user_count DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ;";
+        String sql = "SELECT \n"
+                + "    c.courseId,\n"
+                + "    c.courseName,\n"
+                + "    CAST(c.courseDescription AS NVARCHAR(MAX)) AS courseDescription, \n"
+                + "    c.createdAt\n"
+                + "\n"
+                + "FROM \n"
+                + "    Course c\n"
+                + "LEFT JOIN \n"
+                + "    Participate p ON c.courseId = p.courseId AND p.statusId = 1 AND p.participateRole = 3\n"
+                + "GROUP BY \n"
+                + "    c.courseId, c.courseName, CAST(c.courseDescription AS NVARCHAR(MAX)), c.createdAt\n"
+                + "ORDER BY \n"
+                + "    COUNT(p.username) ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Tính toán offset và số lượng bản ghi trên một trang (giả sử mỗi trang có 10 khóa học)
             int recordsPerPage = 6;
@@ -942,19 +933,20 @@ public class CourseDAO extends DBContext {
 
     public List<Course> findCourseOrderByNumberOfMentee3(int page) {
         List<Course> courses = new ArrayList<>();
-        String sql = "SELECT c.courseId, c.courseName, \n"
-                + "       CAST(c.courseDescription AS NVARCHAR(MAX)) AS courseDescription, \n"
-                + "       c.createdAt, \n"
-                + "       COUNT(p.username) AS user_count\n"
-                + "FROM Course c\n"
-                + "JOIN Participate p ON c.courseId = p.courseId\n"
-                + "JOIN [User] u ON p.username = u.username\n"
-                + "JOIN Status s ON p.statusId = s.statusId\n"
-                + "WHERE p.participateRole = 3 AND p.statusId = 1\n"
-                + "GROUP BY c.courseId, c.courseName, \n"
-                + "         CAST(c.courseDescription AS NVARCHAR(MAX)), \n"
-                + "         c.createdAt\n"
-                + "ORDER BY user_count ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ;";
+        String sql = "SELECT \n"
+                + "    c.courseId,\n"
+                + "    c.courseName,\n"
+                + "    CAST(c.courseDescription AS NVARCHAR(MAX)) AS courseDescription, \n"
+                + "    c.createdAt\n"
+                + "\n"
+                + "FROM \n"
+                + "    Course c\n"
+                + "LEFT JOIN \n"
+                + "    Participate p ON c.courseId = p.courseId AND p.statusId = 1 AND p.participateRole = 3\n"
+                + "GROUP BY \n"
+                + "    c.courseId, c.courseName, CAST(c.courseDescription AS NVARCHAR(MAX)), c.createdAt\n"
+                + "ORDER BY \n"
+                + "    COUNT(p.username) DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Tính toán offset và số lượng bản ghi trên một trang (giả sử mỗi trang có 10 khóa học)
             int recordsPerPage = 6;
@@ -1281,14 +1273,8 @@ public class CourseDAO extends DBContext {
     }
 
     public int getNumOfMentor(int id) {
-        String sql = "SELECT COUNT(*) "
-                + "FROM Course c "
-                + "JOIN Participate p ON c.courseId = p.courseId "
-                + "JOIN [User] u ON p.username = u.username "
-                + "JOIN Status s ON p.statusId = s.statusId "
-                + "WHERE p.participateRole = 2 AND p.statusId = 1 AND c.courseId = ? "
-                + "GROUP BY c.courseId, c.courseName, "
-                + "CAST(c.courseDescription AS NVARCHAR(MAX)), c.createdAt";
+        String sql = " SELECT COUNT(p.username) FROM Participate p\n"
+                + "  WHERE courseId = ? and statusId = 1 and participateRole = 2";
         int totalMentor = 0;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

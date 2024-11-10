@@ -229,6 +229,7 @@
                             <h3>${u.lastName} ${u.firstName}</h3>
                             <a href="userProfile"><i class="fas fa-user"></i> User Profile</a>
                             <a href="changePass.jsp"><i class="fas fa-lock"></i> Change Password</a>
+                            <a href="rating?ratedId=${u.id}"><i class="fas fa-comments"></i> My Feedback</a>
                             <a href="logout.jsp"><i class="fas fa-sign-out-alt"></i> Log Out</a>
                         </div>
                     </div>

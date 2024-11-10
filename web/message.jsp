@@ -16,11 +16,11 @@
             }
             .header {
                 position: fixed; /* Giữ header ở vị trí cố định */
-                top: 0; /* Đặt header ở đầu trang */
+                top: 0;
                 left: 0;
                 right: 0;
                 background: white;
-                z-index: 1000; /* Đảm bảo header ở trên cùng */
+                z-index: 1000;
                 padding: 10px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             }
@@ -31,7 +31,7 @@
                 border-right: 1px solid #ccc;
                 overflow-y: auto;
                 box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-                margin-top: 60px; /* Đẩy xuống dưới header */
+                margin-top: 60px;
             }
             .sidebar h3 {
                 text-align: center;
@@ -87,7 +87,7 @@
             }
             .recipient-header {
                 padding: 10px;
-                background-color: #e9ecef;
+                background-color: #5e3fd3;
                 border-radius: 5px;
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                 margin-bottom: 10px;
@@ -99,7 +99,7 @@
                 padding: 10px;
                 border-left: 1px solid #ccc;
                 box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-                margin-top: 60px; /* Đẩy xuống dưới header */
+                margin-top: 60px;
             }
             .message {
                 margin: 5px 0;
@@ -108,12 +108,15 @@
                 border-radius: 5px;
             }
             .message.sent {
-                background-color: #d1e7dd;
+                background-color: whitesmoke;
                 align-self: flex-end;
+                border-radius: 5px;
+
             }
             .message.received {
-                background-color: #f8d7da;
+                background-color: whitesmoke;
                 align-self: flex-start;
+                border-radius: 5px;
             }
             .send-message {
                 display: flex;
@@ -212,23 +215,23 @@
                 cursor: pointer;
                 font-size: 20px;
             }
-           
+
             .styled-input {
                 padding: 8px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 width: calc(100% - 22px);
-                margin-right: 5px; 
+                margin-right: 5px;
             }
-           
+
             .styled-button {
-                background-color: #5e3fd3; 
-                color: white; 
-                border: none; 
-                border-radius: 5px; 
+                background-color: #5e3fd3;
+                color: white;
+                border: none;
+                border-radius: 5px;
                 padding: 8px 12px;
                 cursor: pointer;
-                font-size: 14px; 
+                font-size: 14px;
             }
             .input-group {
                 display: flex;
@@ -277,19 +280,14 @@
         </div>
         <div class="chat-area">
             <div class="recipient-header">
-                <h3>${sessionScope.currentChatRecipient.lastName} ${currentChatRecipient.firstName} </h3>
+                <h3 style="color: white">${sessionScope.currentChatRecipient.lastName} ${currentChatRecipient.firstName} </h3>
             </div>
             <div class="messages">
                 <c:forEach items="${currentChatMessages}" var="message">
                     <div class="message ${message.sentBy == sessionScope.currentUser.username ? 'sent' : 'received'}">
                         <strong>${message.sentBy}:</strong> ${message.msgContent} <em>(${message.sentAt})</em>
                         <div class="ms-options-icon" tabindex="0">&#x22EE;</div>
-                        <div class="ms-options-menu">
-                            <form action="manageConversation?action=edit-message" method="post" style="display: inline;" id="editForm-${message.messageId}">
-                                <input type="hidden" name="conversationId" value="${currentConversationId}">
-                                <input type="hidden" name="messageId" value="${message.messageId}"> 
-                            </form>
-                        </div>
+                        
                     </div>
                 </c:forEach>
             </div>

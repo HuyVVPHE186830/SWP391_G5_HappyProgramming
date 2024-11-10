@@ -167,7 +167,14 @@
                     <h3>${ratedUser.username}
                     </h3>
                     <p>RATING OVERALL: ${userRatedStar}★</p>
-                    <p>TOP: ${rankStar}</p>
+                    <c:choose>
+                        <c:when test="${userRatedStar == 0}">
+                            Non ranking.
+                        </c:when>
+                        <c:otherwise>
+                            <p>TOP: ${rankStar}</p>
+                        </c:otherwise>
+                    </c:choose>
                     <button type="button" class="btn btn-transparent" data-toggle="modal" data-target="#feedbackModal">
                         Leave Feedback 
                     </button>
@@ -276,7 +283,7 @@
                         <span>1 Star (${turnStar1})</span>
                     </a>
                     <a href="rating?search=search-by-noStar&noStar=2&ratedId=${ratedUser.id}" class="review-summary-item">
-                        <i class="fas fa-sta    r"></i>
+                        <i class="fas fa-star"></i>
                         <span>2 Star (${turnStar2})</span>
                     </a>
                     <a href="rating?search=search-by-noStar&noStar=3&ratedId=${ratedUser.id}" class="review-summary-item">
@@ -297,7 +304,6 @@
                         <div class="user-info">
                             <img src="data:image/jpeg;base64,${f.avatarPath}" alt="User Avatar">
                             <span class="username">${f.ratedFromUser} To ${f.courseName}</span>
-                            <i class="fas fa-ellipsis-v" data-toggle="modal" data-target="#exampleModal" style="cursor: pointer; margin-left: 10px;" aria-hidden="true"></i>
                         </div>
                         (${f.noStar}/5.0★)
                         <br/>

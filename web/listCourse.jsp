@@ -234,13 +234,7 @@
                 </form>
 
             </div>
-            <div class="dropdown">
-                Sort by ▼
-                <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/allCourse?search=price-dces">Decrease Sort</a>
-                    <a href="${pageContext.request.contextPath}/allCourse?search=price-asc">Increase Sort</a>
-                </div>
-            </div>
+        
             <div class="dropdown">
                 Category ▼
                 <div class="dropdown-content">
