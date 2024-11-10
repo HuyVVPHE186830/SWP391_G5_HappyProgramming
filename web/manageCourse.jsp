@@ -459,7 +459,8 @@
                                         <div class="modal-header">
                                             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
                                                 <i class="fas fa-arrow-left"></i>
-                                            </button>                                       </div>
+                                            </button>                                       
+                                        </div>
                                         <div class="modal-body">
                                             <table class="table table-bordered">
                                                 <thead>
@@ -753,7 +754,7 @@
                                                     <td><fmt:formatDate value="${mentee.dob}" pattern="MM/dd/yyyy"/></td>
                                                 </c:if>
                                                 <td>
-                                                    <c:if test="${mentorName.username != sessionScope.user.username}">
+                                                    <c:if test="${mentorName != sessionScope.user.username}">
                                                         <a href="sendMessage?username=${m.username}" class="chat-button" style="background: #5e3fd3">Chat</a>
                                                     </c:if>
                                                     <a href="sendMessage?username=${mentee.username}">
