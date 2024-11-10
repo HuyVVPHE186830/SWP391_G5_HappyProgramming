@@ -187,10 +187,13 @@
                                                 <td>
                                                     <img src="data:image/jpeg;base64,${t.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                 </td>
-                                                <td class="text_page" style="font-weight: 500">${t.lastName}</td>
+                                                <td class="text_page" style="font-weight: 500">${t.lastName} ${t.firstName}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.mail}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.dob}</td>
-                                                <td class="text_page" style="font-weight: 500">${tCVPath}</td>
+                                                <td class="text_page" style="font-weight: 500">
+                                                    <span id="cvFile_${t.username}" style="display:none;">${t.cvPath}</span>
+                                                    <button id="download_${t.username}" class="btn btn-primary" title="Download CV"><i class="fa-solid fa-download"></i> </button>
+                                                </td>
                                                 <td>
                                                     <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;"> <i class="fa-solid fa-eye"></i></a>
                                                 </td>
@@ -201,14 +204,15 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Courses for Mentor: ${t.lastName}</h4>
+                                                        <h4 class="modal-title">Courses for Mentor: ${t.lastName} ${t.firstName}</h4>
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <c:set var="displayedCourses" value="" />
                                                         <c:forEach items="${sessionScope.participateListByStatus}" var="p">
-                                                            <c:if test="${p.username == username}">
+                                                            <c:if test="${p.mentorUsername == username}">
                                                                 <c:forEach items="${sessionScope.courseList}" var="c">
-                                                                    <c:if test="${c.courseId == p.courseId}">
+                                                                    <c:if test="${c.courseId == p.courseId && !fn:contains(displayedCourses, p.courseId)}">
                                                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                                                             <div>
                                                                                 Course ID: ${p.courseId} - ${c.courseName}
@@ -217,6 +221,7 @@
                                                                                 <i class="fas fa-trash"></i>
                                                                             </a>
                                                                         </div>
+                                                                        <c:set var="displayedCourses" value="${displayedCourses},${p.courseId}" />
                                                                     </c:if>
                                                                 </c:forEach>
                                                             </c:if>
@@ -274,10 +279,13 @@
                                                     <td>
                                                         <img src="data:image/jpeg;base64,${mentor.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                     </td>
-                                                    <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
+                                                    <td class="text_page" style="font-weight: 500">${mentor.lastName} ${mentor.firstName}</td>
                                                     <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
                                                     <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
-                                                    <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
+                                                    <td class="text_page" style="font-weight: 500">
+                                                        <span id="cvFile_${mentor.username}" style="display:none;">${mentor.cvPath}</span>
+                                                        <button id="download_${mentor.username}" class="btn btn-primary" title="Download CV"><i class="fa-solid fa-download"></i> </button>
+                                                    </td>
                                                     <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
                                                     <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
                                                     <td class="text_page" style="font-weight: 500">
@@ -343,6 +351,49 @@
                 document.getElementById('updateCourseName').value = courseName;
                 document.getElementById('updateDescription').value = courseDescription;
             }
+            document.addEventListener('DOMContentLoaded', function () {
+                function base64ToFile(base64String, fileName) {
+                    let mimeType;
+                    if (base64String.startsWith('JVBERi0') || base64String.startsWith('0M8R4KGx')) {
+                        mimeType = 'application/pdf';
+                        fileName += '.pdf';
+                    } else if (base64String.startsWith('/9j/') || base64String.startsWith('iVBORw0KGgo') || base64String.startsWith('R0lGODdh') || base64String.startsWith('Qk') || base64String.startsWith('II') || base64String.startsWith('MM') || base64String.startsWith('UklGR')) {
+                        mimeType = 'image/jpeg';
+                        fileName += '.jpg';
+                    } else {
+                        alert('Invalid file type. Only PDF and image files are allowed.');
+                        return;
+                    }
+
+                    const base64Data = base64String.replace(/^data:.+;base64,/, '');
+                    const byteCharacters = atob(base64Data);
+                    const byteNumbers = new Array(byteCharacters.length);
+
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], {type: mimeType});
+                    const url = URL.createObjectURL(blob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                }
+
+                // Lặp qua tất cả các nút tải xuống
+                document.querySelectorAll('[id^="download_"]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const username = button.id.split('_')[1]; // Lấy username từ ID
+                        const base64String = document.getElementById(`cvFile_${username}`).innerText; // Lấy chuỗi base64
+                        const fileName = `CV_${username}`;
+                        base64ToFile(base64String, fileName);
+                    });
+                });
+            });
         </script>
     </body>
 </html>
