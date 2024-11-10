@@ -94,7 +94,7 @@ public class DeleteRequestForMentee extends HttpServlet {
         try {
             User user = daoU.getUserByUsernameM(mentorUsername);
             int courseId = Integer.parseInt(courseId_str);
-            daoP.deleteParticipate(courseId, username);
+            daoP.deleteParticipateForMentee(courseId, username, mentorUsername  );
             session.setAttribute("message", "Delete Successfully");
             response.sendRedirect("viewMentor?userId=" + user.getId() + "&courseId=" + courseId);
         } catch (Exception e) {

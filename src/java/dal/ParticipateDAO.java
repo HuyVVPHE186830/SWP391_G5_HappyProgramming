@@ -173,6 +173,24 @@ public class ParticipateDAO extends DBContext {
         }
         return f;
     }
+    
+    public boolean deleteParticipateForMentee(int courseId, String username, String mentorUsername) {
+        boolean f = false;
+        String sql = "DELETE FROM Participate WHERE courseId = ? and username = ? and mentorUsername = ? and statusId != 1";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, courseId);
+            ps.setString(2, username);
+            ps.setString(3, mentorUsername);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                f = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
 
     public static void main(String[] args) {
         ParticipateDAO dao = new ParticipateDAO();
