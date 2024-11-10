@@ -753,6 +753,9 @@
                                                     <td><fmt:formatDate value="${mentee.dob}" pattern="MM/dd/yyyy"/></td>
                                                 </c:if>
                                                 <td>
+                                                    <c:if test="${mentorName.username != sessionScope.user.username}">
+                                                        <a href="sendMessage?username=${m.username}" class="chat-button" style="background: #5e3fd3">Chat</a>
+                                                    </c:if>
                                                     <a href="sendMessage?username=${mentee.username}">
                                                         <button type="button" class="btn btn-primary btn-sm">
                                                             <i class="fas fa-comments"></i>

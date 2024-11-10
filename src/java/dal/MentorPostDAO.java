@@ -34,7 +34,6 @@ public class MentorPostDAO extends DBContext {
             st.setString(2, createdBy); // Gán giá trị createdBy vào tham số 2
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                // Lấy các trường bạn cần từ kết quả truy vấn
                 int id = rs.getInt("postId");
                 String postTitle = rs.getString("postTitle");
                 String postContent = rs.getString("postContent");
@@ -46,14 +45,13 @@ public class MentorPostDAO extends DBContext {
                 String fileType = rs.getString("fileType");
                 
 
-                // Tạo đối tượng MentorPost từ dữ liệu trong cơ sở dữ liệu
                 MentorPost mentorPost = new MentorPost(id, postTitle, postContent, postType, deadline, courseId, createdBy, createdAt, fileContent, fileName, fileType); // Điều chỉnh constructor nếu cần
-                list.add(mentorPost); // Thêm bài viết vào danh sách
+                list.add(mentorPost); 
             }
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        return list; // Trả về danh sách các bài viết
+        return list; 
     }
     
     public MentorPost getPostById(int postId) {
@@ -87,8 +85,8 @@ public class MentorPostDAO extends DBContext {
             st.setString(1, mentorPost.getPostTitle());
             st.setString(2, mentorPost.getPostContent());
             st.setInt(3, mentorPost.getPostTypeId());
-            st.setTimestamp(4, mentorPost.getDeadline()); // Lưu deadline với thông tin giờ
-            st.setTimestamp(5, new Timestamp(System.currentTimeMillis())); // Lưu createdAt với thời gian hiện tại
+            st.setTimestamp(4, mentorPost.getDeadline());
+            st.setTimestamp(5, new Timestamp(System.currentTimeMillis())); 
             st.setInt(6, mentorPost.getCourseId());
             st.setString(7, mentorPost.getCreatedBy());
             st.setBytes(8, mentorPost.getFileContent());
@@ -104,15 +102,15 @@ public class MentorPostDAO extends DBContext {
         String sql = "DELETE FROM MentorPosts WHERE postId = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, postId); // Đặt ID của bài viết vào câu lệnh SQL
+            st.setInt(1, postId); 
             st.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex); // In ra lỗi nếu có
+            System.out.println(ex); 
         }
     }
 
     public String getPostType(int postTypeId) {
-        String postType = null; // Biến để lưu trữ postType
+        String postType = null; 
         String sql = "SELECT postType FROM MentorPostTypes WHERE postTypeId = ?";
 
         try {
@@ -252,7 +250,6 @@ public class MentorPostDAO extends DBContext {
                 + "    VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
-            // Set parameters for the source and target
             st.setInt(1, submission.getPostId());
             st.setString(2, submission.getSubmittedBy());
             st.setTimestamp(3, submission.getSubmittedAt());
@@ -308,16 +305,16 @@ public class MentorPostDAO extends DBContext {
     }
 
     public Submission getSubmissionBySubmissionId(int submissionId) {
-        Submission submission = null; // Khởi tạo là null để kiểm tra sau này
+        Submission submission = null; 
         String sql = "SELECT s.submissionId, s.postId, s.submittedBy, s.submittedAt, "
                 + "s.submissionContent, s.isLate, s.fileName, s.fileType, u.avatarPath, u.firstName, u.lastName "
                 + "FROM Submissions s "
                 + "JOIN [dbo].[User] u ON s.submittedBy = u.username "
-                + "WHERE s.submissionId = ?"; // Sửa từ postId sang submissionId
+                + "WHERE s.submissionId = ?"; 
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, submissionId); // Sử dụng submissionId để truy vấn
+            st.setInt(1, submissionId); 
             ResultSet rs = st.executeQuery();
 
             if (rs.next()) {
@@ -326,7 +323,7 @@ public class MentorPostDAO extends DBContext {
                         rs.getInt("postId"),
                         rs.getString("submittedBy"),
                         rs.getTimestamp("submittedAt"),
-                        rs.getBytes("submissionContent"), // Giả định submissionContent là String
+                        rs.getBytes("submissionContent"), 
                         rs.getBoolean("isLate"),
                         rs.getString("fileName"),
                         rs.getString("fileType")

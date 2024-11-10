@@ -1,8 +1,4 @@
 
-/*
-                                 * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-                                 * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import dal.CourseDAO;
@@ -137,7 +133,7 @@ public class ViewAllCourse extends HttpServlet {
             case "price-asc":
                 totalRecord = courseDAO.findTotalRecordOrderByNumberOfMentee();
                 listCourse = courseDAO.findCourseOrderByNumberOfMentee3(page);
-                pagecontrol.setUrlPattern(requestURL + "?search=price-dces?");
+                pagecontrol.setUrlPattern(requestURL + "?search=price-asc?");
                 break;
             case "username":
                 String username = request.getParameter("username");

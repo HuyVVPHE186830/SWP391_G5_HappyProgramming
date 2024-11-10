@@ -6,7 +6,7 @@ public class IConstant {
 
     public static final String GOOGLE_CLIENT_SECRET = "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";
 
-    public static final String GOOGLE_REDIRECT_URI = "http://localhost:9999/HappyProgramming/login";
+    public static final String GOOGLE_REDIRECT_URI = "http://localhost:8080/HappyProgramming/login";
 
     public static final String GOOGLE_GRANT_TYPE = "authorization_code";
 
