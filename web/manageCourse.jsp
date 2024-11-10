@@ -440,7 +440,7 @@
                                                             </div>
                                                         </div>
                                                         <p style="font-size: 0.8em; color: gray; margin: 0 50px 10px;">
-                                                            <fmt:formatDate value="${post.createdAt}" pattern="dd-MM-yyyy, HH:mm" />
+                                                            <fmt:formatDate value="${post.createdAt}" pattern="MM/dd/yyyy, HH:mm" />
                                                         </p>
                                                     </c:forEach>
                                                 </c:if>

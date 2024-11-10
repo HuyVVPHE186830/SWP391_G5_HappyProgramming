@@ -358,8 +358,8 @@
                 <div id="registrationForm" class="${showRoleSelection ? 'hidden' : ''}">
                     <form id="registerForm" action="register" method="post" enctype="multipart/form-data">
                         <div class="name-container">
-                            <input class="nameInput" type="text" placeholder="First Name" name="firstName" pattern="^[^\s][A-Za-z\s]*[^\s]$" title="First Name cannot have leading or trailing spaces and must contain at least one non-space character" value="${sessionScope.firstName}" required>
-                            <input class="nameInput" type="text" placeholder="Last Name" name="lastName" pattern="^[^\s][A-Za-z\s]*[^\s]$" title="Last Name cannot have leading or trailing spaces and must contain at least one non-space character" value="${sessionScope.lastName}" required>
+                            <input class="nameInput" type="text" placeholder="First Name" name="firstName" pattern="^[^\s][\p{L}\s]*[^\s]$" title="First Name cannot have leading or trailing spaces and must contain at least one non-space character" value="${sessionScope.firstName}" required>
+                            <input class="nameInput" type="text" placeholder="Last Name" name="lastName" pattern="^[^\s][\p{L}\s]*[^\s]$" title="Last Name cannot have leading or trailing spaces and must contain at least one non-space character" value="${sessionScope.lastName}" required>
                         </div>
                         <input type="text" placeholder="Username" name="username" pattern="^[^\s]+$" title="Username cannot contain spaces" value="${sessionScope.username}" required>
                         <input type="password" placeholder="Password" name="password" pattern="^[^\s]+$" title="Password cannot contain spaces" value="${sessionScope.password}"required>
