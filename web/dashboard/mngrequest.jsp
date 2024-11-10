@@ -187,10 +187,10 @@
                                                 <td>
                                                     <img src="data:image/jpeg;base64,${t.avatarPath}" alt="Avatar" class="avatar-image" style="width:40px; height:40px; border-radius:50%; object-fit: cover;">
                                                 </td>
-                                                <td class="text_page" style="font-weight: 500">${t.lastName}</td>
+                                                <td class="text_page" style="font-weight: 500">${t.lastName} ${t.firstName}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.mail}</td>
                                                 <td class="text_page" style="font-weight: 500">${t.dob}</td>
-                                                <td class="text_page" style="font-weight: 500">${tCVPath}</td>
+                                                <td class="text_page" style="font-weight: 500; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${tCVPath}</td>
                                                 <td>
                                                     <a href="#mentorCoursesModal_${username}" data-toggle="modal" class="btn" style="background-color: #5e3fd3; color: white;"> <i class="fa-solid fa-eye"></i></a>
                                                 </td>
@@ -277,7 +277,7 @@
                                                     <td class="text_page" style="font-weight: 500">${mentor.lastName}</td>
                                                     <td class="text_page" style="font-weight: 500">${mentor.mail}</td>
                                                     <td class="text_page" style="font-weight: 500">${mentor.dob}</td>
-                                                    <td class="text_page" style="font-weight: 500">${mentor.cvPath}</td>
+                                                    <td class="text_page" style="font-weight: 500; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${mentor.cvPath}</td>
                                                     <td class="text_page" style="font-weight: 500">${request.requestTime}</td>
                                                     <td class="text_page" style="font-weight: 500">${request.requestReason}</td>
                                                     <td class="text_page" style="font-weight: 500">
