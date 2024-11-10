@@ -73,6 +73,26 @@
                 text-align: center;
                 font-size: 12px;
             }
+
+            .notification {
+                position: fixed;
+                top: 50px;
+                right: 20px;
+                background-color: #4caf50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                z-index: 9999;
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+                transition: opacity 0.3s ease, transform 0.5s ease;
+            }
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
@@ -84,6 +104,31 @@
             }
         %>
         <jsp:include page="header.jsp" />
+        <div id="notification" class="notification hidden"></div>
+        <script>
+            const errorMessage = '<%= session.getAttribute("error") != null ? session.getAttribute("error") : "" %>';
+            if (errorMessage) {
+                showError(errorMessage);
+            <% session.removeAttribute("error"); %>
+            }
+            function showError(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                    notification.style.backgroundColor = '#dc133b';
+                }, 100);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'scale(0.8) translateY(20px)';
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            }
+        </script>
         <form action="verifyEmail" method="post">
             <c:if test="${not empty sessionScope['error-message-verify']}">
                 <p style="text-align: center; margin-bottom: 20px; font-weight: 600; color: red;">${sessionScope['error-message-verify']}</p>
@@ -94,12 +139,6 @@
 
             </c:if>
             <input type="text" placeholder="Verification Code" name="verificationCode" required>
-            <c:if test="${not empty sessionScope.error}">
-                <div class="error-message">
-                    ${sessionScope.error}
-                </div>
-            </c:if>
-            <% session.removeAttribute("error"); %>
             <button type="submit" class="button-verify" id="verifyButton">VERIFY</button>
         </form>
 

@@ -230,8 +230,12 @@
                                         </c:if>
                                     </c:forEach></td>
                                 <th>
-                                    <a href="deleteRequestForMentee?username=${p.username}&courseId=${p.courseId}" onclick="confirm('Are you sure to cancel this request!')"    >                                  
-                                        <i class="fas fa-trash" 
+                                    <a href="deleteRequestForMentee?username=${p.username}&courseId=${p.courseId}"
+                                       onclick="return confirm('Are you sure to cancel this request!') && ${req.requestStatus == 0 ? 'true' : 'false'}"
+                                       <c:if test="${req.requestStatus != 0}">
+                                           style="color: gray; pointer-events: none;"
+                                       </c:if>>
+                                        <i class="fas fa-trash"
                                            style="<c:if test='${p.statusId != 0}'>color: black;</c:if><c:if test='${p.statusId == 0}'>color: red;</c:if>">
                                            </i>
                                         </a>

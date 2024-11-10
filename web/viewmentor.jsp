@@ -97,7 +97,7 @@
                 border: 2px solid #f9a825;
                 border-radius: 10px;
                 padding: 15px 60px;
-                margin: 30px 0;
+                margin: 0 0 30px;
                 max-width: 200px;
                 text-align: center;
                 color: #333;
@@ -253,6 +253,24 @@
             .hidden {
                 display: none;
             }
+            .chat-button {
+                display: inline-block;
+                padding: 7px 15px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 10px;
+                transition: all 1s ease;
+            }
+
+            .chat-button:hover {
+                background-color: #0056b3;
+                color: white;
+                text-decoration: none;
+            }
+
+
         </style>
     </head>
     <body>
@@ -293,7 +311,6 @@
             <c:if test="${not empty requestScope.mentorDetail}">
                 <c:set var="mD" value="${requestScope.mentorDetail}"/>
                 <c:set var="cM" value="${requestScope.courseOfMentor}"/>
-                <c:set var="cT" value="${requestScope.thisCate}"/>
                 <h6>
                     <a href="home" class="link">Home</a> <span>></span> 
                     <a href="viewcourse?courseId=${cM.courseId}" class="link">${cM.courseName}</a> <span>></span> 
@@ -306,7 +323,12 @@
                     </div>
                     <div class="content-right">
                         <h2>${mD.lastName} ${mD.firstName}</h2>
-                        <h3>Course: ${cM.courseName} <a href="rating" class="link-2">(${cT.categoryName})</a></h3>
+                        <h3>Course: ${cM.courseName} 
+                            <c:forEach var="cT" items="${requestScope.categories}" varStatus="status">
+                                <c:if test="${status.first}"><span>(</span></c:if><a href="rating" class="link-2"><span>${cT.categoryName}</span></a><c:if test="${not status.last}"><span>, </span></c:if><c:if test="${status.last}"><span>)</span></c:if>
+                            </c:forEach>
+
+                        </h3>
 
                         <!--<h3>rating for this course:</h3>-->
 
@@ -331,6 +353,11 @@
                                         <a href="manageCourse?courseId=${cM.courseId}&mentorName=${mD.username}" class="button-enroll">
                                             Your Course
                                         </a>
+                                        <c:if test="${not empty sessionScope.user}">
+                                            <c:if test="${mD.username != sessionScope.user.username}">
+                                                <a href="sendMessage?username=${m.username}" class="button-enroll" style="background: #5e3fd3; margin-left: 10px;">Chat</a>
+                                            </c:if>
+                                        </c:if>
                                     </c:if>
                                     <c:if test="${p.statusId == 0}">
                                         <a class="button-enroll" style="background-color: #ccc; margin-right: 10px">
@@ -343,6 +370,12 @@
                                             <input type="hidden" name="username" value="${sessionScope.user.username}">
                                             <button type="submit" class="button-enroll">Cancel</button>                                        
                                         </form>
+                                        <c:if test="${not empty sessionScope.user}">
+                                            <c:if test="${mD.username != sessionScope.user.username}">
+                                                <a href="sendMessage?username=${m.username}" class="button-enroll" style="background: #5e3fd3; margin-left: 10px;">Chat</a>
+                                            </c:if>
+                                        </c:if>
+
                                         <script>
                                             function confirmCancel(event) {
                                                 event.preventDefault();
@@ -385,42 +418,47 @@
                     </div>
                 </div>
             </c:if>
-
-            <!-- MORE DETAILS -->
-            <c:if test="${not empty requestScope.otherCourseMentor}">
-                <h5 class="detailMentor">
-                    In addition to the courses mentioned, this mentor has also excelled in various other fields and has been an integral part of our platform. Here are some other courses this mentor also teaches:
-                    <c:forEach var="oC" items="${requestScope.otherCourseMentor}" varStatus="status">
-                        <a href="viewcourse?courseId=${oC.courseId}" class="link" style="font-weight: 500">${oC.courseName}</a>
-                        <c:if test="${status.index == requestScope.otherCourseMentor.size() - 2}"> and </c:if>
-                        <c:if test="${!status.last && status.index != requestScope.otherCourseMentor.size() - 2}">, </c:if>
-                    </c:forEach>
-                    <br>
-                    ${mD.lastName} ${mD.firstName} has been our mentor since <span style="font-weight: 500"><fmt:formatDate value="${mD.createdDate}" pattern="dd/MM/yyyy"/></span>. Over the years, this mentor has contributed significantly to the growth and development of our community. With a passion for teaching and guiding, ${mD.lastName} ${mD.firstName} 
-                    has helped numerous learners achieve their goals. Their dedication and expertise are reflected in the wide range of courses they provide. 
-                    <br>
-                    Whether you're a beginner or an advanced learner, this mentor has something valuable to offer in each course.
-                </h5>
-            </c:if>
-
-            <!-- OTHER MENTOR OF THIS COURSE -->
-            <c:if test="${not empty requestScope.otherMentor}">
-                <c:set var="cM" value="${requestScope.courseOfMentor}"/>
-                <h2 class="list-mentor">Other Mentor Of This Course</h2>
-                <div class="mentor-cards">
-                    <c:forEach items="${requestScope.otherMentor}" var="oM">
-                        <a href="viewMentor?userId=${oM.id}&courseId=${cM.courseId}" class="mentor-card"> 
-                            <img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${oM.avatarPath}">
-                            <div class="mentor-body">
-                                <div class="mentor-text">
-                                    <div style="color: black">${oM.lastName} ${oM.firstName}</div>
-                                </div>
-                            </div>
-                        </a>
-                    </c:forEach>
-                </div>
-            </c:if>
         </div>
+
+        <!-- MORE DETAILS -->
+        <c:if test="${not empty requestScope.otherCourseMentor}">
+            <h5 class="detailMentor">
+                In addition to the courses mentioned, this mentor has also excelled in various other fields and has been an integral part of our platform. Here are some other courses this mentor also teaches:
+                <c:forEach var="oC" items="${requestScope.otherCourseMentor}" varStatus="status">
+                    <a href="viewcourse?courseId=${oC.courseId}" class="link" style="font-weight: 500">${oC.courseName}</a>
+                    <c:if test="${status.index == requestScope.otherCourseMentor.size() - 2}"> and </c:if>
+                    <c:if test="${!status.last && status.index != requestScope.otherCourseMentor.size() - 2}">, </c:if>
+                </c:forEach>
+                <br>
+                ${mD.lastName} ${mD.firstName} has been our mentor since <span style="font-weight: 500"><fmt:formatDate value="${mD.createdDate}" pattern="dd/MM/yyyy"/></span>. Over the years, this mentor has contributed significantly to the growth and development of our community. With a passion for teaching and guiding, ${mD.lastName} ${mD.firstName} 
+                has helped numerous learners achieve their goals. Their dedication and expertise are reflected in the wide range of courses they provide. 
+                <br>
+                Whether you're a beginner or an advanced learner, this mentor has something valuable to offer in each course.
+            </h5>
+        </c:if>
+
+        <!-- OTHER MENTOR OF THIS COURSE -->
+        <c:if test="${not empty requestScope.otherMentor}">
+            <c:set var="cM" value="${requestScope.courseOfMentor}"/>
+            <h2 class="list-mentor">Other Mentor Of This Course</h2>
+            <div class="mentor-cards">
+                <c:forEach items="${requestScope.otherMentor}" var="oM">
+                    <div class="mentor-card" style="height: 400px;"> 
+                        <a href="viewMentor?userId=${oM.id}&courseId=${cM.courseId}"><img class="mentor-image-icon" alt="" src="data:image/jpeg;base64, ${oM.avatarPath}"></a>
+                        <div class="mentor-body">
+                            <div class="mentor-text">
+                                <div style="color: black">${oM.lastName} ${oM.firstName}</div>
+                                <c:if test="${not empty sessionScope.user}">
+                                    <c:if test="${m.username != sessionScope.user.username}">
+                                        <a href="sendMessage?username=${m.username}" class="chat-button" style="background: #5e3fd3">Chat</a>
+                                    </c:if>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
 
         <!-- CHAT -->
         <jsp:include page="chat.jsp"/>

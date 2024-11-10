@@ -98,6 +98,26 @@ public class CategoryDAO extends DBContext {
         return c;
     }
 
+    public List<Category> getAllCategoryByCourseId(int courseId) {
+        List<Category> c = new ArrayList<>();
+        String sql = "select Category.* from Category join Course_Category on Category.categoryId = Course_Category.categoryId\n"
+                + "join Course on Course.courseId = Course_Category.courseId\n"
+                + "where Course.courseId = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, courseId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                int categoryId = rs.getInt("categoryId");
+                String categoryName = rs.getString("categoryName");
+                c.add(new Category(categoryId, categoryName));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return c;
+    }
+
     public static void main(String[] args) {
         CategoryDAO dao = new CategoryDAO();
         List<Integer> list = new ArrayList<>();

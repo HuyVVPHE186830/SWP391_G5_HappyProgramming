@@ -28,7 +28,7 @@
             }
 
             .footer p {
-                font-family: 'Lora', serif; /* Font for paragraph text */
+                font-family: 'Roboto', serif; /* Font for paragraph text */
             }
 
             .footer a {

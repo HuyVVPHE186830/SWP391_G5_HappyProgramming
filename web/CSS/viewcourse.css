@@ -38,17 +38,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     width: 60%;
     overflow: hidden;
 }
-.description::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    background: #a855f7; /* Màu tím */
-    clip-path: polygon(50% 100%, 100% 30%, 100% 100%); /* Tạo hình dạng chéo */
-    z-index: 0; /* Đưa phần tử ra phía sau nội dung */
-}
 
 .description h3 {
     font-size: 20px;
@@ -141,6 +130,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    height: 400px;
 }
 
 .mentor-image-icon {
