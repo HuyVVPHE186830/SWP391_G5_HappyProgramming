@@ -457,8 +457,9 @@
                                 <div class="modal-dialog modal-dialog-centered" style="max-width: 1000px;">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="viewSubmitModalLabel_${post.postId}">Submission</h5>
-                                        </div>
+                                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#postDetailModal_${post.postId}">
+                                                <i class="fas fa-arrow-left"></i>
+                                            </button>                                       </div>
                                         <div class="modal-body">
                                             <table class="table table-bordered">
                                                 <thead>
@@ -466,7 +467,7 @@
                                                         <th style="width: 6.25%">Avatar</th>
                                                         <th>Name</th>
                                                         <th style="width: 25%">Submitted At</th>
-                                                        <th style="width: 6.25%">Status</th>
+                                                        <th style="width: 10%">Status</th>
                                                         <th style="width: 6.25%">Download</th>
                                                     </tr>
                                                 </thead>
