@@ -33,6 +33,9 @@ public class LoginFilter implements Filter {
             "/viewcourse.jsp", // No-access page
             "/viewcourse", // No-access page
             "/viewCourseMentor", // No-access page
+            "/viewCourseMentor.jsp", // No-access page
+            "/viewmentor.jsp", // No-access page
+            "/viewMentor", // No-access page
             "/allCourse", // No-access page
             "/CSS/*", // No-access page
             "/img/*", // No-access page
