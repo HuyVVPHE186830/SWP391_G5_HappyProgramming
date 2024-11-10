@@ -729,7 +729,7 @@ public class UserDAO extends DBContext {
         try (PreparedStatement pre = connection.prepareStatement(sql)) {
             ResultSet rs = pre.executeQuery();
 
-            if (rs.next()) { 
+            if (rs.next()) {
                 int id = rs.getInt("id");
                 String usernamE = rs.getString("username");
                 String password = rs.getString("password");
@@ -766,5 +766,18 @@ public class UserDAO extends DBContext {
             System.out.println("Not found");
         }
 
+    }
+
+    public void saveNewPass(String newPass, String username) {
+        try {
+            String sql = "update [User] set password = ? where username = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newPass);
+            ps.setString(2, username);
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

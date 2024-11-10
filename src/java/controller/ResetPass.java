@@ -1,4 +1,3 @@
-
 package controller;
 
 import dal.UserDAO;
@@ -31,6 +30,7 @@ public class ResetPass extends HttpServlet {
         String username = request.getParameter("username"); // Không kiểm tra null
         String email = request.getParameter("email"); // Không kiểm tra null
 
+        Email em = new Email();
         UserDAO dao = new UserDAO();
         List<User> users = dao.getAll(); // Không kiểm tra null
         boolean userFound = false;
@@ -39,9 +39,10 @@ public class ResetPass extends HttpServlet {
             if (username.equals(u.getUsername()) && email.equals(u.getMail())) { // Có thể gây NullPointerException
                 userFound = true;
 
-                String newPass = dao.newPassWord2(u.getUsername());
+//                String newPass = dao.newPassWord2(u.getUsername());
+                String newPass = em.generateVerificationCode();
+                dao.saveNewPass(newPass,username);
                 if (newPass != null) {
-                    Email em = new Email();
                     boolean emailSent = em.sendNewPassToMail(u, newPass); // Không kiểm tra kết quả gửi email
                     if (emailSent) {
                         request.setAttribute("message", "The authentication code has been sent to your email!");

@@ -81,22 +81,6 @@ public class ManageConversation extends HttpServlet {
             case "edit-conversation":
                 editConversation(request);
                 break;
-            case "delete-conversation":
-                deleteConversation(request);
-                break;
-            case "delete-message":
-                deleteMessage(request);
-                break;
-            case "edit-message":
-                editMessage(request);
-                break;
-            case "rate-recipient":
-                rateRecipient(request);
-                break;
-            case "rate-recipient2":
-                rateRecipient2(request, response);
-                break;
-
             default:
 
         }

@@ -45,7 +45,9 @@ public class LoginFilter implements Filter {
             "/verify.jsp", // Any public resources
             "/verify", // Any public resources
             "/home", // Any public resources
-            "/googlelogin"
+            "/googlelogin",
+            "viewMentor.jsp",
+            "viewMentor"
     );
 
     public LoginFilter() {

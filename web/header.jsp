@@ -8,7 +8,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link href="CSS/bootstrap.min.css" rel="stylesheet">
         <style>
-            /* HEADER */
             .content-header {
                 background-color: white;
                 position: fixed;
@@ -165,12 +164,11 @@
                 display: block;
             }
 
-            /* Thông báo */
             .notification {
                 position: fixed;
-                top: 60px; /* Dưới header */
+                top: 60px;
                 right: 20px;
-                background-color: #4caf50; /* Màu xanh lá cho thông báo thành công */
+                background-color: #4caf50;
                 color: white;
                 padding: 15px 20px;
                 border-radius: 8px;
@@ -183,7 +181,7 @@
             }
 
             .notification.hidden {
-                display: none; /* Ẩn thông báo khi không cần thiết */
+                display: none;
             }
         </style>
     </head>
@@ -229,7 +227,13 @@
                             <h3>${u.lastName} ${u.firstName}</h3>
                             <a href="userProfile"><i class="fas fa-user"></i> User Profile</a>
                             <a href="changePass.jsp"><i class="fas fa-lock"></i> Change Password</a>
-                            <a href="rating?ratedId=${u.id}"><i class="fas fa-comments"></i> My Feedback</a>
+                            <c:choose>
+                                <c:when test="${u.roleId == 2}">
+                                    <a href="rating?ratedId=${u.id}"><i class="fas fa-comments"></i> My Feedback</a>
+                                </c:when>
+                                <c:otherwise>
+                                </c:otherwise>
+                            </c:choose>
                             <a href="logout.jsp"><i class="fas fa-sign-out-alt"></i> Log Out</a>
                         </div>
                     </div>
@@ -253,20 +257,17 @@
         <div id="notification" class="notification hidden"></div>
 
         <script>
-            // Hàm hiển thị thông báo
             function showNotification(message, type) {
                 const notification = document.getElementById('notification');
                 notification.textContent = message;
                 notification.classList.remove('hidden');
                 notification.style.backgroundColor = type === "error" ? "#f44336" : "#f44336"; // Đổi màu thông báo theo loại
 
-                // Hiển thị thông báo
                 setTimeout(() => {
                     notification.style.opacity = '1';
                     notification.style.transform = 'translateY(0)';
                 }, 100);
 
-                // Tự động ẩn thông báo sau 3 giây
                 setTimeout(() => {
                     notification.style.opacity = '0';
                     notification.style.transform = 'scale(0.8) translateY(20px)';
@@ -276,7 +277,6 @@
                 }, 3000);
             }
 
-            // Kiểm tra và hiển thị thông báo từ session
             document.addEventListener("DOMContentLoaded", function () {
                 const sessionMessage = '<%= request.getAttribute("success") != null ? request.getAttribute("success") : "" %>';
                 const sessionError = '<%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>';
@@ -288,7 +288,6 @@
                 }
             });
 
-            // SCROLL BAR FUNCTION   
             window.addEventListener("scroll", function () {
                 var header = document.querySelector(".content-header");
                 header.classList.toggle("scrolled", window.scrollY > 0);

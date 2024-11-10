@@ -313,14 +313,12 @@ public class CourseDAO extends DBContext {
         try {
             PreparedStatement st = connection.prepareStatement(sql);
 
-            // Set the category IDs in the prepared statement
             for (int i = 0; i < categoryIds.size(); i++) {
                 st.setInt(i + 1, categoryIds.get(i));
             }
 
             ResultSet rs = st.executeQuery();
 
-            // Process the result set
             while (rs.next()) {
                 int id = rs.getInt("courseId");
                 String name = rs.getString("courseName");
@@ -331,17 +329,15 @@ public class CourseDAO extends DBContext {
                 list.add(e);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();  // Log the exception to make debugging easier
+            ex.printStackTrace();  
         }
 
         return list;
     }
 
     public List<Course> getOtherCourseHasOtherCategory(int categoryId) {
-        // You can implement this method similarly, or it could call the previous method.
-        // Assuming you want to handle a single categoryId, here's a simple version:
         List<Course> list = new ArrayList<>();
-        return list; // Adjust implementation as needed based on your requirements
+        return list; 
     }
 
     public List<Course_Category> getAllCategories_Course() {
@@ -509,7 +505,7 @@ public class CourseDAO extends DBContext {
                 totalRecord = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
+            e.printStackTrace(); 
         }
 
         return totalRecord;
@@ -589,24 +585,18 @@ public class CourseDAO extends DBContext {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, categoryId);
-            // Tính toán offset và số lượng bản ghi trên một trang (giả sử mỗi trang có 10 khóa học)
-//            int recordsPerPage = 12;
-//            int offset = (page - 1) * recordsPerPage;
-//            preparedStatement.setInt(2, offset);
-
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                // Giả sử bạn có một lớp Course với các trường phù hợp
+                
                 Course course = new Course();
                 course.setCourseId(resultSet.getInt("CourseId"));
                 course.setCourseName(resultSet.getString("CourseName"));
                 course.setCourseDescription(resultSet.getString("courseDescription"));
-                // Thêm các trường khác nếu có
                 course.setCreatedAt(resultSet.getDate("createdAt"));
                 courses.add(course);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý ngoại lệ
+            e.printStackTrace(); 
         }
 
         return courses;
@@ -619,24 +609,19 @@ public class CourseDAO extends DBContext {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, username);
-            // Tính toán offset và số lượng bản ghi trên một trang (giả sử mỗi trang có 10 khóa học)
-//            int recordsPerPage = 12;
-//            int offset = (page - 1) * recordsPerPage;
-//            preparedStatement.setInt(2, offset);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                // Giả sử bạn có một lớp Course với các trường phù hợp
+                
                 Course course = new Course();
                 course.setCourseId(resultSet.getInt("CourseId"));
                 course.setCourseName(resultSet.getString("CourseName"));
                 course.setCourseDescription(resultSet.getString("courseDescription"));
-                // Thêm các trường khác nếu có
                 course.setCreatedAt(resultSet.getDate("createdAt"));
                 courses.add(course);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý ngoại lệ
+            e.printStackTrace(); 
         }
 
         return courses;
@@ -656,7 +641,7 @@ public class CourseDAO extends DBContext {
                 totalRecord = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
+            e.printStackTrace(); 
         }
 
         return totalRecord;
@@ -672,7 +657,7 @@ public class CourseDAO extends DBContext {
                 totalRecord = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
+            e.printStackTrace(); 
         }
 
         return totalRecord;
@@ -735,7 +720,7 @@ public class CourseDAO extends DBContext {
                 totalMentee = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
+            e.printStackTrace(); 
         }
 
         return totalMentee;
@@ -750,7 +735,7 @@ public class CourseDAO extends DBContext {
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             int offset = (page - 1) * 6;
-            st.setInt(1, offset); // Corrected: set offset first
+            st.setInt(1, offset); 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("courseId");
@@ -791,7 +776,7 @@ public class CourseDAO extends DBContext {
                 totalRecord = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
+            e.printStackTrace(); 
         }
 
         return totalRecord;
@@ -812,15 +797,15 @@ public class CourseDAO extends DBContext {
                 + "    FROM RankedCourses\n"
                 + "    WHERE rn <= 2\n"
                 + ")\n"
-                + "SELECT * FROM DistinctCourses\n" // Removed the semicolon here
+                + "SELECT * FROM DistinctCourses\n" 
                 + "ORDER BY courseId "
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; // This is part of the main query
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             int recordsPerPage = 4;
             int offset = (page - 1) * recordsPerPage;
-            st.setInt(1, offset); // Corrected: set offset first
+            st.setInt(1, offset); 
             st.setInt(2, recordsPerPage);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -884,7 +869,7 @@ public class CourseDAO extends DBContext {
                 totalRecord = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
+            e.printStackTrace(); 
         }
 
         return totalRecord;
@@ -908,7 +893,6 @@ public class CourseDAO extends DBContext {
                 + "ORDER BY \n"
                 + "    COUNT(p.username) ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Tính toán offset và số lượng bản ghi trên một trang (giả sử mỗi trang có 10 khóa học)
             int recordsPerPage = 6;
             int offset = (page - 1) * recordsPerPage;
             preparedStatement.setInt(1, offset);
@@ -916,16 +900,14 @@ public class CourseDAO extends DBContext {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                // Giả sử bạn có một lớp Course với các trường phù hợp
                 Course course = new Course();
                 course.setCourseId(resultSet.getInt("CourseId"));
                 course.setCourseName(resultSet.getString("CourseName"));
                 course.setCourseDescription(resultSet.getString("courseDescription"));
-                // Thêm các trường khác nếu có
                 courses.add(course);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý ngoại lệ
+            e.printStackTrace(); 
         }
 
         return courses;
@@ -948,7 +930,6 @@ public class CourseDAO extends DBContext {
                 + "ORDER BY \n"
                 + "    COUNT(p.username) DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Tính toán offset và số lượng bản ghi trên một trang (giả sử mỗi trang có 10 khóa học)
             int recordsPerPage = 6;
             int offset = (page - 1) * recordsPerPage;
             preparedStatement.setInt(1, offset);
@@ -956,22 +937,19 @@ public class CourseDAO extends DBContext {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                // Giả sử bạn có một lớp Course với các trường phù hợp
                 Course course = new Course();
                 course.setCourseId(resultSet.getInt("CourseId"));
                 course.setCourseName(resultSet.getString("CourseName"));
                 course.setCourseDescription(resultSet.getString("courseDescription"));
-                // Thêm các trường khác nếu có
                 courses.add(course);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý ngoại lệ
+            e.printStackTrace(); 
         }
 
         return courses;
     }
 
-    //My Courses
     public List<Course> searchMentoringCoursesByName(String userName, String keyword, int page) {
         List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM Course c "
@@ -1060,7 +1038,7 @@ public class CourseDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, userName);
             ps.setString(2, "%" + keyword + "%");
-            ps.setInt(3, (page - 1) * 4);  // Pagination logic
+            ps.setInt(3, (page - 1) * 4);  
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 courses.add(mapCourse(rs));
@@ -1248,7 +1226,6 @@ public class CourseDAO extends DBContext {
         }
         return 1;
     }
-    //End My Courses
 
     public List<Course> getAllCoursesForAdmin() {
         List<Course> courses = new ArrayList<>();
@@ -1322,7 +1299,6 @@ public class CourseDAO extends DBContext {
                 + "AND mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Set parameters
             preparedStatement.setInt(1, 3);
             preparedStatement.setInt(2, status);
             preparedStatement.setInt(3, courseId);
@@ -1405,10 +1381,10 @@ public class CourseDAO extends DBContext {
                 + "AND mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, courseId); // courseId
-            preparedStatement.setInt(2, 3); // participateRole
-            preparedStatement.setInt(3, status); // statusId
-            preparedStatement.setString(4, mentorName); // statusId
+            preparedStatement.setInt(1, courseId); 
+            preparedStatement.setInt(2, 3); 
+            preparedStatement.setInt(3, status); 
+            preparedStatement.setString(4, mentorName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1432,9 +1408,9 @@ public class CourseDAO extends DBContext {
                 + "AND mentorUsername = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, courseId); // courseId
+            preparedStatement.setInt(1, courseId); 
             preparedStatement.setInt(2, status);
-            preparedStatement.setString(3, mentorName);// statusId
+            preparedStatement.setString(3, mentorName);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1453,11 +1429,10 @@ public class CourseDAO extends DBContext {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, status);     // Trạng thái muốn cập nhật, ví dụ: -1
-            statement.setInt(2, courseId);   // ID của khóa học
-            statement.setString(3, username); // Tên tài khoản của mentee
+            statement.setInt(1, status);     
+            statement.setInt(2, courseId);   
+            statement.setString(3, username); 
 
-            // Thực thi câu lệnh update
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
